@@ -15,6 +15,6 @@ var util = require('util'),
    io.sockets.on('connection', clientEvents.onClientConnection);
 
    util.log('Starting server...');
-   server.listen(443);
+   server.listen(80);
    util.log('Server started.');
 })();
