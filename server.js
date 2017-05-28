@@ -3,10 +3,7 @@
  */
 var util = require('util'),
    fs = require('fs'),
-   server = require('https').createServer({
-      key: fs.readFileSync('../key.pem'),
-      cert: fs.readFileSync('../cert.pem')
-   }),
+   server = require('http').createServer(),
    io = require('socket.io')(server),
    clientEvents = require('./events/client');
 
