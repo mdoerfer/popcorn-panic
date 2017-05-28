@@ -2,7 +2,11 @@
  * Require dependencies
  */
 var util = require('util'),
-   server = require('http').createServer(),
+   fs = require('fs'),
+   server = require('https').createServer({
+      key: fs.readFileSync('../key.pem'),
+      cert: fs.readFileSync('../csr.pem')
+   }),
    io = require('socket.io')(server),
    clientEvents = require('./events/client');
 
@@ -10,7 +14,7 @@ var util = require('util'),
  * Initialize server
  * This function runs automatically when the server is started
  */
-(function () {
+(function() {
    io.sockets.on('connection', clientEvents.onClientConnection);
 
    util.log('Starting server...');
