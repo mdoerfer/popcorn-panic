@@ -8,6 +8,11 @@ var socket,
    players = [];
 
    socket = io.listen(80);
+   socket.configure(function() {
+      socket.set('transports', [
+         'websocket'
+      ]);
+   });
 
    setEventHandlers();
 })();
