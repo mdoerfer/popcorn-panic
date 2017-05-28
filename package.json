@@ -1,0 +1,31 @@
+{
+  "name": "popcorn-panic-server",
+  "version": "1.0.0",
+  "description": "A gameserver for the popcorn panic game using sockets",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tapiwan/popcorn-panic-server.git"
+  },
+  "keywords": [
+    "gameserver",
+    "popcorn",
+    "panic",
+    "socket.io",
+    "sockets",
+    "server",
+    "nodejs"
+  ],
+  "author": "Dirk Englert",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tapiwan/popcorn-panic-server/issues"
+  },
+  "homepage": "https://github.com/tapiwan/popcorn-panic-server#readme",
+  "dependencies": {
+    "socket.io": "^2.0.1"
+  }
+}
