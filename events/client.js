@@ -9,7 +9,7 @@ exports.onClientConnection = function(client) {
    util.log('New client connected. ID: ' + client.id);
 
    client.on('disconnect', function() {
-      util.log('Client disconnected.' + this.client.conn.transport.constructor.name);
+      util.log('Client disconnected. (' + this.client.conn.transport.constructor.name + ')');
    });
 };
 
