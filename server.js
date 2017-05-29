@@ -16,6 +16,8 @@ var clientEvents = require('./events/client');
  * This function runs automatically when the server is started
  */
 (function() {
+   io.set('origins', '*:*');
+
    io.sockets.on('connection', clientEvents.onClientConnection);
 
    util.log('Starting server...');
