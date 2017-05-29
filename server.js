@@ -19,6 +19,6 @@ var clientEvents = require('./events/client');
    io.sockets.on('connection', clientEvents.onClientConnection);
 
    util.log('Starting server...');
-   server.listen(80);
+   server.listen(8080);
    util.log('Server started.');
 })();
