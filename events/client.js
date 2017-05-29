@@ -7,6 +7,10 @@ var util = require('util');
 */
 exports.onClientConnection = function(client) {
    util.log('New client connected. ID: ' + client.id);
+
+   client.on('disconnect', function() {
+      util.log('Client disconnected.');
+   });
 };
 
 /**
