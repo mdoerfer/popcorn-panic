@@ -2,14 +2,13 @@
  * Require dependencies
  */
 var util = require('util'),
-   fs = require('fs'),
    server = require('http').createServer(),
    io = require('socket.io')(server);
 
 /**
  * Require events
  */
-var clientEvents = require('./events/client');
+var socketEvents = require('./events/socket.events');
 
 /**
  * Initialize server
@@ -21,14 +20,20 @@ var clientEvents = require('./events/client');
    startServer();
 })();
 
+/**
+ * Establish socket connection
+ */
 function initializeSockets() {
-   io.sockets.on('connection', clientEvents.onClientConnection);
+   io.sockets.on('connection', socketEvents.onSocketConnection);
 }
 
+/**
+ * Start server
+ */
 function startServer() {
-   util.log('Starting server...');
+   util.log('STARTING SERVER...');
 
-   server.listen(80);
-
-   util.log('Server started.');
+   server.listen(80, function() {
+       util.log('SERVER STARTED.');
+   });
 }
