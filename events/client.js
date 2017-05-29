@@ -7,4 +7,5 @@ var util = require('util');
 */
 exports.onClientConnection = function(client) {
    util.log('New client connected. ID: ' + client.id);
+   util.log('Socket: ' + client.client.conn.transport.constructor.name);
 };
