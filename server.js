@@ -1,39 +1,21 @@
-/**
- * Require dependencies
- */
-var util = require('util'),
-   server = require('http').createServer(),
-   io = require('socket.io')(server);
+'use strict';
 
-/**
- * Require events
- */
-var socketEvents = require('./events/socket.events');
+const express = require('express');
+const socketIO = require('socket.io');
+const path = require('path');
 
-/**
- * Initialize server
- *
- * This function runs automatically when the server is started
- */
-(function() {
-   initializeSockets();
-   startServer();
-})();
+const PORT = process.env.PORT || 3000;
+const INDEX = path.join(__dirname, 'index.html');
 
-/**
- * Establish socket connection
- */
-function initializeSockets() {
-   io.sockets.on('connection', socketEvents.onSocketConnection);
-}
+const server = express()
+  .use((req, res) => res.sendFile(INDEX) )
+  .listen(PORT, () => console.log(`Listening on ${ PORT }`));
 
-/**
- * Start server
- */
-function startServer() {
-   util.log('STARTING SERVER...');
+const io = socketIO(server);
 
-   server.listen(80, function() {
-       util.log('SERVER STARTED.');
-   });
-}
+io.on('connection', (socket) => {
+  console.log('Client connected');
+  socket.on('disconnect', () => console.log('Client disconnected'));
+});
+
+setInterval(() => io.emit('time', new Date().toTimeString()), 1000);
