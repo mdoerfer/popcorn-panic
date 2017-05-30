@@ -1,21 +1,39 @@
-'use strict';
+/**
+ * Require dependencies
+ */
+var util = require('util'),
+    server = require('http').createServer(),
+    io = require('socket.io')(server);
 
-const express = require('express');
-const socketIO = require('socket.io');
-const path = require('path');
+/**
+ * Require events
+ */
+var socketEvents = require('./events/socket.events');
 
-const PORT = process.env.PORT || 3000;
-const INDEX = path.join(__dirname, 'index.html');
+/**
+ * Initialize server
+ *
+ * This function runs automatically when the server is started
+ */
+(function() {
+    initializeSockets();
+    startServer();
+})();
 
-const server = express()
-  .use((req, res) => res.sendFile(INDEX) )
-  .listen(PORT, () => console.log(`Listening on ${ PORT }`));
+/**
+ * Establish socket connection
+ */
+function initializeSockets() {
+    io.sockets.on('connection', socketEvents.onSocketConnection);
+}
 
-const io = socketIO(server);
+/**
+ * Start server
+ */
+function startServer() {
+    util.log('STARTING SERVER...');
 
-io.on('connection', (socket) => {
-  console.log('Client connected');
-  socket.on('disconnect', () => console.log('Client disconnected'));
-});
-
-setInterval(() => io.emit('time', new Date().toTimeString()), 1000);
+    server.listen(80, function() {
+        util.log('SERVER STARTED.');
+    });
+}
