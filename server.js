@@ -33,7 +33,7 @@ function initializeSockets() {
 function startServer() {
     util.log('STARTING SERVER...');
 
-    server.listen(3000, function() {
+    server.listen(80, function() {
         util.log('SERVER STARTED.');
     });
 }
