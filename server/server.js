@@ -104,7 +104,7 @@ function onChooseName(payload) {
     util.log();
     util.log('CHOOSE_NAME.');
 
-    this.client.emit('name-chosen', {});
+    io.emit('name-chosen', {});
 }
 
 /**
