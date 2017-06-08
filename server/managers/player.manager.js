@@ -10,7 +10,7 @@ const PlayerManager = function() {
      * @returns {Array<Player>}
      */
     this.getPlayers = function(ids) {
-        if(ids.length) {
+        if(ids !== undefined) {
             var foundPlayers = [];
 
             _.foreach(players, function(index) {
