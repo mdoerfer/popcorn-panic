@@ -56,4 +56,16 @@ Room.prototype.isFull = function() {
     return this.players.length >= this.maxPlayers;
 };
 
+Room.prototype.isEmpty = function() {
+  return this.players.length === 0;
+};
+
+Room.prototype.wouldBeEmpty = function() {
+    return (this.players.length - 1) === 0;
+};
+
+Room.prototype.hasPlayer = function(id) {
+    return this.players.indexOf(id) !== -1;
+};
+
 module.exports = Room;

@@ -357,12 +357,20 @@ function playerExists(id) {
 
 //Add new room
 function newRoom(name) {
-    if(!roomExists()) {
+    if(!roomExists(name)) {
         rooms.push(new Room(name));
         return true;
     }
     else {
         return false;
+    }
+}
+//Remove room
+function removeRoom(name) {
+    for(var i = 0; i < rooms.length; i++) {
+        if(rooms[i].getName() === name) {
+            rooms.splice(i, 1);
+        }
     }
 }
 //Find room
@@ -377,13 +385,20 @@ function findRoom(name) {
 function joinRoom(socket, name) {
     if(roomExists(name) && playerExists(socket.id)) {
         var room = findRoom(name);
+        var player = findPlayer(socket.id);
 
+        //If room isn't full
         if(!room.isFull()) {
-            //TODO: Check if player is already in room
-            room.addPlayer(socket.id);
-            socket.join(name);
+            //If player is not in the room already
+            if(!room.hasPlayer(player.getId())) {
+                room.addPlayer(player.getId());
+                socket.join(name);
 
-            return true;
+                return true;
+            }
+            else {
+                return false;
+            }
         }
         else {
             return false;
@@ -397,9 +412,14 @@ function joinRoom(socket, name) {
 function leaveRoom(socket, name) {
     if(roomExists(name) && playerExists(socket.id)) {
         var room = findRoom(name);
+        var player = findPlayer(socket.id);
 
-        room.removePlayer(socket.id);
+        room.removePlayer(player.getId());
         socket.leave(name);
+
+        if(room.isEmpty()) {
+            removeRoom(name);
+        }
 
         return true;
     }
