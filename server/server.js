@@ -66,8 +66,36 @@ function onSocketConnection(socket) {
  * Bind all event handlers
  */
 function bindEventHandlers(socket) {
-    socket.on('disconnect', onSocketDisconnect);
-    socket.on('choose-name', onChooseName);
+    socket.on('disconnect', function(payload) {
+        util.log();
+        util.log('SOCKET_DISCONNECTED.');
+        util.log('SOCKET_ID: ' + socket.id);
+        util.log('SOCKET_TRANSPORT: ' + socket.client.conn.transport.constructor.name);
+
+        console.log(socket);
+
+        removePlayer(socket.id);
+    });
+
+    socket.on('choose-name', function(payload) {
+        util.log();
+        util.log('CHOOSE_NAME.');
+        util.log('SOCKET_ID: ' + socket.id);
+        util.log('SOCKET_TRANSPORT: ' + socket.client.conn.transport.constructor.name);
+
+        var player = findPlayer(socket.id);
+        player.setName(payload.name);
+
+        socket.emit('name-chosen', {
+            state: 'success',
+            data: {
+                player: player
+            }
+        });
+
+        util.log(players);
+    });
+
     socket.on('join-lobby', onJoinLobby);
     socket.on('get-rooms', onGetRooms);
     socket.on('create-room', onCreateRoom);
@@ -76,44 +104,6 @@ function bindEventHandlers(socket) {
     socket.on('change-map', onChangeMap);
     socket.on('change-mode', onChangeMode);
     socket.on('start-game', onStartGame);
-}
-
-/**
- * Handle socket disconnect
- */
-function onSocketDisconnect(payload) {
-    util.log();
-    util.log('SOCKET_DISCONNECTED.');
-    util.log('SOCKET_ID: ' + this.id);
-    util.log('SOCKET_TRANSPORT: ' + this.client.conn.transport.constructor.name);
-
-    console.log(this);
-
-    removePlayer(this.id);
-}
-
-/**
- * On 'choose-name'
- *
- * @param payload Contains the data emitted by the client
- */
-function onChooseName(payload) {
-    util.log();
-    util.log('CHOOSE_NAME.');
-    util.log('SOCKET_ID: ' + this.id);
-    util.log('SOCKET_TRANSPORT: ' + this.client.conn.transport.constructor.name);
-
-    var player = findPlayer(this.id);
-    player.setName(payload.name);
-
-    io.emit('name-chosen', {
-        state: 'success',
-        data: {
-            player: player
-        }
-    });
-
-    util.log(players);
 }
 
 /**
