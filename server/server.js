@@ -2,7 +2,8 @@
  * Require dependencies
  */
 var util = require('util'),
-    io = require('socket.io');
+    server = require('http').createServer(),
+    io = require('socket.io')(server);
 
 /**
  * Require models
@@ -13,8 +14,6 @@ var Player = require('./models/player.model'),
 /**
  * Global variables
  */
-var socket;
-
 var players = [],
     rooms = [];
 
@@ -24,18 +23,25 @@ var players = [],
  * This function runs automatically when the server is started
  */
 (function () {
-    startSocketServer();
+    initializeSockets();
+    startServer();
 })();
 
 /**
  * Establish socket connection
  */
-function startSocketServer() {
+function initializeSockets() {
+    io.sockets.on('connection', onSocketConnection);
+}
+
+/**
+ * Start server
+ */
+function startServer() {
     util.log('STARTING SERVER...');
 
-    socket = io.listen(80, function() {
+    server.listen(80, function () {
         util.log('SERVER STARTED.');
-        socket.sockets.on('connection', onSocketConnection);
     });
 }
 
@@ -98,7 +104,7 @@ function onChooseName(payload) {
     util.log();
     util.log('CHOOSE_NAME.');
 
-    socket.emit('name-chosen', {});
+    this.client.emit('name-chosen', {});
 }
 
 /**
