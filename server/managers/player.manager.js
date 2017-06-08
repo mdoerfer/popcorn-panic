@@ -28,7 +28,7 @@ const PlayerManager = function() {
             return foundPlayers;
         }
         else {
-            return players;
+            return this.players;
         }
     };
 
