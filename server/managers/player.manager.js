@@ -1,5 +1,5 @@
 const _ = require('./../util/util'),
-    Player = require('./models/player.model');
+    Player = require('./../models/player.model');
 
 const PlayerManager = function() {
     var players = [];

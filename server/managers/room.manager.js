@@ -1,5 +1,5 @@
 const _ = require('./../util/util'),
-    Room = require('./models/room.model');
+    Room = require('./../models/room.model');
 
 const RoomManager = function() {
     var rooms = [];
