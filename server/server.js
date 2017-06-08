@@ -58,6 +58,7 @@ function onSocketConnection(socket) {
     util.log('SOCKET_TRANSPORT: ' + socket.client.conn.transport.constructor.name);
 
     newPlayer(socket.id);
+
     bindEventHandlers(socket);
 }
 
@@ -80,13 +81,13 @@ function bindEventHandlers(socket) {
 /**
  * Handle socket disconnect
  */
-function onSocketDisconnect() {
+function onSocketDisconnect(socket) {
     util.log();
     util.log('SOCKET_DISCONNECTED.');
-    util.log('SOCKET_ID: ' + this.id);
-    util.log('SOCKET_TRANSPORT: ' + this.client.conn.transport.constructor.name);
+    util.log('SOCKET_ID: ' + this.socket.id);
+    util.log('SOCKET_TRANSPORT: ' + this.socket.client.conn.transport.constructor.name);
 
-    removePlayer(this.id);
+    removePlayer(this.socket.id);
 }
 
 /**
