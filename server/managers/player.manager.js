@@ -16,7 +16,7 @@ const PlayerManager = function() {
             for(var i = 0; i < this.players.length; i++) {
                 for(var c = 0; c < ids.length; c++) {
                     if(this.players[i].getId() === ids[c]) {
-                        foundPlayers.push(player);
+                        foundPlayers.push(this.players[i]);
                     }
                 }
             }
