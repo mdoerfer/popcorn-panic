@@ -1,6 +1,5 @@
 const Player = function(id) {
     this.id = id;
-    this.class = 'Player';
     this.name = '';
     this.pressure = 0;
     this.character = '';

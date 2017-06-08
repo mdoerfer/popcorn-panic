@@ -68,7 +68,7 @@ function onSocketConnection(socket) {
  */
 function bindEventHandlers(socket) {
     socket.on('disconnect', onSocketDisconnect);
-    socket.on('choose-name', onChooseName());
+    socket.on('choose-name', onChooseName);
     socket.on('join-lobby', onJoinLobby);
     socket.on('get-rooms', onGetRooms);
     socket.on('create-room', onCreateRoom);
@@ -103,7 +103,7 @@ function onSocketDisconnect() {
  * @param payload Contains the data emitted by the client
  */
 function onChooseName(payload) {
-    this.emit('name-chosen', {});
+    //this.emit('name-chosen', {});
 }
 
 /**
@@ -112,7 +112,7 @@ function onChooseName(payload) {
  * @param payload Contains the data emitted by the client
  */
 function onJoinLobby(payload) {
-    this.emit('lobby-joined', {});
+    //this.emit('lobby-joined', {});
 }
 
 /**
@@ -121,7 +121,7 @@ function onJoinLobby(payload) {
  * @param payload Contains the data emitted by the client
  */
 function onGetRooms(payload) {
-    this.emit('rooms-available', {});
+    //this.emit('rooms-available', {});
 }
 
 /**
@@ -130,7 +130,7 @@ function onGetRooms(payload) {
  * @param payload Contains the data emitted by the client
  */
 function onCreateRoom(payload) {
-    this.emit('room-created', {});
+    //this.emit('room-created', {});
 }
 
 /**
@@ -139,7 +139,7 @@ function onCreateRoom(payload) {
  * @param payload Contains the data emitted by the client
  */
 function onJoinRoom(payload) {
-    this.emit('room-joined', {});
+    //this.emit('room-joined', {});
 }
 
 /**
@@ -148,7 +148,7 @@ function onJoinRoom(payload) {
  * @param payload Contains the data emitted by the client
  */
 function onLeaveRoom(payload) {
-    this.emit('room-left', {});
+    //this.emit('room-left', {});
 }
 
 /**
@@ -157,7 +157,7 @@ function onLeaveRoom(payload) {
  * @param payload Contains the data emitted by the client
  */
 function onChangeMap(payload) {
-    this.emit('map-changed', {});
+    //this.emit('map-changed', {});
 }
 
 /**
@@ -166,7 +166,7 @@ function onChangeMap(payload) {
  * @param payload Contains the data emitted by the client
  */
 function onChangeMode(payload) {
-    this.emit('mode-changed', {});
+    //this.emit('mode-changed', {});
 }
 
 /**
@@ -175,5 +175,5 @@ function onChangeMode(payload) {
  * @param payload Contains the data emitted by the client
  */
 function onStartGame(payload) {
-    this.emit('game-started', {});
+    //this.emit('game-started', {});
 }

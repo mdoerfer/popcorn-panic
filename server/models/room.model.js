@@ -1,5 +1,4 @@
 const Room = function () {
-    this.class = 'Room';
     this.name = '';
     this.players = [];
     this.mode = '';
@@ -12,16 +11,12 @@ Room.prototype.setName = function (name) {
 };
 
 Room.prototype.addPlayer = function (player) {
-    if(player.class !== 'Player') return;
-
     if (this.players.length < this.maxPlayers) {
         this.players.push(player);
     }
 };
 
 Room.prototype.removePlayer = function (player) {
-    if(player.class !== 'Player') return;
-
     for (var i = 0; i < this.players.length; i++) {
         if(this.players[i].getName() === player.getName()) {
             this.players.slice(i, 1);
