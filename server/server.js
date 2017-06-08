@@ -84,10 +84,10 @@ function bindEventHandlers(socket) {
 function onSocketDisconnect(socket) {
     util.log();
     util.log('SOCKET_DISCONNECTED.');
-    util.log('SOCKET_ID: ' + this.socket.id);
-    util.log('SOCKET_TRANSPORT: ' + this.socket.client.conn.transport.constructor.name);
+    util.log('SOCKET_ID: ' + socket.id);
+    util.log('SOCKET_TRANSPORT: ' + socket.client.conn.transport.constructor.name);
 
-    removePlayer(this.socket.id);
+    removePlayer(socket.id);
 }
 
 /**
