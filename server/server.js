@@ -101,8 +101,8 @@ function onChooseName(socket) {
         util.log('CHOOSE_NAME.');
 
         //Change player name
-        var player = players.getPlayer(socket.id)
-            .setName(payload.name);
+        var player = players.getPlayer(socket.id);
+        player.setName(payload.name);
 
         //Give new player new information about himself
         socket.emit('name-chosen', {
@@ -259,8 +259,8 @@ function onChangeMap(socket) {
         util.log('CHANGE_MAP.');
 
         if(rooms.roomExists(payload.roomName)) {
-            var room = rooms.getRoom(payload.roomName)
-                .setMap(payload.mapName);
+            var room = rooms.getRoom(payload.roomName);
+            room.setMap(payload.mapName);
 
             io.to(room.getName()).emit('map-changed', {
                 state: 'success',
@@ -281,8 +281,8 @@ function onChangeMode(socket) {
         util.log('CHANGE_MODE.');
 
         if(rooms.roomExists(payload.roomName)) {
-            var room = rooms.getRoom(payload.roomName)
-                .setMode(payload.modeName);
+            var room = rooms.getRoom(payload.roomName);
+            room.setMode(payload.modeName);
 
             io.to(room.getName()).emit('mode-changed', {
                 state: 'success',
