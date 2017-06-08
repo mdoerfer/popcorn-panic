@@ -60,13 +60,13 @@ function onSocketConnection(socket) {
     players.push(new Player(socket.id));
     util.log(players);
 
-    bindEventHandlers();
+    bindEventHandlers(socket);
 }
 
 /**
  * Bind all event handlers
  */
-function bindEventHandlers() {
+function bindEventHandlers(socket) {
     socket.on('disconnect', onSocketDisconnect);
     socket.on('choose-name', onChooseName());
     socket.on('join-lobby', onJoinLobby);
