@@ -52,4 +52,8 @@ Room.prototype.getMaxPlayers = function() {
     return this.maxPlayers;
 };
 
+Room.prototype.isFull = function() {
+    return this.players.length >= this.maxPlayers;
+};
+
 module.exports = Room;

@@ -57,6 +57,7 @@ function onSocketConnection(socket) {
     util.log('SOCKET_ID: ' + socket.id);
     util.log('SOCKET_TRANSPORT: ' + socket.client.conn.transport.constructor.name);
 
+    //Add new player to players
     newPlayer(socket.id);
 
     bindEventHandlers(socket);
@@ -87,6 +88,7 @@ function onDisconnect(socket) {
         util.log('SOCKET_ID: ' + socket.id);
         util.log('SOCKET_TRANSPORT: ' + socket.client.conn.transport.constructor.name);
 
+        //Remove player from players
         removePlayer(socket.id);
     });
 }
@@ -175,15 +177,20 @@ function onJoinRoom(socket) {
         util.log();
         util.log('JOIN_ROOM.');
 
-        var roomJoined = joinRoom(socket.id, payload.name);
+        var roomJoined = joinRoom(socket, payload.name);
 
         if(roomJoined) {
             var room = findRoom(payload.name);
+            var player = findPlayer(socket.id);
+            var players = findPlayers(room.getPlayers());
 
-            socket.emit('room-joined', {
+            //Inform all people in the room about someone joining
+            io.to(room.getName()).emit('room-joined', {
                 state: 'success',
                 data: {
-                    room: room
+                    room: room,
+                    player: player,
+                    players: players
                 }
             });
         }
@@ -203,12 +210,17 @@ function onLeaveRoom(socket) {
         util.log();
         util.log('LEAVE_ROOM.');
 
-        var roomLeft = leaveRoom(socket.id, payload.name);
+        var roomLeft = leaveRoom(socket, payload.name);
 
         if(roomLeft) {
-            socket.emit('room-left', {
+            var room = findRoom(payload.name);
+            var player = findPlayer(socket.id);
+
+            io.to(room.getName()).emit('room-left', {
                 state: 'success',
-                data: {}
+                data: {
+                    player: player
+                }
             });
         }
         else {
@@ -232,7 +244,7 @@ function onChangeMap(socket) {
         if(changedMap) {
             var room = findRoom(payload.name);
 
-            socket.emit('map-changed', {
+            io.to(room.getName()).emit('map-changed', {
                 state: 'success',
                 data: {
                     room: room
@@ -255,7 +267,7 @@ function onChangeMode(socket) {
         if(changedMode) {
             var room = findRoom(payload.name);
 
-            socket.emit('mode-changed', {
+            io.to(room.getName()).emit('mode-changed', {
                 state: 'success',
                 data: {
                     room: room
@@ -273,7 +285,9 @@ function onStartGame(socket) {
         util.log();
         util.log('START_GAME.');
 
-        socket.emit('game-started', {});
+        var room = findRoom(payload.name);
+
+        io.to(room.getName()).emit('game-started', {});
     });
 }
 
@@ -300,6 +314,20 @@ function findPlayer(id) {
             return players[i];
         }
     }
+}
+//Find players
+function findPlayers(ids) {
+    var foundPlayers = [];
+
+    for(var i = 0; i < players.length; i++) {
+        for(var c = 0; c < ids.length; c++) {
+            if(players[i].getId() === ids[c]) {
+                foundPlayers.push(players[i]);
+            }
+        }
+    }
+
+    return foundPlayers;
 }
 //Player exists
 function playerExists(id) {
@@ -341,24 +369,31 @@ function findRoom(name) {
     }
 }
 //Join room
-function joinRoom(id, name) {
-    if(roomExists(name) && playerExists(id)) {
+function joinRoom(socket, name) {
+    if(roomExists(name) && playerExists(socket.id)) {
         var room = findRoom(name);
 
-        room.addPlayer(id);
+        if(!room.isFull()) {
+            room.addPlayer(socket.id);
+            socket.join(name);
 
-        return true;
+            return true;
+        }
+        else {
+            return false;
+        }
     }
     else {
         return false;
     }
 }
 //Leave room
-function leaveRoom(id, name) {
-    if(roomExists(name) && playerExists(id)) {
+function leaveRoom(socket, name) {
+    if(roomExists(name) && playerExists(socket.id)) {
         var room = findRoom(name);
 
         room.removePlayer(id);
+        socket.leave(name);
 
         return true;
     }
