@@ -3,7 +3,8 @@
  */
 var util = require('util'),
     server = require('http').createServer(),
-    io = require('socket.io')(server);
+    io = require('socket.io')(server),
+    mongoose = require('mongoose');
 
 /**
  * Require events
@@ -15,11 +16,18 @@ var socketEvents = require('./events/socket.events');
  *
  * This function runs automatically when the server is started
  */
-(function() {
+(function () {
+    connectToMongoDB();
     initializeSockets();
     startServer();
 })();
 
+/**
+ * Establish database connection
+ */
+function connectToMongoDB() {
+    mongoose.connect('mongodb://localhost/popcorn_panic');
+}
 /**
  * Establish socket connection
  */
@@ -33,7 +41,7 @@ function initializeSockets() {
 function startServer() {
     util.log('STARTING SERVER...');
 
-    server.listen(80, function() {
+    server.listen(80, function () {
         util.log('SERVER STARTED.');
     });
 }
