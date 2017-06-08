@@ -392,7 +392,7 @@ function leaveRoom(socket, name) {
     if(roomExists(name) && playerExists(socket.id)) {
         var room = findRoom(name);
 
-        room.removePlayer(id);
+        room.removePlayer(socket.id);
         socket.leave(name);
 
         return true;
