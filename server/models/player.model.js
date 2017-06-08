@@ -9,95 +9,95 @@ const Player = function(playerId) {
     this.pressure = 0;
     this.character = 'Default';
     this.maxPressure = 100;
+};
 
-    this.setId = function(playerId) {
-        this.id = playerId;
+Player.prototype.setId = function(playerId) {
+    this.id = playerId;
+};
+
+Player.prototype.setName = function(playerName) {
+    this.name = playerName;
+};
+
+Player.prototype.setPressure = function(playerPressure) {
+    this.pressure = playerPressure;
+};
+
+Player.prototype.setCharacter = function(playerCharacter) {
+    this.character = playerCharacter;
+};
+
+Player.prototype.setLocation = function(playerX, playerY, playerZ) {
+    this.x = playerX;
+    this.y = playerY;
+    this.z = playerZ;
+};
+
+Player.prototype.setX = function(playerX) {
+    this.x = playerX;
+};
+
+Player.prototype.setY = function(playerY) {
+    this.y = playerY;
+};
+
+Player.prototype.setZ = function(playerZ) {
+    this.z = playerZ;
+};
+
+Player.prototype.getName = function() {
+    return this.name;
+};
+
+Player.prototype.getId = function() {
+    return this.id;
+};
+
+Player.prototype.getPressure = function() {
+    return this.pressure;
+};
+
+Player.prototype.getCharacter = function() {
+    return this.character;
+};
+
+Player.prototype.getLocation = function() {
+    return {
+        x: this.x,
+        y: this.y,
+        z: this.z
     };
+};
 
-    this.setName = function(playerName) {
-        this.name = playerName;
-    };
+Player.prototype.getX = function() {
+    return this.x;
+};
 
-    this.setPressure = function(playerPressure) {
-        this.pressure = playerPressure;
-    };
+Player.prototype.getY = function() {
+    return this.y;
+};
 
-    this.setCharacter = function(playerCharacter) {
-        this.character = playerCharacter;
-    };
+Player.prototype.getZ = function() {
+    return this.z;
+};
 
-    this.setLocation = function(playerX, playerY, playerZ) {
-        this.x = playerX;
-        this.y = playerY;
-        this.z = playerZ;
-    };
+Player.prototype.takeDamage = function(amount) {
+    var newPressure = this.getPressure() + amount;
 
-    this.setX = function(playerX) {
-        this.x = playerX;
-    };
+    if(newPressure > this.maxPressure) {
+        this.pressure = this.maxPressure;
+    }
+    else {
+        this.pressure = newPressure;
+    }
+};
 
-    this.setY = function(playerY) {
-        this.y = playerY;
-    };
-
-    this.setZ = function(playerZ) {
-        this.z = playerZ;
-    };
-
-    this.getName = function() {
-        return this.name;
-    };
-
-    this.getId = function() {
-        return this.id;
-    };
-
-    this.getPressure = function() {
-        return this.pressure;
-    };
-
-    this.getCharacter = function() {
-        return this.character;
-    };
-
-    this.getLocation = function() {
-        return {
-            x: this.x,
-            y: this.y,
-            z: this.z
-        };
-    };
-
-    this.getX = function() {
-        return this.x;
-    };
-
-    this.getY = function() {
-        return this.y;
-    };
-
-    this.getZ = function() {
-        return this.z;
-    };
-
-    this.takeDamage = function(amount) {
-        var newPressure = this.getPressure() + amount;
-
-        if(newPressure > this.maxPressure) {
-            this.pressure = this.maxPressure;
-        }
-        else {
-            this.pressure = newPressure;
-        }
-    };
-
-    this.reset = function() {
-        this.pressure = 0;
-        this.character = 'Default';
-        this.x = 0;
-        this.y = 0;
-        this.z = 0;
-    };
+Player.prototype.reset = function() {
+    this.pressure = 0;
+    this.character = 'Default';
+    this.x = 0;
+    this.y = 0;
+    this.z = 0;
 };
 
 module.exports = Player;
