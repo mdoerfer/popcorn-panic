@@ -13,17 +13,13 @@ const PlayerManager = function() {
         if(ids !== undefined) {
             var foundPlayers = [];
 
-            _.foreach(this.players, function(index) {
-                var player = this;
-
-                _.foreach(ids, function(index) {
-                    var id = this;
-
-                    if(player.getId() === id) {
+            for(var i = 0; i < this.players.length; i++) {
+                for(var c = 0; c < ids.length; c++) {
+                    if(this.players[i].getId() === ids[c]) {
                         foundPlayers.push(player);
                     }
-                });
-            });
+                }
+            }
 
             return foundPlayers;
         }
