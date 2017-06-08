@@ -1,5 +1,14 @@
+/**
+ * Dependencies
+ */
 const _ = require('./../util/util');
 
+/**
+ * Room
+ *
+ * @param roomName
+ * @constructor
+ */
 const Room = function(roomName) {
     this.name = roomName;
     this.players = [];
@@ -8,10 +17,21 @@ const Room = function(roomName) {
     this.maxPlayers = 4;
 };
 
+/**
+ * Set room name
+ *
+ * @param roomName
+ */
 Room.prototype.setName = function(roomName) {
     this.name = roomName;
 };
 
+/**
+ * Add player id as foreign key to room
+ *
+ * @param playerId
+ * @returns {boolean}
+ */
 Room.prototype.addPlayer = function(playerId) {
     var addedPlayer = false;
 
@@ -24,6 +44,12 @@ Room.prototype.addPlayer = function(playerId) {
     return addedPlayer;
 };
 
+/**
+ * Remove player id from room
+ *
+ * @param playerId
+ * @returns {boolean}
+ */
 Room.prototype.removePlayer = function(playerId) {
     var self = this;
     var removedPlayer = false;
@@ -39,50 +65,111 @@ Room.prototype.removePlayer = function(playerId) {
     return removedPlayer;
 };
 
+/**
+ * Set room mode
+ *
+ * @param roomMode
+ */
 Room.prototype.setMode = function(roomMode) {
     this.mode = roomMode;
 };
 
+/**
+ * Set room map
+ *
+ * @param roomMap
+ */
 Room.prototype.setMap = function(roomMap) {
     this.map = roomMap;
 };
 
+/**
+ * Get room name
+ *
+ * @returns {*}
+ */
 Room.prototype.getName = function() {
     return this.name;
 };
 
+/**
+ * Get room player ids (foreign keys)
+ *
+ * @returns {Array}
+ */
 Room.prototype.getPlayers = function() {
     return this.players;
 };
 
+/**
+ * Get room mode
+ *
+ * @returns {string|*}
+ */
 Room.prototype.getMode = function() {
     return this.mode;
 };
 
+/**
+ * Get room map
+ *
+ * @returns {*|string}
+ */
 Room.prototype.getMap = function() {
     return this.map;
 };
 
+/**
+ * Get room max players amount
+ *
+ * @returns {number}
+ */
 Room.prototype.getMaxPlayers = function() {
     return this.maxPlayers;
 };
 
+/**
+ * Check if room isnt full
+ *
+ * @returns {boolean}
+ */
 Room.prototype.isntFull = function() {
     return this.players.length < this.maxPlayers;
 };
 
+/**
+ * Check if room is full
+ *
+ * @returns {boolean}
+ */
 Room.prototype.isFull = function() {
     return this.players.length >= this.maxPlayers;
 };
 
+/**
+ * Check if room is empty
+ *
+ * @returns {boolean}
+ */
 Room.prototype.isEmpty = function() {
     return this.players.length === 0;
 };
 
+/**
+ * Check if room would be empty if one player left
+ *
+ * @returns {boolean}
+ */
 Room.prototype.wouldBeEmpty = function() {
     return (this.players.length - 1) === 0;
 };
 
+/**
+ * Check if certain player id has joined the room
+ *
+ * @param playerId
+ * @returns {boolean}
+ */
 Room.prototype.hasPlayer = function(playerId) {
     return this.players.indexOf(playerId) !== -1;
 };
