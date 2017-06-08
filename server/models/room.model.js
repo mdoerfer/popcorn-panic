@@ -29,7 +29,7 @@ Room.prototype.removePlayer = function(playerId) {
     var removedPlayer = false;
 
     _.foreach(this.players, function(index) {
-        if(this.getId() === playerId) {
+        if(this === playerId) {
             self.players.splice(index, 1);
 
             removedPlayer = true;
