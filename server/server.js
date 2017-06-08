@@ -91,8 +91,8 @@ function onSocketDisconnect() {
     //TODO: Remove player from players array by his ID
     for(var i = 0; i < players.length; i++) {
         if(players[i].getId() === this.id) {
-            util.log("Found player:");
-            util.log(players[i]);
+            players.slice(i, 1);
+            util.log(players);
         }
     }
 }
