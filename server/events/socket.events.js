@@ -1,4 +1,5 @@
-var util = require('util');
+var util = require('util'),
+    Player = require('./../models/player.model');
 
 /**
  * Handle client connection
@@ -10,6 +11,10 @@ exports.onSocketConnection = function (socket) {
     util.log('NEW_SOCKET_CONNECTED.');
     util.log('SOCKET_ID: ' + socket.id);
     util.log('SOCKET_TRANSPORT: ' + socket.client.conn.transport.constructor.name);
+
+    //Add new player
+    players.push(new Player(socket.id));
+    util.log(players);
 
     bindEventHandlers();
 };
@@ -39,6 +44,12 @@ exports.onSocketDisconnect = function () {
     util.log('SOCKET_DISCONNECTED.');
     util.log('SOCKET_ID: ' + this.id);
     util.log('SOCKET_TRANSPORT: ' + this.client.conn.transport.constructor.name);
+
+    for(var i = 0; i < players.length; i++) {
+        if(players[i].id === this.id) {
+            players.slice(i, 1);
+        }
+    }
 };
 
 /**
