@@ -237,7 +237,7 @@ function onLeaveRoom(socket) {
             });
 
             if(room.isEmpty()) {
-                removeRoom(name);
+                removeRoom(room.getName());
             }
         }
         else {
