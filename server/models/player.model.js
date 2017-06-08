@@ -14,7 +14,7 @@ const Player = function(playerId) {
         id = playerId;
     };
 
-    this.setName = function(playerId) {
+    this.setName = function(playerName) {
         name = playerName;
     };
 
