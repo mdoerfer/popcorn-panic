@@ -2,7 +2,7 @@ const _ = require('./../util/util'),
     Room = require('./../models/room.model');
 
 const RoomManager = function() {
-    var rooms = [];
+    this.rooms = [];
 
     /**
      * Return all rooms
@@ -10,7 +10,7 @@ const RoomManager = function() {
      * @returns {Array<Room>}
      */
     this.getRooms = function() {
-        return rooms;
+        return this.rooms;
     };
 
     /**
@@ -22,7 +22,7 @@ const RoomManager = function() {
     this.getRoom = function(roomName) {
         var foundRoom = null;
 
-        _.foreach(rooms, function(index) {
+        _.foreach(this.rooms, function(index) {
             if(this.getName() === roomName) {
                 foundRoom = this;
             }
@@ -41,7 +41,7 @@ const RoomManager = function() {
         var createdRoom = false;
 
         if(!this.roomExists(roomName)) {
-            rooms.push(new Room(roomName));
+            this.rooms.push(new Room(roomName));
 
             createdRoom = true;
         }
@@ -56,11 +56,12 @@ const RoomManager = function() {
      * @returns {boolean}
      */
     this.removeRoom = function(roomName) {
+        var self = this;
         var removedRoom = false;
 
-        _.foreach(rooms, function(index) {
+        _.foreach(this.rooms, function(index) {
             if(this.getName() === roomName) {
-                rooms.splice(index, 1);
+                self.rooms.splice(index, 1);
 
                 removedRoom = true;
             }
@@ -78,7 +79,7 @@ const RoomManager = function() {
     this.roomExists = function(roomName) {
         var roomExists = false;
 
-        _.foreach(rooms, function() {
+        _.foreach(this.rooms, function() {
             if(this.getName() === roomName) {
                 roomExists = true;
             }

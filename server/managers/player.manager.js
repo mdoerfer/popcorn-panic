@@ -2,7 +2,7 @@ const _ = require('./../util/util'),
     Player = require('./../models/player.model');
 
 const PlayerManager = function() {
-    var players = [];
+    this.players = [];
 
     /**
      * Return all players
@@ -13,7 +13,7 @@ const PlayerManager = function() {
         if(ids !== undefined) {
             var foundPlayers = [];
 
-            _.foreach(players, function(index) {
+            _.foreach(this.players, function(index) {
                 var player = this;
 
                 _.foreach(ids, function(index) {
@@ -41,7 +41,7 @@ const PlayerManager = function() {
     this.getPlayer = function(playerId) {
         var foundPlayer = null;
 
-        _.foreach(players, function(index) {
+        _.foreach(this.players, function(index) {
             if(this.getId() === playerId) {
                 foundPlayer = this;
             }
@@ -57,7 +57,7 @@ const PlayerManager = function() {
      * @returns {boolean}
      */
     this.createPlayer = function(playerId) {
-        players.push(new Player(playerId));
+        this.players.push(new Player(playerId));
 
         return true;
     };
@@ -69,11 +69,12 @@ const PlayerManager = function() {
      * @returns {boolean}
      */
     this.removePlayer = function(playerId) {
+        var self = this;
         var removedPlayer = false;
 
-        _.foreach(players, function(index) {
+        _.foreach(this.players, function(index) {
             if(this.getId() === playerId) {
-                players.splice(index, 1);
+                self.players.splice(index, 1);
 
                 removedPlayer = true;
             }
