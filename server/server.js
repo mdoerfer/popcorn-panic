@@ -3,8 +3,13 @@
  */
 var util = require('util'),
     server = require('http').createServer(),
-    io = require('socket.io')(server),
-    mongoose = require('mongoose');
+    io = require('socket.io')(server);
+
+/**
+ * Global variables
+ */
+var players = [],
+    rooms = [];
 
 /**
  * Require events
@@ -17,17 +22,10 @@ var socketEvents = require('./events/socket.events');
  * This function runs automatically when the server is started
  */
 (function () {
-    connectToMongoDB();
     initializeSockets();
     startServer();
 })();
 
-/**
- * Establish database connection
- */
-function connectToMongoDB() {
-    mongoose.connect('mongodb://localhost/popcorn_panic');
-}
 /**
  * Establish socket connection
  */
