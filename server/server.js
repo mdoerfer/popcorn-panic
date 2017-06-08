@@ -362,7 +362,7 @@ function newRoom(name) {
 }
 //Find room
 function findRoom(name) {
-    for(var i = 0; i < room.length; i++) {
+    for(var i = 0; i < rooms.length; i++) {
         if(rooms[i].getName() === name) {
             return rooms[i];
         }
