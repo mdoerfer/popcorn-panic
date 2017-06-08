@@ -58,7 +58,6 @@ function onSocketConnection(socket) {
 
     //Add new player to players array
     players.push(new Player(socket.id));
-    util.log(players); //TODO: Remove log
 
     bindEventHandlers(socket);
 }
@@ -88,15 +87,12 @@ function onSocketDisconnect() {
     util.log('SOCKET_ID: ' + this.id);
     util.log('SOCKET_TRANSPORT: ' + this.client.conn.transport.constructor.name);
 
-    //TODO: Remove player from players array by his ID
+    //Remove player from players array
     for(var i = 0; i < players.length; i++) {
         if(players[i].getId() === this.id) {
             players.splice(i, 1);
         }
     }
-
-    //Log players
-    util.log(players);
 }
 
 /**
