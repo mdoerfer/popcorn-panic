@@ -88,11 +88,7 @@ function onSocketDisconnect() {
     util.log('SOCKET_ID: ' + this.id);
     util.log('SOCKET_TRANSPORT: ' + this.client.conn.transport.constructor.name);
 
-    for (var i = 0; i < players.length; i++) {
-        if (players[i].id === this.id) {
-            players.slice(i, 1);
-        }
-    }
+    util.log(this);
 
     util.log(players);
 }
