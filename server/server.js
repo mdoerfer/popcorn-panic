@@ -101,8 +101,10 @@ function onSocketDisconnect() {
  * @param payload Contains the data emitted by the client
  */
 function onChooseName(payload) {
-    util.log(this);
-    //this.emit('name-chosen', {});
+    util.log();
+    util.log('CHOOSE_NAME.');
+
+    this.client.emit('name-chosen', {});
 }
 
 /**
@@ -111,6 +113,9 @@ function onChooseName(payload) {
  * @param payload Contains the data emitted by the client
  */
 function onJoinLobby(payload) {
+    util.log();
+    util.log('JOIN_LOBBY.');
+
     //this.emit('lobby-joined', {});
 }
 
@@ -120,6 +125,9 @@ function onJoinLobby(payload) {
  * @param payload Contains the data emitted by the client
  */
 function onGetRooms(payload) {
+    util.log();
+    util.log('GET_ROOMS.');
+
     //this.emit('rooms-available', {});
 }
 
@@ -129,6 +137,9 @@ function onGetRooms(payload) {
  * @param payload Contains the data emitted by the client
  */
 function onCreateRoom(payload) {
+    util.log();
+    util.log('CREATE_ROOM.');
+
     //this.emit('room-created', {});
 }
 
@@ -138,6 +149,9 @@ function onCreateRoom(payload) {
  * @param payload Contains the data emitted by the client
  */
 function onJoinRoom(payload) {
+    util.log();
+    util.log('JOIN_ROOM.');
+
     //this.emit('room-joined', {});
 }
 
@@ -147,6 +161,9 @@ function onJoinRoom(payload) {
  * @param payload Contains the data emitted by the client
  */
 function onLeaveRoom(payload) {
+    util.log();
+    util.log('LEAVE_ROOM.');
+
     //this.emit('room-left', {});
 }
 
@@ -156,6 +173,9 @@ function onLeaveRoom(payload) {
  * @param payload Contains the data emitted by the client
  */
 function onChangeMap(payload) {
+    util.log();
+    util.log('CHANGE_MAP.');
+
     //this.emit('map-changed', {});
 }
 
@@ -165,6 +185,9 @@ function onChangeMap(payload) {
  * @param payload Contains the data emitted by the client
  */
 function onChangeMode(payload) {
+    util.log();
+    util.log('CHANGE_MODE.');
+
     //this.emit('mode-changed', {});
 }
 
@@ -174,5 +197,8 @@ function onChangeMode(payload) {
  * @param payload Contains the data emitted by the client
  */
 function onStartGame(payload) {
+    util.log();
+    util.log('START_GAME.');
+
     //this.emit('game-started', {});
 }
