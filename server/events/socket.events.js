@@ -43,6 +43,8 @@ exports.onSocketDisconnect = function () {
 
 /**
  * On 'signup'
+ *
+ * @param payload Contains the data emitted by the client
  */
 exports.onSignup = function (payload) {
     this.emit('signup-done', {});
@@ -50,6 +52,8 @@ exports.onSignup = function (payload) {
 
 /**
  * On 'login'
+ *
+ * @param payload Contains the data emitted by the client
  */
 exports.onLogin = function (payload) {
     this.emit('login-done', {});
@@ -57,6 +61,8 @@ exports.onLogin = function (payload) {
 
 /**
  * On 'join-lobby'
+ *
+ * @param payload Contains the data emitted by the client
  */
 exports.onJoinLobby = function (payload) {
     this.emit('lobby-joined', {});
@@ -64,6 +70,8 @@ exports.onJoinLobby = function (payload) {
 
 /**
  * On 'get-rooms'
+ *
+ * @param payload Contains the data emitted by the client
  */
 exports.onGetRooms = function (payload) {
     this.emit('rooms-available', {});
@@ -71,6 +79,8 @@ exports.onGetRooms = function (payload) {
 
 /**
  * On 'create-room'
+ *
+ * @param payload Contains the data emitted by the client
  */
 exports.onCreateRoom = function (payload) {
     this.emit('room-created', {});
@@ -78,6 +88,8 @@ exports.onCreateRoom = function (payload) {
 
 /**
  * On 'join-room'
+ *
+ * @param payload Contains the data emitted by the client
  */
 exports.onJoinRoom = function (payload) {
     this.emit('room-joined', {});
@@ -85,6 +97,8 @@ exports.onJoinRoom = function (payload) {
 
 /**
  * On 'leave-room'
+ *
+ * @param payload Contains the data emitted by the client
  */
 exports.onLeaveRoom = function (payload) {
     this.emit('room-left', {});
@@ -92,6 +106,8 @@ exports.onLeaveRoom = function (payload) {
 
 /**
  * On 'change-map'
+ *
+ * @param payload Contains the data emitted by the client
  */
 exports.onChangeMap = function (payload) {
     this.emit('map-changed', {});
@@ -99,6 +115,8 @@ exports.onChangeMap = function (payload) {
 
 /**
  * On 'change-mode'
+ *
+ * @param payload Contains the data emitted by the client
  */
 exports.onChangeMode = function (payload) {
     this.emit('mode-changed', {});
@@ -106,6 +124,8 @@ exports.onChangeMode = function (payload) {
 
 /**
  * On 'start-game'
+ *
+ * @param payload Contains the data emitted by the client
  */
 exports.onStartGame = function (payload) {
     this.emit('game-started', {});
