@@ -352,7 +352,7 @@ function newRoom(name) {
         }
     }
 
-    if(!roomsExists) {
+    if(!roomExists) {
         rooms.push(new Room(name));
         return true;
     }
