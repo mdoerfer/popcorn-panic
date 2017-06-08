@@ -125,6 +125,8 @@ function onJoinLobby(socket) {
         util.log();
         util.log('JOIN_LOBBY.');
 
+        //TODO: Leave socket rooms and go to lobby
+
         //Give lobby information to new player
         socket.emit('lobby-joined', {
             state: 'success',
@@ -344,15 +346,7 @@ function playerExists(id) {
 
 //Add new room
 function newRoom(name) {
-    var roomExists = false;
-
-    for(var i = 0; i < rooms.length; i++) {
-        if(rooms[i].getName() === name) {
-            roomExists = true;
-        }
-    }
-
-    if(!roomExists) {
+    if(!roomExists()) {
         rooms.push(new Room(name));
         return true;
     }
@@ -374,6 +368,7 @@ function joinRoom(socket, name) {
         var room = findRoom(name);
 
         if(!room.isFull()) {
+            //TODO: Check if player is already in room
             room.addPlayer(socket.id);
             socket.join(name);
 
