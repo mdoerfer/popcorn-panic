@@ -1,71 +1,85 @@
-const Room = function(name) {
-    this.name = name;
-    this.players = [];
-    this.mode = '';
-    this.map = '';
-    this.maxPlayers = 4;
-};
+const _ = require('./../util/util');
 
-Room.prototype.setName = function(name) {
-    this.name = name;
-};
+const Room = function(roomName) {
+    var name = roomName,
+        players = [],
+        mode = '',
+        map = '',
+        maxPlayers = 4;
 
-Room.prototype.addPlayer = function(id) {
-    if(this.players.length < this.maxPlayers) {
-        this.players.push(id);
-    }
-};
+    this.setName = function(roomName) {
+        name = roomName;
+    };
 
-Room.prototype.removePlayer = function(id) {
-    for(var i = 0; i < this.players.length; i++) {
-        if(this.players[i] === id) {
-            this.players.splice(i, 1);
+    this.addPlayer = function(playerId) {
+        var addedPlayer = false;
+
+        if(!this.isFull() && !this.hasPlayer(playerId)) {
+            players.push(playerId);
+
+            addedPlayer = true;
         }
-    }
-};
 
-Room.prototype.setMode = function(mode) {
-    this.mode = mode;
-};
+        return addedPlayer;
+    };
 
-Room.prototype.setMap = function(map) {
-    this.map = map;
-};
+    this.removePlayer = function(playerId) {
+        var removedPlayer = false;
 
-Room.prototype.getName = function() {
-    return this.name;
-};
+        _.foreach(players, function(index) {
+            if(this.getId() === playerId) {
+                players.splice(index, 1);
 
-Room.prototype.getPlayers = function() {
-    return this.players;
-};
+                removedPlayer = true;
+            }
+        });
 
-Room.prototype.getMode = function() {
-    return this.mode;
-};
+        return removedPlayer;
+    };
 
-Room.prototype.getMap = function() {
-    return this.map;
-};
+    this.setMode = function(roomMode) {
+        mode = roomMode;
+    };
 
-Room.prototype.getMaxPlayers = function() {
-    return this.maxPlayers;
-};
+    this.setMap = function(roomMap) {
+        map = roomMap;
+    };
 
-Room.prototype.isFull = function() {
-    return this.players.length >= this.maxPlayers;
-};
+    this.getName = function() {
+        return name;
+    };
 
-Room.prototype.isEmpty = function() {
-  return this.players.length === 0;
-};
+    this.getPlayers = function() {
+        return players;
+    };
 
-Room.prototype.wouldBeEmpty = function() {
-    return (this.players.length - 1) === 0;
-};
+    this.getMode = function() {
+        return mode;
+    };
 
-Room.prototype.hasPlayer = function(id) {
-    return this.players.indexOf(id) !== -1;
+    this.getMap = function() {
+        return map;
+    };
+
+    this.getMaxPlayers = function() {
+        return this.maxPlayers;
+    };
+
+    this.isFull = function() {
+        return players.length >= maxPlayers;
+    };
+
+    this.isEmpty = function() {
+        return players.length === 0;
+    };
+
+    this.wouldBeEmpty = function() {
+        return (players.length - 1) === 0;
+    };
+
+    this.hasPlayer = function(playerId) {
+        return players.indexOf(playerId) !== -1;
+    };
 };
 
 module.exports = Room;

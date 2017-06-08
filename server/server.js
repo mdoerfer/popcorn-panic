@@ -6,16 +6,16 @@ var util = require('util'),
     io = require('socket.io')(server);
 
 /**
- * Require models
+ * Require managers
  */
-var Player = require('./models/player.model'),
-    Room = require('./models/room.model');
+var PlayerManager = require('./managers/player.manager'),
+    RoomManager = require('./managers/room.manager');
 
 /**
  * Global variables
  */
-var players = [],
-    rooms = [];
+var players = new PlayerManager(),
+    rooms = new RoomManager();
 
 /**
  * Initialize server
@@ -57,8 +57,7 @@ function onSocketConnection(socket) {
     util.log('SOCKET_ID: ' + socket.id);
     util.log('SOCKET_TRANSPORT: ' + socket.client.conn.transport.constructor.name);
 
-    //Add new player to players
-    newPlayer(socket.id);
+    players.createPlayer(socket.id);
 
     bindEventHandlers(socket);
 }
@@ -89,7 +88,7 @@ function onDisconnect(socket) {
         util.log('SOCKET_TRANSPORT: ' + socket.client.conn.transport.constructor.name);
 
         //Remove player from players
-        removePlayer(socket.id);
+        players.removePlayer(socket.id);
     });
 }
 
@@ -100,12 +99,10 @@ function onChooseName(socket) {
     socket.on('choose-name', function(payload) {
         util.log();
         util.log('CHOOSE_NAME.');
-        util.log('SOCKET_ID: ' + socket.id);
-        util.log('SOCKET_TRANSPORT: ' + socket.client.conn.transport.constructor.name);
 
         //Change player name
-        var player = findPlayer(socket.id);
-        player.setName(payload.name);
+        var player = players.getPlayer(socket.id)
+            .setName(payload.name);
 
         //Give new player new information about himself
         socket.emit('name-chosen', {
@@ -131,8 +128,8 @@ function onJoinLobby(socket) {
         socket.emit('lobby-joined', {
             state: 'success',
             data: {
-                players: players,
-                rooms: rooms
+                players: players.getPlayers(),
+                rooms: rooms.getRooms()
             }
         });
 
@@ -140,8 +137,8 @@ function onJoinLobby(socket) {
         socket.broadcast.emit('lobby-joined', {
             state: 'success',
             data: {
-                players: players,
-                rooms: rooms
+                players: players.getPlayers(),
+                rooms: rooms.getRooms()
             }
         });
     });
@@ -155,10 +152,10 @@ function onCreateRoom(socket) {
         util.log();
         util.log('ROOM_CREATED.');
 
-        var roomCreated = newRoom(payload.name);
+        var roomCreated = rooms.createRoom(payload.name);
 
         if(roomCreated) {
-            var room = findRoom(payload.name);
+            var room = rooms.getRoom(payload.name);
 
             socket.emit('room-created', {
                 state: 'success',
@@ -183,27 +180,29 @@ function onJoinRoom(socket) {
         util.log();
         util.log('JOIN_ROOM.');
 
-        var roomJoined = joinRoom(socket, payload.name);
+        if(rooms.roomExists(payload.name)) {
+            var room = rooms.getRoom(payload.name);
 
-        if(roomJoined) {
-            var room = findRoom(payload.name);
-            var player = findPlayer(socket.id);
-            var players = findPlayers(room.getPlayers());
+            var roomJoined = room.addPlayer(socket.id);
 
-            //Inform all people in the room about someone joining
-            io.to(room.getName()).emit('room-joined', {
-                state: 'success',
-                data: {
-                    room: room,
-                    player: player,
-                    players: players
-                }
-            });
-        }
-        else {
-            socket.emit('room-joined', {
-                state: 'error'
-            });
+            if(roomJoined) {
+                var player = players.getPlayer(socket.id),
+                    players = players.getPlayers(room.getPlayers());
+
+                io.to(room.getName()).emit('room-joined', {
+                    state: 'success',
+                    data: {
+                        room: room,
+                        player: player,
+                        players: players
+                    }
+                });
+            }
+            else {
+                socket.emit('room-joined', {
+                    state: 'error'
+                });
+            }
         }
     });
 }
@@ -216,34 +215,37 @@ function onLeaveRoom(socket) {
         util.log();
         util.log('LEAVE_ROOM.');
 
-        var roomLeft = leaveRoom(socket, payload.name);
+        if(rooms.roomExists(payload.name)) {
+            var room = rooms.getRoom(payload.name);
 
-        if(roomLeft) {
-            var room = findRoom(payload.name);
-            var player = findPlayer(socket.id);
+            var roomLeft = room.removePlayer(socket.id);
 
-            io.to(room.getName()).emit('room-left', {
-                state: 'success',
-                data: {
-                    player: player
+            if(roomLeft) {
+                var player = players.getPlayer(socket.id);
+
+                io.to(room.getName()).emit('room-left', {
+                    state: 'success',
+                    data: {
+                        player: player
+                    }
+                });
+
+                socket.emit('room-left', {
+                    state: 'success',
+                    data: {
+                        player: player
+                    }
+                });
+
+                if(room.isEmpty()) {
+                    rooms.removeRoom(room.getName());
                 }
-            });
-
-            socket.emit('room-left', {
-                state: 'success',
-                data: {
-                    player: player
-                }
-            });
-
-            if(room.isEmpty()) {
-                removeRoom(room.getName());
             }
-        }
-        else {
-            socket.emit('room-left', {
-                state: 'error'
-            });
+            else {
+                socket.emit('room-left', {
+                    state: 'error'
+                });
+            }
         }
     });
 }
@@ -256,10 +258,9 @@ function onChangeMap(socket) {
         util.log();
         util.log('CHANGE_MAP.');
 
-        var changedMap = changeMap(payload.roomName, payload.mapName);
-
-        if(changedMap) {
-            var room = findRoom(payload.name);
+        if(rooms.roomExists(payload.roomName)) {
+            var room = rooms.getRoom(payload.roomName)
+                .setMap(payload.mapName);
 
             io.to(room.getName()).emit('map-changed', {
                 state: 'success',
@@ -279,10 +280,9 @@ function onChangeMode(socket) {
         util.log();
         util.log('CHANGE_MODE.');
 
-        var changedMode = changeMode(payload.roomName, payload.modeName);
-
-        if(changedMode) {
-            var room = findRoom(payload.name);
+        if(rooms.roomExists(payload.roomName)) {
+            var room = rooms.getRoom(payload.roomName)
+                .setMode(payload.modeName);
 
             io.to(room.getName()).emit('mode-changed', {
                 state: 'success',
@@ -302,166 +302,8 @@ function onStartGame(socket) {
         util.log();
         util.log('START_GAME.');
 
-        var room = findRoom(payload.name);
+        var room = rooms.getRoom(payload.name);
 
         io.to(room.getName()).emit('game-started', {});
     });
-}
-
-/**
- * Helper functions
- */
-
-//Add new player
-function newPlayer(id) {
-    players.push(new Player(id));
-}
-//Remove player
-function removePlayer(id) {
-    for(var i = 0; i < players.length; i++) {
-        if(players[i].getId() === id) {
-            players.splice(i, 1);
-        }
-    }
-}
-//Find player
-function findPlayer(id) {
-    for(var i = 0; i < players.length; i++) {
-        if(players[i].getId() === id) {
-            return players[i];
-        }
-    }
-}
-//Find players
-function findPlayers(ids) {
-    var foundPlayers = [];
-
-    for(var i = 0; i < players.length; i++) {
-        for(var c = 0; c < ids.length; c++) {
-            if(players[i].getId() === ids[c]) {
-                foundPlayers.push(players[i]);
-            }
-        }
-    }
-
-    return foundPlayers;
-}
-//Player exists
-function playerExists(id) {
-    var playerExists = false;
-
-    for(var i = 0; i < players.length; i++) {
-        if(players[i].getId() === id) {
-            playerExists = true;
-        }
-    }
-
-    return playerExists;
-}
-
-//Add new room
-function newRoom(name) {
-    if(!roomExists(name)) {
-        rooms.push(new Room(name));
-        return true;
-    }
-    else {
-        return false;
-    }
-}
-//Remove room
-function removeRoom(name) {
-    for(var i = 0; i < rooms.length; i++) {
-        if(rooms[i].getName() === name) {
-            rooms.splice(i, 1);
-        }
-    }
-}
-//Find room
-function findRoom(name) {
-    for(var i = 0; i < rooms.length; i++) {
-        if(rooms[i].getName() === name) {
-            return rooms[i];
-        }
-    }
-}
-//Join room
-function joinRoom(socket, name) {
-    if(roomExists(name) && playerExists(socket.id)) {
-        var room = findRoom(name);
-        var player = findPlayer(socket.id);
-
-        //If room isn't full
-        if(!room.isFull()) {
-            //If player is not in the room already
-            if(!room.hasPlayer(player.getId())) {
-                room.addPlayer(player.getId());
-                socket.join(name);
-
-                return true;
-            }
-            else {
-                return false;
-            }
-        }
-        else {
-            return false;
-        }
-    }
-    else {
-        return false;
-    }
-}
-//Leave room
-function leaveRoom(socket, name) {
-    if(roomExists(name) && playerExists(socket.id)) {
-        var room = findRoom(name);
-        var player = findPlayer(socket.id);
-
-        room.removePlayer(player.getId());
-        socket.leave(name);
-
-        return true;
-    }
-    else {
-        return false;
-    }
-}
-//Change map
-function changeMap(roomName, mapName) {
-    if(roomExists(roomName)) {
-        var room = findRoom(roomName);
-
-        room.setMap(mapName);
-
-        return true;
-    }
-    else {
-        return false;
-    }
-}
-//Change mode
-function changeMode(roomName, modeName) {
-    if(roomExists(roomName)) {
-        var room = findRoom(roomName);
-
-        room.setMode(modeName);
-
-        return true;
-    }
-    else {
-        return false;
-    }
-}
-//Room exists
-function roomExists(name) {
-    var roomExists = false;
-
-    for(var i = 0; i < rooms.length; i++) {
-        if(rooms[i].getName() === name) {
-            roomExists = true;
-        }
-    }
-
-    return roomExists;
 }
