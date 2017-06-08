@@ -184,6 +184,7 @@ function onJoinRoom(socket) {
             var room = rooms.getRoom(payload.name);
 
             var roomJoined = room.addPlayer(socket.id);
+            socket.join(room.getName());
 
             if(roomJoined) {
                 var newPlayer = players.getPlayer(socket.id),
@@ -219,6 +220,7 @@ function onLeaveRoom(socket) {
             var room = rooms.getRoom(payload.name);
 
             var roomLeft = room.removePlayer(socket.id);
+            socket.leave(room.getName());
 
             if(roomLeft) {
                 var player = players.getPlayer(socket.id);

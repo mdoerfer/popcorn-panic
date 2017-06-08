@@ -15,9 +15,11 @@ Room.prototype.setName = function(roomName) {
 Room.prototype.addPlayer = function(playerId) {
     var addedPlayer = false;
 
-    this.players.push(playerId);
+    if(this.isntFull() && !this.hasPlayer(playerId)) {
+        this.players.push(playerId);
 
-    addedPlayer = true;
+        addedPlayer = true;
+    }
 
     return addedPlayer;
 };
