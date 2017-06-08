@@ -15,7 +15,7 @@ Room.prototype.setName = function(roomName) {
 Room.prototype.addPlayer = function(playerId) {
     var addedPlayer = false;
 
-    if(!this.isFull() && !this.hasPlayer(playerId)) {
+    if(this.isntFull() && !this.hasPlayer(playerId)) {
         this.players.push(playerId);
 
         addedPlayer = true;
@@ -65,6 +65,10 @@ Room.prototype.getMap = function() {
 
 Room.prototype.getMaxPlayers = function() {
     return this.maxPlayers;
+};
+
+Room.prototype.isntFull = function() {
+    return this.players.length < this.maxPlayers;
 };
 
 Room.prototype.isFull = function() {
