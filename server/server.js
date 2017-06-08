@@ -92,9 +92,11 @@ function onSocketDisconnect() {
     for(var i = 0; i < players.length; i++) {
         if(players[i].getId() === this.id) {
             players.splice(i, 1);
-            util.log(players);
         }
     }
+
+    //Log players
+    util.log(players);
 }
 
 /**
