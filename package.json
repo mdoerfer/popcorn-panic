@@ -1,14 +1,14 @@
 {
-  "name": "popcorn-panic-server",
+  "name": "popcorn-panic",
   "version": "1.0.0",
-  "description": "A gameserver for the popcorn panic game using sockets",
+  "description": "Online multiplayer game Popcorn Panic using node.js and socket.io for the server and PlayCanvas for the client.",
   "main": "./server/server.js",
   "scripts": {
     "server": "node ./server/server.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/tapiwan/popcorn-panic-server.git"
+    "url": "git+https://github.com/tapiwan/popcorn-panic.git"
   },
   "keywords": [
     "gameserver",
@@ -22,9 +22,9 @@
   "author": "Dirk Englert",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/tapiwan/popcorn-panic-server/issues"
+    "url": "https://github.com/tapiwan/popcorn-panic/issues"
   },
-  "homepage": "https://github.com/tapiwan/popcorn-panic-server#readme",
+  "homepage": "https://github.com/tapiwan/popcorn-panic#readme",
   "dependencies": {
     "socket.io": "2.0.1"
   }

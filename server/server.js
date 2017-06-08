@@ -88,7 +88,12 @@ function onSocketDisconnect() {
     util.log('SOCKET_ID: ' + this.id);
     util.log('SOCKET_TRANSPORT: ' + this.client.conn.transport.constructor.name);
 
-    //TODO: Remove player from players array by his ID;
+    //TODO: Remove player from players array by his ID
+    for(var i = 0; i < players.length; i++) {
+        if(players[i].id === this.id) {
+            players.slice(i, 1);
+        }
+    }
 
     util.log(players);
 }
