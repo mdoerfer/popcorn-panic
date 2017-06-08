@@ -40,7 +40,7 @@ const RoomManager = function() {
     this.createRoom = function(roomName) {
         var createdRoom = false;
 
-        if(!roomExists(roomName)) {
+        if(!this.roomExists(roomName)) {
             rooms.push(new Room(roomName));
 
             createdRoom = true;
