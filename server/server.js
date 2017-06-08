@@ -158,9 +158,13 @@ function onCreateRoom(socket) {
         var roomCreated = newRoom(payload.name);
 
         if(roomCreated) {
+            var room = findRoom(payload.name);
+
             socket.emit('room-created', {
                 state: 'success',
-                data: {}
+                data: {
+                    room: room
+                }
             });
         }
         else {
