@@ -57,9 +57,7 @@ function onSocketConnection(socket) {
     util.log('SOCKET_ID: ' + socket.id);
     util.log('SOCKET_TRANSPORT: ' + socket.client.conn.transport.constructor.name);
 
-    //Add new player to players array
-    players.push(new Player(socket.id));
-
+    newPlayer(socket.id);
     bindEventHandlers(socket);
 }
 
@@ -88,12 +86,7 @@ function onSocketDisconnect() {
     util.log('SOCKET_ID: ' + this.id);
     util.log('SOCKET_TRANSPORT: ' + this.client.conn.transport.constructor.name);
 
-    //Remove player from players array
-    for(var i = 0; i < players.length; i++) {
-        if(players[i].getId() === this.id) {
-            players.splice(i, 1);
-        }
-    }
+    removePlayer(this.id);
 }
 
 /**
@@ -106,9 +99,18 @@ function onChooseName(payload) {
     util.log('CHOOSE_NAME.');
     util.log('SOCKET_ID: ' + this.id);
     util.log('SOCKET_TRANSPORT: ' + this.client.conn.transport.constructor.name);
-    util.log(payload);
 
-    io.emit('name-chosen', {});
+    var player = findPlayer(this.id);
+    player.setName(payload.name);
+
+    io.emit('name-chosen', {
+        state: 'success',
+        data: {
+            player: player
+        }
+    });
+
+    util.log(players);
 }
 
 /**
@@ -120,7 +122,7 @@ function onJoinLobby(payload) {
     util.log();
     util.log('JOIN_LOBBY.');
 
-    //this.emit('lobby-joined', {});
+    io.emit('lobby-joined', {});
 }
 
 /**
@@ -132,7 +134,7 @@ function onGetRooms(payload) {
     util.log();
     util.log('GET_ROOMS.');
 
-    //this.emit('rooms-available', {});
+    io.emit('rooms-available', {});
 }
 
 /**
@@ -144,7 +146,7 @@ function onCreateRoom(payload) {
     util.log();
     util.log('CREATE_ROOM.');
 
-    //this.emit('room-created', {});
+    io.emit('room-created', {});
 }
 
 /**
@@ -156,7 +158,7 @@ function onJoinRoom(payload) {
     util.log();
     util.log('JOIN_ROOM.');
 
-    //this.emit('room-joined', {});
+    io.emit('room-joined', {});
 }
 
 /**
@@ -168,7 +170,7 @@ function onLeaveRoom(payload) {
     util.log();
     util.log('LEAVE_ROOM.');
 
-    //this.emit('room-left', {});
+    io.emit('room-left', {});
 }
 
 /**
@@ -180,7 +182,7 @@ function onChangeMap(payload) {
     util.log();
     util.log('CHANGE_MAP.');
 
-    //this.emit('map-changed', {});
+    io.emit('map-changed', {});
 }
 
 /**
@@ -192,7 +194,7 @@ function onChangeMode(payload) {
     util.log();
     util.log('CHANGE_MODE.');
 
-    //this.emit('mode-changed', {});
+    io.emit('mode-changed', {});
 }
 
 /**
@@ -204,5 +206,28 @@ function onStartGame(payload) {
     util.log();
     util.log('START_GAME.');
 
-    //this.emit('game-started', {});
+    io.emit('game-started', {});
+}
+
+/**
+ * Helper functions
+ */
+function newPlayer(id) {
+    players.push(new Player(id));
+}
+
+function removePlayer(id) {
+    for(var i = 0; i < players.length; i++) {
+        if(players[i].getId() === id) {
+            players.splice(i, 1);
+        }
+    }
+}
+
+function findPlayer(id) {
+    for(var i = 0; i < players.length; i++) {
+        if(players[i].getId() === id) {
+            return players[i];
+        }
+    }
 }
