@@ -9,6 +9,10 @@ const Player = function(id) {
     this.maxPressure = 100;
 };
 
+Player.prototype.setId = function(id) {
+    this.id = id;
+}
+
 Player.prototype.setName = function(name) {
     this.name = name;
 };
@@ -41,6 +45,10 @@ Player.prototype.setZ = function(z)  {
 
 Player.prototype.getName = function() {
     return this.name;
+};
+
+Player.prototype.getId = function() {
+    return this.id;
 };
 
 Player.prototype.getPressure = function() {
