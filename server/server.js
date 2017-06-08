@@ -228,6 +228,13 @@ function onLeaveRoom(socket) {
                     player: player
                 }
             });
+
+            socket.emit('room-left', {
+                state: 'success',
+                data: {
+                    player: player
+                }
+            });
         }
         else {
             socket.emit('room-left', {
