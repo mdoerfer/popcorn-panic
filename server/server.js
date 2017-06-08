@@ -235,6 +235,10 @@ function onLeaveRoom(socket) {
                     player: player
                 }
             });
+
+            if(room.isEmpty()) {
+                removeRoom(name);
+            }
         }
         else {
             socket.emit('room-left', {
@@ -416,10 +420,6 @@ function leaveRoom(socket, name) {
 
         room.removePlayer(player.getId());
         socket.leave(name);
-
-        if(room.isEmpty()) {
-            removeRoom(name);
-        }
 
         return true;
     }
