@@ -84,12 +84,12 @@ function bindEventHandlers(socket) {
 function onSocketDisconnect(payload) {
     util.log();
     util.log('SOCKET_DISCONNECTED.');
-    util.log('SOCKET_ID: ' + socket.id);
-    util.log('SOCKET_TRANSPORT: ' + socket.client.conn.transport.constructor.name);
+    util.log('SOCKET_ID: ' + this.id);
+    util.log('SOCKET_TRANSPORT: ' + this.client.conn.transport.constructor.name);
 
     console.log(this);
 
-    removePlayer(socket.id);
+    removePlayer(this.id);
 }
 
 /**
