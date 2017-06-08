@@ -66,7 +66,7 @@ function onSocketConnection(socket) {
  * Bind all event handlers
  */
 function bindEventHandlers(socket) {
-    socket.on('disconnect', onSocketDisconnect(socket));
+    socket.on('disconnect', onSocketDisconnect);
     socket.on('choose-name', onChooseName);
     socket.on('join-lobby', onJoinLobby);
     socket.on('get-rooms', onGetRooms);
@@ -81,11 +81,13 @@ function bindEventHandlers(socket) {
 /**
  * Handle socket disconnect
  */
-function onSocketDisconnect(socket) {
+function onSocketDisconnect(payload) {
     util.log();
     util.log('SOCKET_DISCONNECTED.');
     util.log('SOCKET_ID: ' + socket.id);
     util.log('SOCKET_TRANSPORT: ' + socket.client.conn.transport.constructor.name);
+
+    console.log(this);
 
     removePlayer(socket.id);
 }
