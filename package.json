@@ -2,9 +2,9 @@
   "name": "popcorn-panic-server",
   "version": "1.0.0",
   "description": "A gameserver for the popcorn panic game using sockets",
-  "main": "server.js",
+  "main": "./server/server.js",
   "scripts": {
-    "start": "nodemon ./server/server.js"
+    "server": "node ./server/server.js"
   },
   "repository": {
     "type": "git",
