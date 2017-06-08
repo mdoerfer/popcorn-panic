@@ -1,5 +1,5 @@
-const Room = function() {
-    this.name = '';
+const Room = function(name) {
+    this.name = name;
     this.players = [];
     this.mode = '';
     this.map = '';
