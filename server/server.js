@@ -38,6 +38,7 @@ function initializeSockets() {
  * Start server
  */
 function startServer() {
+    util.log();
     util.log('STARTING SERVER...');
 
     server.listen(80, function () {
@@ -105,6 +106,7 @@ function onChooseName(payload) {
     util.log('CHOOSE_NAME.');
     util.log('SOCKET_ID: ' + this.id);
     util.log('SOCKET_TRANSPORT: ' + this.client.conn.transport.constructor.name);
+    util.log(payload);
 
     io.emit('name-chosen', {});
 }
