@@ -56,9 +56,9 @@ function onSocketConnection(socket) {
     util.log('SOCKET_ID: ' + socket.id);
     util.log('SOCKET_TRANSPORT: ' + socket.client.conn.transport.constructor.name);
 
-    //Add new player
+    //Add new player to players array
     players.push(new Player(socket.id));
-    util.log(players);
+    util.log(players); //TODO: Remove log
 
     bindEventHandlers(socket);
 }
@@ -88,7 +88,7 @@ function onSocketDisconnect() {
     util.log('SOCKET_ID: ' + this.id);
     util.log('SOCKET_TRANSPORT: ' + this.client.conn.transport.constructor.name);
 
-    util.log(this);
+    //TODO: Remove player from players array by his ID;
 
     util.log(players);
 }
