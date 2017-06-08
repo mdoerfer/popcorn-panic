@@ -11,7 +11,7 @@ const Player = function(id) {
 
 Player.prototype.setId = function(id) {
     this.id = id;
-}
+};
 
 Player.prototype.setName = function(name) {
     this.name = name;

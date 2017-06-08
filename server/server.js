@@ -69,7 +69,6 @@ function bindEventHandlers(socket) {
     onDisconnect(socket);
     onChooseName(socket);
     onJoinLobby(socket);
-    onGetRooms(socket);
     onCreateRoom(socket);
     onJoinRoom(socket);
     onLeaveRoom(socket);
@@ -106,7 +105,7 @@ function onChooseName(socket) {
         var player = findPlayer(socket.id);
         player.setName(payload.name);
 
-        //Emit name-chosen
+        //Give new player new information about himself
         socket.emit('name-chosen', {
             state: 'success',
             data: {
@@ -124,19 +123,23 @@ function onJoinLobby(socket) {
         util.log();
         util.log('JOIN_LOBBY.');
 
-        socket.emit('lobby-joined', {});
-    });
-}
+        //Give lobby information to new player
+        socket.emit('lobby-joined', {
+            state: 'success',
+            data: {
+                players: players,
+                rooms: rooms
+            }
+        });
 
-/**
- * On 'get-rooms'
- */
-function onGetRooms(socket) {
-    socket.on('get-rooms', function(payload) {
-        util.log();
-        util.log('GET_ROOMS.');
-
-        socket.emit('rooms-available', {});
+        //Inform all players about somebody joining the lobby
+        socket.broadcast.emit('lobby-joined', {
+            state: 'success',
+            data: {
+                players: players,
+                rooms: rooms
+            }
+        });
     });
 }
 
@@ -148,7 +151,19 @@ function onCreateRoom(socket) {
         util.log();
         util.log('ROOM_CREATED.');
 
-        socket.emit('room-created', {});
+        var roomCreated = newRoom(payload.name);
+
+        if(roomCreated) {
+            socket.emit('room-created', {
+                state: 'success',
+                data: {}
+            });
+        }
+        else {
+            socket.emit('room-created', {
+                state: 'error'
+            });
+        }
     });
 }
 
@@ -160,7 +175,23 @@ function onJoinRoom(socket) {
         util.log();
         util.log('JOIN_ROOM.');
 
-        socket.emit('room-joined', {});
+        var roomJoined = joinRoom(socket.id, payload.name);
+
+        if(roomJoined) {
+            var room = findRoom(payload.name);
+
+            socket.emit('room-joined', {
+                state: 'success',
+                data: {
+                    room: room
+                }
+            });
+        }
+        else {
+            socket.emit('room-joined', {
+                state: 'error'
+            });
+        }
     });
 }
 
@@ -172,7 +203,19 @@ function onLeaveRoom(socket) {
         util.log();
         util.log('LEAVE_ROOM.');
 
-        socket.emit('room-left', {});
+        var roomLeft = leaveRoom(socket.id, payload.name);
+
+        if(roomLeft) {
+            socket.emit('room-left', {
+                state: 'success',
+                data: {}
+            });
+        }
+        else {
+            socket.emit('room-left', {
+                state: 'error'
+            });
+        }
     });
 }
 
@@ -184,7 +227,18 @@ function onChangeMap(socket) {
         util.log();
         util.log('CHANGE_MAP.');
 
-        socket.emit('map-changed', {});
+        var changedMap = changeMap(payload.roomName, payload.mapName);
+
+        if(changedMap) {
+            var room = findRoom(payload.name);
+
+            socket.emit('map-changed', {
+                state: 'success',
+                data: {
+                    room: room
+                }
+            });
+        }
     });
 }
 
@@ -196,7 +250,18 @@ function onChangeMode(socket) {
         util.log();
         util.log('CHANGE_MODE.');
 
-        socket.emit('mode-changed', {});
+        var changedMode = changeMode(payload.roomName, payload.modeName);
+
+        if(changedMode) {
+            var room = findRoom(payload.name);
+
+            socket.emit('mode-changed', {
+                state: 'success',
+                data: {
+                    room: room
+                }
+            });
+        }
     });
 }
 
@@ -235,4 +300,107 @@ function findPlayer(id) {
             return players[i];
         }
     }
+}
+//Player exists
+function playerExists(id) {
+    var playerExists = false;
+
+    for(var i = 0; i < players.length; i++) {
+        if(players[i].getId() === id) {
+            playerExists = true;
+        }
+    }
+
+    return playerExists;
+}
+
+//Add new room
+function newRoom(name) {
+    var roomExists = false;
+
+    for(var i = 0; i < rooms.length; i++) {
+        if(rooms[i].getName() === name) {
+            roomExists = true;
+        }
+    }
+
+    if(!roomsExists) {
+        rooms.push(new Room(name));
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+//Find room
+function findRoom(name) {
+    for(var i = 0; i < room.length; i++) {
+        if(rooms[i].getName() === name) {
+            return rooms[i];
+        }
+    }
+}
+//Join room
+function joinRoom(id, name) {
+    if(roomExists(name) && playerExists(id)) {
+        var room = findRoom(name);
+
+        room.addPlayer(id);
+
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+//Leave room
+function leaveRoom(id, name) {
+    if(roomExists(name) && playerExists(id)) {
+        var room = findRoom(name);
+
+        room.removePlayer(id);
+
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+//Change map
+function changeMap(roomName, mapName) {
+    if(roomExists(roomName)) {
+        var room = findRoom(roomName);
+
+        room.setMap(mapName);
+
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+//Change mode
+function changeMode(roomName, modeName) {
+    if(roomExists(roomName)) {
+        var room = findRoom(roomName);
+
+        room.setMode(modeName);
+
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+//Room exists
+function roomExists(name) {
+    var roomExists = false;
+
+    for(var i = 0; i < rooms.length; i++) {
+        if(rooms[i].getName() === name) {
+            roomExists = true;
+        }
+    }
+
+    return roomExists;
 }

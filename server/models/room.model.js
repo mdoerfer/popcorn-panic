@@ -1,4 +1,4 @@
-const Room = function () {
+const Room = function() {
     this.name = '';
     this.players = [];
     this.mode = '';
@@ -6,20 +6,20 @@ const Room = function () {
     this.maxPlayers = 4;
 };
 
-Room.prototype.setName = function (name) {
+Room.prototype.setName = function(name) {
     this.name = name;
 };
 
-Room.prototype.addPlayer = function (player) {
-    if (this.players.length < this.maxPlayers) {
-        this.players.push(player);
+Room.prototype.addPlayer = function(id) {
+    if(this.players.length < this.maxPlayers) {
+        this.players.push(id);
     }
 };
 
-Room.prototype.removePlayer = function (player) {
-    for (var i = 0; i < this.players.length; i++) {
-        if(this.players[i].getName() === player.getName()) {
-            this.players.slice(i, 1);
+Room.prototype.removePlayer = function(id) {
+    for(var i = 0; i < this.players.length; i++) {
+        if(this.players[i] === id) {
+            this.players.splice(i, 1);
         }
     }
 };
@@ -32,7 +32,7 @@ Room.prototype.setMap = function(map) {
     this.map = map;
 };
 
-Room.prototype.getName = function () {
+Room.prototype.getName = function() {
     return this.name;
 };
 
