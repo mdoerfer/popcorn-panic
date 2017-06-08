@@ -186,15 +186,15 @@ function onJoinRoom(socket) {
             var roomJoined = room.addPlayer(socket.id);
 
             if(roomJoined) {
-                var player = players.getPlayer(socket.id),
-                    players = players.getPlayers(room.getPlayers());
+                var newPlayer = players.getPlayer(socket.id),
+                    roomPlayers = players.getPlayers(room.getPlayers());
 
                 io.to(room.getName()).emit('room-joined', {
                     state: 'success',
                     data: {
                         room: room,
-                        player: player,
-                        players: players
+                        player: newPlayer,
+                        players: roomPlayers
                     }
                 });
             }
