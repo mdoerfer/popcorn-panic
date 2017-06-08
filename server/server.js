@@ -101,6 +101,7 @@ function onSocketDisconnect() {
  * @param payload Contains the data emitted by the client
  */
 function onChooseName(payload) {
+    util.log(this);
     //this.emit('name-chosen', {});
 }
 
