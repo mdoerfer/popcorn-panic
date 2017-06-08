@@ -66,7 +66,7 @@ function onSocketConnection(socket) {
  * Bind all event handlers
  */
 function bindEventHandlers(socket) {
-    socket.on('disconnect', onSocketDisconnect);
+    socket.on('disconnect', onSocketDisconnect(socket));
     socket.on('choose-name', onChooseName);
     socket.on('join-lobby', onJoinLobby);
     socket.on('get-rooms', onGetRooms);
