@@ -88,6 +88,8 @@ function onDisconnect(socket) {
         util.log('SOCKET_TRANSPORT: ' + socket.client.conn.transport.constructor.name);
 
         //Remove player from players
+        //TODO: Remove player from all rooms he joined,
+        //TODO: Remove rooms the player created
         players.removePlayer(socket.id);
     });
 }
@@ -114,7 +116,6 @@ function onJoinLobby(socket) {
         socket.broadcast.emit('lobby-joined', {
             state: 'success',
             data: {
-                newPlayer: players.getPlayer(socket.id),
                 players: players.getPlayers(),
                 rooms: rooms.getRooms()
             }
@@ -158,6 +159,7 @@ function onCreateRoom(socket) {
         util.log();
         util.log('ROOM_CREATED.');
 
+        //TODO: Check if user is already owner of a room, or if he has joined one
         var roomCreated = rooms.createRoom(payload.name, socket.id);
 
         if(roomCreated) {
@@ -195,6 +197,7 @@ function onJoinRoom(socket) {
         util.log();
         util.log('JOIN_ROOM.');
 
+        //TODO: Check if user already joined a room
         if(rooms.roomExists(payload.name)) {
             var room = rooms.getRoom(payload.name);
 
@@ -290,6 +293,7 @@ function onChangeMap(socket) {
         util.log();
         util.log('CHANGE_MAP.');
 
+        //TODO: Check if user is owner of the room, else deny operation
         if(rooms.roomExists(payload.roomName)) {
             var room = rooms.getRoom(payload.roomName);
             room.setMap(payload.mapName);
@@ -312,6 +316,7 @@ function onChangeMode(socket) {
         util.log();
         util.log('CHANGE_MODE.');
 
+        //TODO: Check if user is owner of the room, else deny operation
         if(rooms.roomExists(payload.roomName)) {
             var room = rooms.getRoom(payload.roomName);
             room.setMode(payload.modeName);
@@ -334,6 +339,7 @@ function onStartGame(socket) {
         util.log();
         util.log('START_GAME.');
 
+        //TODO: Check if user is owner of the room, else deny operation
         var room = rooms.getRoom(payload.name);
 
         io.to(room.getName()).emit('game-started', {});
