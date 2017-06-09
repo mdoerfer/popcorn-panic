@@ -166,7 +166,8 @@ function onCreateRoom(socket) {
             socket.emit('room-created', {
                 state: 'success',
                 data: {
-                    room: room
+                    room: room,
+                    rooms: rooms.getRooms()
                 }
             });
         }
