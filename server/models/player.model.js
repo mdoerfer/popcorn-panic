@@ -11,13 +11,19 @@ const _ = require('./../util/util');
  */
 const Player = function(playerId) {
     this.id = playerId;
-    this.name = 'Unknown Unicorn';
+    this.name = this.defaultName;
     this.x = 0;
     this.y = 0;
     this.z = 0;
     this.pressure = 0;
-    this.character = 'Default';
+    this.character = this.possibleCharacters[0];
     this.maxPressure = 100;
+    this.defaultName = 'Unknown Unicorn';
+    this.possibleCharacters = [
+        'Cornboy',
+        'Corngirl',
+        'Angrycorn'
+    ]
 };
 
 /**
@@ -35,7 +41,12 @@ Player.prototype.setId = function(playerId) {
  * @param playerName
  */
 Player.prototype.setName = function(playerName) {
-    this.name = playerName;
+    if(!playerName.length) {
+        this.name = this.defaultName;
+    }
+    else {
+        this.name = playerName;
+    }
 };
 
 /**
@@ -53,7 +64,12 @@ Player.prototype.setPressure = function(playerPressure) {
  * @param playerCharacter
  */
 Player.prototype.setCharacter = function(playerCharacter) {
-    this.character = playerCharacter;
+    if(this.possibleCharacters.indexOf(playerCharacter) !== -1) {
+        this.character = playerCharacter;
+    }
+    else {
+        this.character = this.possibleCharacters[0];
+    }
 };
 
 /**

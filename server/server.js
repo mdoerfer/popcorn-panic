@@ -133,13 +133,7 @@ function onChooseName(socket) {
 
         //Change player name
         var player = players.getPlayer(socket.id);
-
-        if(!payload.name.length) {
-            player.setName('Unknown Unicorn');
-        }
-        else {
-            player.setName(payload.name);
-        }
+        player.setName(payload.name);
 
         //Give new player new information about himself
         socket.emit('name-chosen', {
