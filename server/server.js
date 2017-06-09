@@ -163,14 +163,6 @@ function onCreateRoom(socket) {
         if(roomCreated) {
             var room = rooms.getRoom(payload.name);
 
-            socket.emit('room-created', {
-                state: 'success',
-                data: {
-                    room: room,
-                    rooms: rooms.getRooms()
-                }
-            });
-
             socket.broadcast.emit('room-created', {
                 state: 'success',
                 data: {
