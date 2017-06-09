@@ -67,8 +67,8 @@ function onSocketConnection(socket) {
  */
 function bindEventHandlers(socket) {
     onDisconnect(socket);
-    onChooseName(socket);
     onJoinLobby(socket);
+    onChooseName(socket);
     onCreateRoom(socket);
     onJoinRoom(socket);
     onLeaveRoom(socket);
@@ -93,36 +93,12 @@ function onDisconnect(socket) {
 }
 
 /**
- * On 'choose-name'
- */
-function onChooseName(socket) {
-    socket.on('choose-name', function(payload) {
-        util.log();
-        util.log('CHOOSE_NAME.');
-
-        //Change player name
-        var player = players.getPlayer(socket.id);
-        player.setName(payload.name);
-
-        //Give new player new information about himself
-        socket.emit('name-chosen', {
-            state: 'success',
-            data: {
-                player: player
-            }
-        });
-    });
-}
-
-/**
  * On 'join-lobby'
  */
 function onJoinLobby(socket) {
     socket.on('join-lobby', function(payload) {
         util.log();
         util.log('JOIN_LOBBY.');
-
-        //TODO: Leave socket rooms and go to lobby
 
         //Give lobby information to new player
         socket.emit('lobby-joined', {
@@ -141,6 +117,34 @@ function onJoinLobby(socket) {
                 newPlayer: players.getPlayer(socket.id),
                 players: players.getPlayers(),
                 rooms: rooms.getRooms()
+            }
+        });
+    });
+}
+
+/**
+ * On 'choose-name'
+ */
+function onChooseName(socket) {
+    socket.on('choose-name', function(payload) {
+        util.log();
+        util.log('CHOOSE_NAME.');
+
+        //Change player name
+        var player = players.getPlayer(socket.id);
+
+        if(!payload.name.length) {
+            player.setName('Unknown Unicorn');
+        }
+        else {
+            player.setName(payload.name);
+        }
+
+        //Give new player new information about himself
+        socket.emit('name-chosen', {
+            state: 'success',
+            data: {
+                player: player
             }
         });
     });
