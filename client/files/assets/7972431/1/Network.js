@@ -15,115 +15,16 @@ var client = client || function() {
             //Connect for first time
             self.socket = io.connect(game.config.socket.host);
             
-            self.socket.on('name-chosen', function(payload) {
-                if(payload.state === 'success') {
-                    console.info('Name changed.');
-                    
-                    console.group('Payload');
-                    console.log(payload.data);
-                    console.groupEnd();
-                    
-                }
-                else {
-                    console.log('Error during name change');
-                } 
+            self.socket.on('connect', function() {
+                console.log('Connected to gameserver');
             });
             
-            self.socket.on('lobby-joined', function(payload) {
-               if(payload.state === 'success') {
-                   //TODO: Change scene to lobby and append data accordingly
-                    console.info('Lobby joined');
-                   
-                   console.group('Payload');
-                    console.log(payload.data);
-                    console.groupEnd();
-                }
-                else {
-                    console.log('Error joining lobby');
-                }
+            self.socket.on('error', function(payload) {
+                console.log('Error during connection to gameserver', payload);
             });
             
-            self.socket.on('room-created', function(payload) {
-                if(payload.state === 'success') {              
-                    self.joinRoom(payload.data.room.name);
-                    
-                    console.info('Created room');
-                    
-                    console.group('Payload');
-                    console.log(payload.data);
-                    console.groupEnd();
-                }
-                else {
-                    console.log('Error during room creation');
-                }
-            });
-            
-            self.socket.on('room-joined', function(payload) {
-               if(payload.state === 'success') {
-                    //TODO: Change scene to room and append data accordingly
-                    console.info('Joined room');
-                   
-                   console.group('Payload');
-                    console.log(payload.data);
-                    console.groupEnd();
-                }
-                else {
-                    console.log('Error joining room');
-                }
-            });
-            
-            self.socket.on('room-left', function(payload) {
-               if(payload.state === 'success') {
-                    self.joinLobby();
-                   console.info('Left room');
-                   
-                   console.group('Payload');
-                    console.log(payload.data);
-                    console.groupEnd();
-                }
-                else {
-                    console.log('Error leaving room');
-                }
-            });
-            
-            self.socket.on('game-started', function(payload) {
-               if(payload.state === 'success') {
-                   //Change scene to game scene
-                    console.info('Game started');
-                   
-                   console.group('Payload');
-                    console.log(payload.data);
-                    console.groupEnd();
-                }
-                else {
-                    console.info('Error starting game');
-                } 
-            });
-            
-            self.socket.on('mode-changed', function(payload) {
-               if(payload.state === 'success') {
-                    console.info('Changed mode');
-                   
-                   console.group('Payload');
-                    console.log(payload.data);
-                    console.groupEnd();
-                }
-                else {
-                    console.log('Error changing mode');
-                }
-            });
-            
-            self.socket.on('map-changed', function(payload) {
-               if(payload.state === 'success') {
-                    console.info('Changed map');
-                   
-                   console.group('Payload');
-                    console.log(payload.data);
-                    console.groupEnd();
-                }
-                else {
-                    console.log('Error changing map');
-                }
+            self.socket.on('connect_failed', function(payload) {
+                console.log('Connection to gameserver failed', payload);
             });
         }
     };
@@ -146,6 +47,20 @@ var client = client || function() {
         }
         else {
             console.log('"choose-name": Player name must be provided');
+        }
+    };
+    
+    /**
+     * Choose character
+     */
+    this.chooseCharacter = function(playerCharacter) {
+        if(typeof playerCharacter !== "undefined") {
+            this.socket.emit('choose-character', {
+                character: playerCharacter
+            });      
+        }
+        else {
+            console.log('"choose-character": Character name must be provided');
         }
     };
     
