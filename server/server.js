@@ -170,6 +170,14 @@ function onCreateRoom(socket) {
                     rooms: rooms.getRooms()
                 }
             });
+
+            socket.broadcast.emit('room-created', {
+                state: 'success',
+                data: {
+                    room: room,
+                    rooms: rooms.getRooms()
+                }
+            })
         }
         else {
             socket.emit('room-created', {
