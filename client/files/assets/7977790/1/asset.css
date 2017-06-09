@@ -193,6 +193,67 @@ button span {
     display: none;
 }
 
-.slide img{
+.character-pic{
     width:100%;
+}
+
+.slide-right{
+    transform: rotate(180deg);
+    float: right;
+    margin-right: 10px;
+}
+
+.slide-left{
+    float: left;
+    margin-left: 10px;
+}
+
+.chevron {
+    padding: 10px;
+}
+
+.character {
+    font-family: Open Sans; 
+    text-align: center;
+    position: relative; 
+    font-size: 25pt;
+    font-weight: bold;
+}
+
+.playButton{
+    position: relative;
+    text-align: center;
+    padding-top: 25px;
+}
+
+#redplane{
+    width: 70%;
+    top: 20px;
+    left: 12%;
+    -webkit-animation-name: action; /* Safari 4.0 - 8.0 */
+    -webkit-animation-duration: 12s; /*Safari 4.0 - 8.0 */
+    animation-name: action
+    animation-duration: 12s;
+    animation-iteration-count:infinite;
+       -webkit-animation-timing-function: linear; /* Safari 4.0 - 8.0 */
+    animation-timing-function: linear;
+}
+
+/* Safari 4.0 - 8.0 */
+@-webkit-keyframes action{
+    from {transform: rotate(0deg);}
+    to {transform: rotate(360deg);}
+}
+
+/* Standard syntax */
+@keyframes action{
+    from {transform: rotate(0deg);}
+    to {transform: rotate(360deg);}
+}
+
+#play{
+    width: 20%;
+    position: absolute;
+    top: 36%;
+    left: 42%;
 }
