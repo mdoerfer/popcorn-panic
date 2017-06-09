@@ -69,6 +69,7 @@ function bindEventHandlers(socket) {
     onDisconnect(socket);
     onJoinLobby(socket);
     onChooseName(socket);
+    onChooseCharacter(socket);
     onCreateRoom(socket);
     onJoinRoom(socket);
     onLeaveRoom(socket);
@@ -137,6 +138,28 @@ function onChooseName(socket) {
 
         //Give new player new information about himself
         socket.emit('name-chosen', {
+            state: 'success',
+            data: {
+                player: player
+            }
+        });
+    });
+}
+
+/**
+ * On 'choose-character'
+ */
+function onChooseCharacter(socket) {
+    socket.on('choose-character', function(payload) {
+        util.log();
+        util.log('CHOOSE_CHARACTER.');
+
+        //Change player name
+        var player = players.getPlayer(socket.id);
+        player.setCharacter(payload.character);
+
+        //Give new player new information about himself
+        socket.emit('character-chosen', {
             state: 'success',
             data: {
                 player: player
