@@ -9,12 +9,22 @@ const _ = require('./../util/util');
  * @param roomName
  * @constructor
  */
-const Room = function(roomName) {
+const Room = function(roomName, ownerId) {
+    this.owner = ownerId;
     this.name = roomName;
     this.players = [];
     this.mode = '';
     this.map = '';
     this.maxPlayers = 4;
+};
+
+/**
+ * Set room owner
+ *
+ * @param roomOwner
+ */
+Room.prototype.setOwner = function(roomOwner) {
+    this.owner = roomOwner;
 };
 
 /**
@@ -81,6 +91,10 @@ Room.prototype.setMode = function(roomMode) {
  */
 Room.prototype.setMap = function(roomMap) {
     this.map = roomMap;
+};
+
+Room.prototype.getOwner = function() {
+    return this.owner;
 };
 
 /**

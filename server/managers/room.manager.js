@@ -46,11 +46,11 @@ RoomManager.prototype.getRoom = function(roomName) {
  * @param roomName
  * @returns {boolean}
  */
-RoomManager.prototype.createRoom = function(roomName) {
+RoomManager.prototype.createRoom = function(roomName, ownerId) {
     var createdRoom = false;
 
     if(!this.roomExists(roomName)) {
-        this.rooms.push(new Room(roomName));
+        this.rooms.push(new Room(roomName, ownerId));
 
         createdRoom = true;
     }

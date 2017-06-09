@@ -158,7 +158,7 @@ function onCreateRoom(socket) {
         util.log();
         util.log('ROOM_CREATED.');
 
-        var roomCreated = rooms.createRoom(payload.name);
+        var roomCreated = rooms.createRoom(payload.name, socket.id);
 
         if(roomCreated) {
             var room = rooms.getRoom(payload.name);
