@@ -11,19 +11,19 @@ const _ = require('./../util/util');
  */
 const Player = function(playerId) {
     this.id = playerId;
-    this.name = this.defaultName;
     this.x = 0;
     this.y = 0;
     this.z = 0;
     this.pressure = 0;
-    this.character = this.possibleCharacters[0];
     this.maxPressure = 100;
     this.defaultName = 'Unknown Unicorn';
     this.possibleCharacters = [
         'Cornboy',
         'Corngirl',
         'Angrycorn'
-    ]
+    ];
+    this.name = this.defaultName;
+    this.character = this.possibleCharacters[0];
 };
 
 /**
