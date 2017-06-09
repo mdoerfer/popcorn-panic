@@ -17,7 +17,6 @@ var client = client || function() {
             
             self.socket.on('name-chosen', function(payload) {
                 if(payload.state === 'success') {
-                    self.socket.emit('join-lobby');
                     console.info('Name changed.');
                     
                     console.group('Payload');
@@ -45,10 +44,8 @@ var client = client || function() {
             });
             
             self.socket.on('room-created', function(payload) {
-                if(payload.state === 'success') {
-                    self.socket.emit('join-room', {
-                        name: payload.data.room.name
-                    });
+                if(payload.state === 'success') {              
+                    self.joinRoom(payload.data.room.name);
                     
                     console.info('Created room');
                     
@@ -77,7 +74,7 @@ var client = client || function() {
             
             self.socket.on('room-left', function(payload) {
                if(payload.state === 'success') {
-                    self.socket.emit('join-lobby');
+                    self.joinLobby();
                    console.info('Left room');
                    
                    console.group('Payload');
@@ -91,6 +88,7 @@ var client = client || function() {
             
             self.socket.on('game-started', function(payload) {
                if(payload.state === 'success') {
+                   //Change scene to game scene
                     console.info('Game started');
                    
                    console.group('Payload');
@@ -127,6 +125,113 @@ var client = client || function() {
                     console.log('Error changing map');
                 }
             });
+        }
+    };
+    
+    /**
+     * Join lobby
+     */
+    this.joinLobby = function() {
+        this.socket.emit('join-lobby');
+    };
+    
+    /**
+     * Choose name
+     */
+    this.chooseName = function(playerName) {
+        if(typeof playerName !== "undefined") {
+            this.socket.emit('choose-name', {
+                name: playerName
+            });      
+        }
+        else {
+            console.log('"choose-name": Player name must be provided');
+        }
+    };
+    
+    /**
+     * Create room
+     */
+    this.createRoom = function(roomName) {
+        if(typeof roomName !== "undefined") {
+            this.socket.emit('create-room', {
+                name: roomName
+            });      
+        }
+        else {
+            console.log('"create-room": Room name must be provided.');
+        }
+    };
+    
+    /**
+     * Join room
+     */
+    this.joinRoom = function(roomName) {
+        if(typeof roomName !== "undefined") {
+            this.socket.emit('join-room', {
+                name: roomName
+            });      
+        }
+        else {
+            console.log('"join-room": Room name must be provided.');
+        }
+    };
+    
+    /**
+     * Leave room
+     */
+    this.leaveRoom = function(roomName) {
+        if(typeof roomName !== "undefined") {
+            this.socket.emit('leave-room', {
+                name: roomName
+            });      
+        }
+        else {
+            console.log('"leave-room": Room name must be provided.');
+        }
+    };
+    
+    /**
+     * Change map
+     */
+    this.changeMap = function(roomName, mapName) {
+        if(typeof roomName !== "undefined" && typeof mapName !== "undefined") {
+            this.socket.emit('change-map', {
+                roomName: roomName,
+                mapName: mapName
+            });      
+        }
+        else {
+            console.log('"change-map": Room name and map name must be provided.');
+        }
+    };
+    
+    /**
+     * Change mode
+     */
+    this.changeMode = function(roomName, modeName) {
+        if(typeof roomName !== "undefined" && typeof modeName !== "undefined") {
+            this.socket.emit('change-mode', {
+                roomName: roomName,
+                modeName: modeName
+            });      
+        }
+        else {
+            console.log('"change-mode": Room name and mode name must be provided.');
+        }
+    };
+    
+    /**
+     * Start game
+     */
+    this.startGame = function(roomName) {
+         if(typeof roomName !== "undefined") {
+            this.socket.emit('start-game', {
+                name: roomName
+            });      
+        }
+        else {
+            console.log('"start-game": Room name must be provided.');
         }
     };
     

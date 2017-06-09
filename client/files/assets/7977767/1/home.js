@@ -27,6 +27,7 @@ Home.attributes.add('css', {
  */
 Home.prototype.initialize = function() {
     this.initializeUI();
+    this.initializeClient();
 };
 
 /**
@@ -72,6 +73,14 @@ Home.prototype.initializeUI = function() {
             console.log('Quit clicked.');
         });
     }
+};
+
+Home.prototype.initializeClient = function() {
+  //Connect client
+  game.client.connect();
+    
+    //Join lobby
+    game.client.joinLobby();
 };
 
 /**
