@@ -179,6 +179,13 @@ Room.prototype.wouldBeEmpty = function() {
 };
 
 /**
+ * Check if certain player id is owner of the room
+ */
+Room.prototype.hasOwner = function(playerId) {
+    return this.getOwner() == playerId;
+};
+
+/**
  * Check if certain player id has joined the room
  *
  * @param playerId

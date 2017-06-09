@@ -88,10 +88,9 @@ function onDisconnect(socket) {
         util.log('SOCKET_ID: ' + socket.id);
         util.log('SOCKET_TRANSPORT: ' + socket.client.conn.transport.constructor.name);
 
-        //Remove player from players
-        //TODO: Remove player from all rooms he joined,
-        //TODO: Remove rooms the player created
+        //Remove player from players and clear up leftovers
         players.removePlayer(socket.id);
+        rooms.removeLeftovers(socket.id);
     });
 }
 
@@ -176,7 +175,6 @@ function onCreateRoom(socket) {
         util.log();
         util.log('ROOM_CREATED.');
 
-        //TODO: Check if user is already owner of a room, or if he has joined one
         var roomCreated = rooms.createRoom(payload.name, socket.id);
 
         if(roomCreated) {
@@ -214,8 +212,7 @@ function onJoinRoom(socket) {
         util.log();
         util.log('JOIN_ROOM.');
 
-        //TODO: Check if user already joined a room
-        if(rooms.roomExists(payload.name)) {
+        if(rooms.roomExists(payload.name) && !rooms.playerIsMemberAlready(socket.id)) {
             var room = rooms.getRoom(payload.name);
 
             var roomJoined = room.addPlayer(socket.id);
