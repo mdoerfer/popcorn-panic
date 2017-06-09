@@ -214,6 +214,20 @@ function onJoinRoom(socket) {
                         players: roomPlayers
                     }
                 });
+
+                socket.emit('room-joined', {
+                    state: 'success',
+                    data: {
+                        rooms: rooms.getRooms()
+                    }
+                });
+
+                socket.broadcast.emit('room-joined', {
+                    state: 'success',
+                    data: {
+                        rooms: rooms.getRooms()
+                    }
+                });
             }
             else {
                 socket.emit('room-joined', {
