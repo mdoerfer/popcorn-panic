@@ -128,6 +128,7 @@ function onJoinLobby(socket) {
         socket.emit('lobby-joined', {
             state: 'success',
             data: {
+                myPlayer: players.getPlayer(socket.id),
                 players: players.getPlayers(),
                 rooms: rooms.getRooms()
             }
@@ -137,6 +138,7 @@ function onJoinLobby(socket) {
         socket.broadcast.emit('lobby-joined', {
             state: 'success',
             data: {
+                newPlayer: players.getPlayer(socket.id),
                 players: players.getPlayers(),
                 rooms: rooms.getRooms()
             }
