@@ -209,6 +209,7 @@ function onJoinRoom(socket) {
                     state: 'success',
                     data: {
                         room: room,
+                        rooms: rooms.getRooms(),
                         player: newPlayer,
                         players: roomPlayers
                     }
