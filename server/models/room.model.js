@@ -16,6 +16,7 @@ const Room = function(roomName, ownerId) {
     this.mode = '';
     this.map = '';
     this.maxPlayers = 4;
+    this.started = false;
 };
 
 /**
@@ -25,6 +26,8 @@ const Room = function(roomName, ownerId) {
  */
 Room.prototype.setOwner = function(roomOwner) {
     this.owner = roomOwner;
+
+    return this;
 };
 
 /**
@@ -34,6 +37,8 @@ Room.prototype.setOwner = function(roomOwner) {
  */
 Room.prototype.setName = function(roomName) {
     this.name = roomName;
+
+    return this;
 };
 
 /**
@@ -82,6 +87,8 @@ Room.prototype.removePlayer = function(playerId) {
  */
 Room.prototype.setMode = function(roomMode) {
     this.mode = roomMode;
+
+    return this;
 };
 
 /**
@@ -91,6 +98,8 @@ Room.prototype.setMode = function(roomMode) {
  */
 Room.prototype.setMap = function(roomMap) {
     this.map = roomMap;
+
+    return this;
 };
 
 Room.prototype.getOwner = function() {
@@ -193,6 +202,14 @@ Room.prototype.hasOwner = function(playerId) {
  */
 Room.prototype.hasPlayer = function(playerId) {
     return this.players.indexOf(playerId) !== -1;
+};
+
+Room.prototype.startGame = function() {
+  this.started = true;
+};
+
+Room.prototype.stopGame = function() {
+  this.started = false;
 };
 
 module.exports = Room;

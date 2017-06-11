@@ -33,6 +33,8 @@ const Player = function(playerId) {
  */
 Player.prototype.setId = function(playerId) {
     this.id = playerId;
+
+    return this;
 };
 
 /**
@@ -47,6 +49,8 @@ Player.prototype.setName = function(playerName) {
     else {
         this.name = playerName;
     }
+
+    return this;
 };
 
 /**
@@ -56,6 +60,8 @@ Player.prototype.setName = function(playerName) {
  */
 Player.prototype.setPressure = function(playerPressure) {
     this.pressure = playerPressure;
+
+    return this;
 };
 
 /**
@@ -70,6 +76,8 @@ Player.prototype.setCharacter = function(playerCharacter) {
     else {
         this.character = this.possibleCharacters[0];
     }
+
+    return this;
 };
 
 /**
@@ -83,6 +91,8 @@ Player.prototype.setLocation = function(playerX, playerY, playerZ) {
     this.x = playerX;
     this.y = playerY;
     this.z = playerZ;
+
+    return this;
 };
 
 /**
@@ -92,6 +102,8 @@ Player.prototype.setLocation = function(playerX, playerY, playerZ) {
  */
 Player.prototype.setX = function(playerX) {
     this.x = playerX;
+
+    return this;
 };
 
 /**
@@ -101,6 +113,8 @@ Player.prototype.setX = function(playerX) {
  */
 Player.prototype.setY = function(playerY) {
     this.y = playerY;
+
+    return this;
 };
 
 /**
@@ -110,6 +124,8 @@ Player.prototype.setY = function(playerY) {
  */
 Player.prototype.setZ = function(playerZ) {
     this.z = playerZ;
+
+    return this;
 };
 
 /**

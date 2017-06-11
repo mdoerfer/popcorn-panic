@@ -6,16 +6,14 @@ var util = require('util'),
     io = require('socket.io')(server);
 
 /**
- * Require managers
+ * Require game manager
  */
-var PlayerManager = require('./managers/player.manager'),
-    RoomManager = require('./managers/room.manager');
+var GameManager = require('./managers/game.manager');
 
 /**
  * Global variables
  */
-var players = new PlayerManager(),
-    rooms = new RoomManager();
+var game = new GameManager();
 
 /**
  * Initialize server
@@ -39,10 +37,13 @@ function initializeSockets() {
  */
 function startServer() {
     util.log();
-    util.log('STARTING SERVER...');
+    util.log('STARTING POPCORN-PANIC SERVER...');
 
-    server.listen(80, function() {
-        util.log('SERVER STARTED.');
+    var PORT = 80;
+
+    server.listen(PORT, function() {
+        util.log('POPCORN-PANIC SERVER STARTED.');
+        util.log('LISTENING ON PORT ' + PORT);
     });
 }
 
@@ -52,13 +53,17 @@ function startServer() {
  * @param socket [The socket connection]
  */
 function onSocketConnection(socket) {
+    //Console
     util.log();
     util.log('NEW_SOCKET_CONNECTED.');
     util.log('SOCKET_ID: ' + socket.id);
     util.log('SOCKET_TRANSPORT: ' + socket.client.conn.transport.constructor.name);
 
-    players.createPlayer(socket.id);
+    //Create player
+    var playerId = socket.id;
+    game.playerManager.createPlayer(playerId);
 
+    //Bind event handlers to socket
     bindEventHandlers(socket);
 }
 
@@ -83,14 +88,16 @@ function bindEventHandlers(socket) {
  */
 function onDisconnect(socket) {
     socket.on('disconnect', function(payload) {
+        //Console
         util.log();
         util.log('SOCKET_DISCONNECTED.');
         util.log('SOCKET_ID: ' + socket.id);
         util.log('SOCKET_TRANSPORT: ' + socket.client.conn.transport.constructor.name);
 
         //Remove player from players and clear up leftovers
-        players.removePlayer(socket.id);
-        rooms.removeLeftovers(socket.id);
+        var playerId = socket.id;
+        game.playerManager.removePlayer(playerId);
+        game.roomManager.removeLeftovers(playerId);
     });
 }
 
@@ -99,16 +106,20 @@ function onDisconnect(socket) {
  */
 function onJoinLobby(socket) {
     socket.on('join-lobby', function(payload) {
+        //Console
         util.log();
         util.log('JOIN_LOBBY.');
+
+        //Player ID
+        var playerId = socket.id;
 
         //Give lobby information to new player
         socket.emit('lobby-joined', {
             state: 'success',
             data: {
-                myPlayer: players.getPlayer(socket.id),
-                players: players.getPlayers(),
-                rooms: rooms.getRooms()
+                myPlayer: game.playerManager.getPlayer(playerId),
+                players: game.playerManager.getPlayers(),
+                rooms: game.roomManager.getRooms()
             }
         });
 
@@ -116,8 +127,8 @@ function onJoinLobby(socket) {
         socket.broadcast.emit('lobby-joined', {
             state: 'success',
             data: {
-                players: players.getPlayers(),
-                rooms: rooms.getRooms()
+                players: game.playerManager.getPlayers(),
+                rooms: game.roomManager.getRooms()
             }
         });
     });
@@ -128,12 +139,16 @@ function onJoinLobby(socket) {
  */
 function onChooseName(socket) {
     socket.on('choose-name', function(payload) {
+        //Console
         util.log();
         util.log('CHOOSE_NAME.');
 
+        //Get variables
+        var playerId = socket.id;
+        var playerName = payload.name;
+
         //Change player name
-        var player = players.getPlayer(socket.id);
-        player.setName(payload.name);
+        var player = game.playerManager.getPlayer(playerId).setName(playerName);
 
         //Give new player new information about himself
         socket.emit('name-chosen', {
@@ -150,12 +165,16 @@ function onChooseName(socket) {
  */
 function onChooseCharacter(socket) {
     socket.on('choose-character', function(payload) {
+        //Console
         util.log();
         util.log('CHOOSE_CHARACTER.');
 
-        //Change player name
-        var player = players.getPlayer(socket.id);
-        player.setCharacter(payload.character);
+        //Get variables
+        var playerId = socket.id;
+        var playerCharacter = payload.character;
+
+        //Change player character
+        var player = game.playerManager.getPlayer(playerId).setCharacter(playerCharacter);
 
         //Give new player new information about himself
         socket.emit('character-chosen', {
@@ -172,31 +191,45 @@ function onChooseCharacter(socket) {
  */
 function onCreateRoom(socket) {
     socket.on('create-room', function(payload) {
-        util.log();
-        util.log('ROOM_CREATED.');
+        //Get variables
+        var playerId = socket.id;
+        var roomName = payload.name;
 
-        var roomCreated = rooms.createRoom(payload.name, socket.id);
+        //Try creating
+        var roomCreated = game.roomManager.createRoom(roomName, playerId);
 
         if(roomCreated) {
-            var room = rooms.getRoom(payload.name);
+            //Console
+            util.log();
+            util.log('ROOM_CREATED.');
 
+            //Get room
+            var room = game.roomManager.getRoom(roomName);
+
+            //Inform user about room creation
             socket.emit('room-created', {
                 state: 'success',
                 data: {
                     room: room,
-                    rooms: rooms.getRooms()
+                    rooms: game.roomManager.getRooms()
                 }
             });
 
+            //Inform all other users about room creation
             socket.broadcast.emit('room-created', {
                 state: 'success',
                 data: {
                     room: room,
-                    rooms: rooms.getRooms()
+                    rooms: game.roomManager.getRooms()
                 }
             })
         }
         else {
+            //Console
+            util.log();
+            util.log('ERROR_ROOM_CREATED.');
+
+            //Inform user about error
             socket.emit('room-created', {
                 state: 'error'
             });
@@ -209,44 +242,64 @@ function onCreateRoom(socket) {
  */
 function onJoinRoom(socket) {
     socket.on('join-room', function(payload) {
-        util.log();
-        util.log('JOIN_ROOM.');
+        //Get variables
+        var playerId = socket.id;
+        var roomName = payload.name;
 
-        if(rooms.roomExists(payload.name) && !rooms.playerIsMemberAlready(socket.id)) {
-            var room = rooms.getRoom(payload.name);
+        //Check if room exists and player hasn't joined any rooms yet
+        var playerMayJoin = game.roomManager.roomExists(roomName) && !game.roomManager.playerIsMemberAlready(playerId);
 
-            var roomJoined = room.addPlayer(socket.id);
-            socket.join(room.getName());
+        if(playerMayJoin) {
+            //Get room
+            var room = game.roomManager.getRoom(roomName);
+
+            //Try joining
+            var roomJoined = room.addPlayer(playerId);
 
             if(roomJoined) {
-                var newPlayer = players.getPlayer(socket.id),
-                    roomPlayers = players.getPlayers(room.getPlayers());
+                //Console
+                util.log();
+                util.log('ROOM_JOINED.');
 
+                //Join socket room
+                socket.join(room.getName());
+
+                //Payload variables
+                var newPlayer = game.playerManager.getPlayer(playerId),
+                    roomPlayers = game.playerManager.getPlayers(room.getPlayers());
+
+                //Inform game room about user joining
                 io.to(room.getName()).emit('room-joined', {
                     state: 'success',
                     data: {
                         room: room,
-                        rooms: rooms.getRooms(),
+                        rooms: game.roomManager.getRooms(),
                         player: newPlayer,
                         players: roomPlayers
                     }
                 });
 
+                //Inform user about joining the room
                 socket.emit('room-joined', {
                     state: 'success',
                     data: {
-                        rooms: rooms.getRooms()
+                        rooms: game.roomManager.getRooms()
                     }
                 });
 
+                //Inform all other users that someone joined a room
                 socket.broadcast.emit('room-joined', {
                     state: 'success',
                     data: {
-                        rooms: rooms.getRooms()
+                        rooms: game.roomManager.getRooms()
                     }
                 });
             }
             else {
+                //Console
+                util.log();
+                util.log('ERROR_ROOM_JOINED.');
+
                 socket.emit('room-joined', {
                     state: 'error'
                 });
@@ -260,18 +313,32 @@ function onJoinRoom(socket) {
  */
 function onLeaveRoom(socket) {
     socket.on('leave-room', function(payload) {
-        util.log();
-        util.log('LEAVE_ROOM.');
+        //Get variables
+        var playerId = socket.id;
+        var roomName = payload.name;
 
-        if(rooms.roomExists(payload.name)) {
-            var room = rooms.getRoom(payload.name);
+        //Check if room exists
+        var roomExists = game.roomManager.roomExists(roomName);
 
-            var roomLeft = room.removePlayer(socket.id);
-            socket.leave(room.getName());
+        //If room exists, try leaving
+        if(roomExists) {
+            var room = game.roomManager.getRoom(roomName);
+
+            //Try leaving
+            var roomLeft = room.removePlayer(playerId);
 
             if(roomLeft) {
-                var player = players.getPlayer(socket.id);
+                //Console
+                util.log();
+                util.log('LEAVE_ROOM.');
 
+                //Leave socket room
+                socket.leave(room.getName());
+
+                //Get leaving player
+                var player = game.playerManager.getPlayer(playerId);
+
+                //Inform game room about user leaving
                 io.to(room.getName()).emit('room-left', {
                     state: 'success',
                     data: {
@@ -279,6 +346,7 @@ function onLeaveRoom(socket) {
                     }
                 });
 
+                //Inform player about leaving the room
                 socket.emit('room-left', {
                     state: 'success',
                     data: {
@@ -286,11 +354,16 @@ function onLeaveRoom(socket) {
                     }
                 });
 
+                //If room is empty now, remove it
                 if(room.isEmpty()) {
-                    rooms.removeRoom(room.getName());
+                    game.roomManager.removeRoom(room.getName());
                 }
             }
             else {
+                //Console
+                util.log();
+                util.log('ERROR_LEAVE_ROOM.');
+
                 socket.emit('room-left', {
                     state: 'error'
                 });
@@ -304,20 +377,47 @@ function onLeaveRoom(socket) {
  */
 function onChangeMap(socket) {
     socket.on('change-map', function(payload) {
-        util.log();
-        util.log('CHANGE_MAP.');
+        //Get variables
+        var playerId = socket.id;
+        var roomName = payload.roomName;
+        var mapName = payload.mapName;
 
-        //TODO: Check if user is owner of the room, else deny operation
-        if(rooms.roomExists(payload.roomName)) {
-            var room = rooms.getRoom(payload.roomName);
-            room.setMap(payload.mapName);
+        //Check if room exists
+        var roomExists = game.roomManager.roomExists(roomName);
 
-            io.to(room.getName()).emit('map-changed', {
-                state: 'success',
-                data: {
-                    room: room
-                }
-            });
+        if(roomExists) {
+            //Get room
+            var room = game.roomManager.getRoom(roomName);
+
+            //Check if player is owner
+            var playerIsOwner = room.hasOwner(playerId);
+
+            if(playerIsOwner) {
+                //Console
+                util.log();
+                util.log('CHANGE_MAP.');
+
+                //Set the map
+                room.setMap(mapName);
+
+                //Inform game room about map change
+                io.to(room.getName()).emit('map-changed', {
+                    state: 'success',
+                    data: {
+                        room: room
+                    }
+                });
+            }
+            else {
+                //Console
+                util.log();
+                util.log('DENY_CHANGE_MAP. (PLAYER_ISNT_OWNER)');
+            }
+        }
+        else {
+            //Console
+            util.log();
+            util.log('ERROR_CHANGE_MAP. (ROOM_DOESNT_EXIST)');
         }
     });
 }
@@ -327,20 +427,47 @@ function onChangeMap(socket) {
  */
 function onChangeMode(socket) {
     socket.on('change-mode', function(payload) {
-        util.log();
-        util.log('CHANGE_MODE.');
+        //Get variables
+        var playerId = socket.id;
+        var roomName = payload.roomName;
+        var modeName = payload.modeName;
 
-        //TODO: Check if user is owner of the room, else deny operation
-        if(rooms.roomExists(payload.roomName)) {
-            var room = rooms.getRoom(payload.roomName);
-            room.setMode(payload.modeName);
+        //Check if room exists
+        var roomExists = game.roomManager.roomExists(roomName);
 
-            io.to(room.getName()).emit('mode-changed', {
-                state: 'success',
-                data: {
-                    room: room
-                }
-            });
+        if(roomExists) {
+            //Get room
+            var room = game.roomManager.getRoom(roomName);
+
+            //Check if player is owner
+            var playerIsOwner = room.hasOwner(playerId);
+
+            if(playerIsOwner) {
+                //Console
+                util.log();
+                util.log('CHANGE_MODE.');
+
+                //Set the mode
+                room.setMode(modeName);
+
+                //Inform game room about mode change
+                io.to(room.getName()).emit('mode-changed', {
+                    state: 'success',
+                    data: {
+                        room: room
+                    }
+                });
+            }
+            else {
+                //Console
+                util.log();
+                util.log('DENY_CHANGE_MODE. (PLAYER_ISNT_OWNER)');
+            }
+        }
+        else {
+            //Console
+            util.log();
+            util.log('ERROR_CHANGE_MODE. (ROOM_DOESNT_EXIST)');
         }
     });
 }
@@ -350,12 +477,46 @@ function onChangeMode(socket) {
  */
 function onStartGame(socket) {
     socket.on('start-game', function(payload) {
-        util.log();
-        util.log('START_GAME.');
+        //Get variables
+        var playerId = socket.id;
+        var roomName = payload.roomName;
 
-        //TODO: Check if user is owner of the room, else deny operation
-        var room = rooms.getRoom(payload.name);
+        //Check if room exists
+        var roomExists = game.roomManager.roomExists(roomName);
 
-        io.to(room.getName()).emit('game-started', {});
+        if(roomExists) {
+            //Get room
+            var room = game.roomManager.getRoom(roomName);
+
+            //Check if player is owner
+            var playerIsOwner = room.hasOwner(playerId);
+
+            if(playerIsOwner) {
+                //Console
+                util.log();
+                util.log('START_GAME.');
+
+                //Set the mode
+                room.startGame();
+
+                //Inform game room about mode change
+                io.to(room.getName()).emit('game-started', {
+                    state: 'success',
+                    data: {
+                        room: room
+                    }
+                });
+            }
+            else {
+                //Console
+                util.log();
+                util.log('DENY_START_GAME. (PLAYER_ISNT_OWNER)');
+            }
+        }
+        else {
+            //Console
+            util.log();
+            util.log('ERROR_START_GAME. (ROOM_DOESNT_EXIST)');
+        }
     });
 }
