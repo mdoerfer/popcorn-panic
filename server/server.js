@@ -305,6 +305,11 @@ function onJoinRoom(socket) {
                 });
             }
         }
+        else {
+            //Console
+            util.log();
+            util.log('ERROR_ROOM_JOINED. (ROOM_DOESNT_EXIST_OR_PLAYER_ALREADY_MEMBER)');
+        }
     });
 }
 
@@ -356,7 +361,16 @@ function onLeaveRoom(socket) {
 
                 //If room is empty now, remove it
                 if(room.isEmpty()) {
-                    game.roomManager.removeRoom(room.getName());
+                    var removedRoom = game.roomManager.removeRoom(room.getName());
+
+                    if(removedRoom) {
+                        //Console
+                        util.log('REMOVE_ROOM_BECAUSE_EMPTY.');
+                    }
+                    else {
+                        //Console
+                        util.log('ERROR_REMOVE_ROOM_BECAUSE_EMPTY.');
+                    }
                 }
             }
             else {
@@ -368,6 +382,11 @@ function onLeaveRoom(socket) {
                     state: 'error'
                 });
             }
+        }
+        else {
+            //Console
+            util.log();
+            util.log('ERROR_LEAVE_ROOM. (ROOM_DOESNT_EXIST)');
         }
     });
 }
