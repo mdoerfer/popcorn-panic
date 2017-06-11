@@ -1,90 +1,110 @@
-var UI = pc.createScript('ui');
+var Lobby = pc.createScript('lobby');
 
 /**
  * Add component attributes
  */
-UI.attributes.add('headerLogo', {
+Lobby.attributes.add('headerLogo', {
     type: 'asset',
     title: 'Header Logo'
 });
 
-UI.attributes.add('headerBg', {
+Lobby.attributes.add('headerBg', {
     type: 'asset',
     title: 'Header Background'
 });
 
-UI.attributes.add('cornboyPic', {
+Lobby.attributes.add('cornboyPic', {
     type: 'asset',
     title: 'Cornboy'
 });
 
-UI.attributes.add('corngirlPic', {
+Lobby.attributes.add('corngirlPic', {
     type: 'asset',
     title: 'Corngirl'
 });
 
-UI.attributes.add('angrycornPic', {
+Lobby.attributes.add('angrycornPic', {
     type: 'asset',
     title: 'Angrycorn'
 });
 
-UI.attributes.add('chevron', {
+Lobby.attributes.add('chevron', {
     type: 'asset',
     title: 'Chevron'
 });
 
-UI.attributes.add('redplane', {
+Lobby.attributes.add('redplane', {
     type: 'asset',
     title: 'redplane'
 });
 
-UI.attributes.add('play', {
+Lobby.attributes.add('play', {
     type: 'asset',
     title: 'play'
 });
 
-UI.attributes.add('lobbyClass', {
+Lobby.attributes.add('lobbyClass', {
     type: 'string',
     title: 'Lobby Class',
     placeholder: 'lobby',
     default: 'lobby'
 });
 
-UI.attributes.add('lobbyHtml', {
+Lobby.attributes.add('lobbyHtml', {
     type: 'asset',
     assetType: 'html',
     title: 'Lobby HTML'
 });
 
-UI.attributes.add('lobbyCss', {
+Lobby.attributes.add('lobbyCss', {
     type: 'asset',
     assetType: 'css',
     title: 'Lobby CSS'
 });
 
-UI.attributes.add('roomClass', {
-    type: 'string',
-    title: 'Room Class',
-    placeholder: 'room',
-    default: 'room'
-});
+/**
+ * Change scene
+ * 
+ * @param sceneId
+ */
+Lobby.prototype.changeScenes = function(sceneId) {
+    // Get a reference to the current root object
+    var oldHierarchy = this.app.root.findByName ('Root');
+    
+    // Load the new scene. The scene ID is found by loading the scene in the editor and 
+    // taking the number from the URL
+    // e.g. If the URL when Scene 1 is loaded is: https://playcanvas.com/editor/scene/475211
+    // The ID is the number on the end (475211)
+    this.loadScene (sceneId, function () {
+        // Once the new scene has been loaded, destroy the old one
+        oldHierarchy.destroy ();
+    });
+};
 
-UI.attributes.add('roomHtml', {
-    type: 'asset',
-    assetType: 'html',
-    title: 'Room HTML'
-});
-
-UI.attributes.add('roomCss', {
-    type: 'asset',
-    assetType: 'css',
-    title: 'Room CSS'
-});
+/**
+ * Load scene
+ * 
+ * @param id
+ * @param callback
+ */
+Lobby.prototype.loadScene = function (id, callback) {
+    // Get the path to the scene
+    var url = id  + ".json";
+    
+    // Load the scenes entity hierarchy
+    this.app.loadSceneHierarchy(url, function (err, parent) {
+        if (!err) {
+            callback(parent);
+        } else {
+            console.error (err);
+        }
+    });
+};
 
 /**
  * Initialize component
  */
-UI.prototype.initialize = function() {
+Lobby.prototype.initialize = function() {
     this.initializeUI();
     this.initializeClient();
 };
@@ -92,38 +112,28 @@ UI.prototype.initialize = function() {
 /**
  * Initialize UI
  */
-UI.prototype.initializeUI = function() {
+Lobby.prototype.initializeUI = function() {
     this.loadLobby();
-};
-
-/**
- * Clear UI
- */ 
-UI.prototype.clearUI = function() {
-    
 };
 
 /**
  * Load lobby 
  */
-UI.prototype.loadLobby = function() {
-    this.clearUI();
-    
+Lobby.prototype.loadLobby = function() {
     /**
      * Append CSS
      */
     var style = document.createElement('style');
-    document.head.appendChild(style);
     style.innerHTML = this.lobbyCss.resource || '';
+    document.head.appendChild(style);
     
     /**
      * Append HTML
      */
-    this.div = document.createElement('div');
-    this.div.setAttribute('id', 'ui');
-    this.div.classList.add(this.lobbyClass);
-    this.div.innerHTML = this.lobbyHtml.resource || '';
-    document.body.appendChild(this.div);
+    var div = document.createElement('div');
+    div.classList.add(this.lobbyClass);
+    div.innerHTML = this.lobbyHtml.resource || '';
+    document.body.appendChild(div);
     
     /**
      * Add images 
@@ -157,32 +167,9 @@ UI.prototype.loadLobby = function() {
 };
 
 /**
- * Load room
- */ 
-UI.prototype.loadRoom = function() {
-    this.clearUI();
-    
-    /**
-     * Append CSS
-     */
-    var style = document.createElement('style');
-    document.head.appendChild(style);
-    style.innerHTML = this.roomCss.resource || '';
-    
-    /**
-     * Append HTML
-     */
-    this.div = document.createElement('div');
-    this.div.setAttribute('id', 'ui');
-    this.div.classList.add(this.roomClass);
-    this.div.innerHTML = this.roomHtml.resource || '';
-    document.body.appendChild(this.div);
-};
-
-/**
  * Connect to game server, join lobby and set up event listeners
  */ 
-UI.prototype.initializeClient = function() {
+Lobby.prototype.initializeClient = function() {
     //Connect client
     game.client.connect();
     
@@ -204,36 +191,43 @@ UI.prototype.initializeClient = function() {
 /**
  * React on lobby joined
  */
-UI.prototype.onLobbyJoined = function(payload) {
+Lobby.prototype.onLobbyJoined = function(payload) {
    if(payload.state === 'success') {
-        //TODO: Change scene to lobby and append data accordingly
+       //Console
         console.info('Lobby joined');
         console.log(payload.data);
        
+       //Get variables
+       var myPlayer = payload.data.myPlayer;
+       var rooms = payload.data.rooms;
+       var players = payload.data.players;
+       
        //Set initial name
-       if(typeof payload.data.myPlayer !== "undefined") {
-           updatePlayerNameInput(payload.data.myPlayer.name);
+       if(typeof myPlayer !== "undefined") {
+           //Set player name input
+           updatePlayerNameInput(myPlayer.name);
            
            //Set character slider to initial character
-           updatePlayerCharacterSlider(payload.data.myPlayer.character);
+           updatePlayerCharacterSlider(myPlayer.character);
            
            //Update character on change
            addCharacterChangeListener();
        }
        
        //Set initial rooms
-       updateLobbyRooms(payload.data.rooms);
+       updateLobbyRooms(rooms);
        
        //Add listener for room creation
        addCreateRoomListener();
        
        //Show players online
-       updatePlayersOnline(payload.data.players);
+       updatePlayersOnline(players);
        
        //Update name on change
        addPlayerNameInputChangeListener();
     }
     else {
+        //Console
         console.log('Error joining lobby');
     }
 };
@@ -241,14 +235,19 @@ UI.prototype.onLobbyJoined = function(payload) {
 /**
  * React on name chosen
  */ 
-UI.prototype.onNameChosen = function(payload) {
+Lobby.prototype.onNameChosen = function(payload) {
     if(payload.state === 'success') {
-        console.info('Name changed.');
+        //Console
+        console.info('Name chosen.');
+        
+        //Get variables
+        var player = payload.data.player;
         
         //Set new name
-        updatePlayerNameInput(payload.data.player.name);
+        updatePlayerNameInput(player.name);
     }
     else {
+        //Console
         console.log('Error during name change');
     } 
 };
@@ -256,14 +255,19 @@ UI.prototype.onNameChosen = function(payload) {
 /**
  * React on name chosen
  */ 
-UI.prototype.onCharacterChosen = function(payload) {
+Lobby.prototype.onCharacterChosen = function(payload) {
     if(payload.state === 'success') {
-        console.info('Character changed.');
+        //Console
+        console.info('Character chosen.');
         
-        //Set new name
-        updatePlayerCharacterSlider(payload.data.player.character);
+        //Get variables
+        var character = payload.data.player.character;
+        
+        //Update character slider
+        updatePlayerCharacterSlider(character);
     }
     else {
+        //Console
         console.log('Error during character change');
     } 
 };
@@ -271,16 +275,25 @@ UI.prototype.onCharacterChosen = function(payload) {
 /**
  * React on room created
  */
-UI.prototype.onRoomCreated = function(payload) {
+Lobby.prototype.onRoomCreated = function(payload) {
     if(payload.state === 'success') {
-        if(payload.data.room.owner === game.client.socket.id) {
-            game.client.joinRoom(payload.data.room.name);
-            //TODO: Change scene to room
+        //Console
+        console.info('Room created.');
+        
+        //Get variables
+        var room = payload.data.room;
+        var rooms = payload.data.rooms;
+        
+        //Join room
+        if(room.owner === game.client.socket.id) {
+            game.client.joinRoom(room.name);
         }
-
-        updateLobbyRooms(payload.data.rooms);
+        
+        //Update lobby rooms
+        updateLobbyRooms(rooms);
     }
     else {
+        //Console
         console.log('Error during room creation');
     }
 };
@@ -288,13 +301,17 @@ UI.prototype.onRoomCreated = function(payload) {
 /**
  * React on room joined
  */
-UI.prototype.onRoomJoined = function(payload) {
+Lobby.prototype.onRoomJoined = function(payload) {
    if(payload.state === 'success') {
-        //TODO: Change scene to room and append data accordingly
-        updateLobbyRooms(payload.data.rooms);
+       //Console
+       console.info('Room joined.');
+       var rooms = payload.data.rooms;
+       
+        updateLobbyRooms(rooms);
        
        if(typeof payload.data.room !== "undefined") {
-           UI.prototype.loadRoom(payload.data.room);
+           //TODO: Change scene to room
+           console.log('TODO: CHANGE SCENE TO ROOM');
        }
     }
     else {
@@ -305,66 +322,88 @@ UI.prototype.onRoomJoined = function(payload) {
 /**
  * React on room left
  */
-UI.prototype.onRoomLeft = function(payload) {
+Lobby.prototype.onRoomLeft = function(payload) {
    if(payload.state === 'success') {
+       //Console
+       console.info('Room left.');
+       
+       //Join lobby
         game.client.joinLobby();
     }
     else {
-        console.log('Error leaving room');
+        //Console
+        console.log('Error leaving room.');
     }
 };
 
 /**
  * React on game started
  */
-UI.prototype.onGameStarted = function(payload) {
+Lobby.prototype.onGameStarted = function(payload) {
    if(payload.state === 'success') {
-        //Change scene to game scene
-        console.info('Game started');
+        //Console
+        console.info('Game started.');
         console.log(payload.data);
+       
+       //TODO: Change scene to game scene
+       console.log('TODO: CHANGE SCENE TO GAME');
     }
     else {
-        console.info('Error starting game');
+        //Console
+        console.info('Error starting game.');
     } 
 };
 
 /**
  * React on map changed
  */
-UI.prototype.onMapChanged = function(payload) {
+Lobby.prototype.onMapChanged = function(payload) {
    if(payload.state === 'success') {
-        console.info('Changed map');
+       //Console
+        console.info('Changed map.');
         console.log(payload.data);
     }
     else {
-        console.log('Error changing map');
+        //Console
+        console.log('Error changing map.');
     }
 };
 
 /**
  * React on mode changed
  */
-UI.prototype.onModeChanged = function(payload) {
+Lobby.prototype.onModeChanged = function(payload) {
    if(payload.state === 'success') {
-        console.info('Changed mode');
+       //Console
+        console.info('Changed mode.');
         console.log(payload.data);
     }
     else {
-        console.log('Error changing mode');
+        //Console
+        console.log('Error changing mode.');
     }
 };
 
 /**
+ * --------------------------
+ * 
  * LOBBY USER FUNCTIONS
- */ 
+ * 
+ * --------------------------
+ */
+//Return the <input> for the player name
 function getPlayerNameInput() {
     return document.getElementById('my-username');
 }
+
+//Set value of the <input> for the player name
 function updatePlayerNameInput(name) {
     var input = getPlayerNameInput();
     
     input.value = name;
 }
+
+//Update player name on <input> change
 function addPlayerNameInputChangeListener() {
     var input = getPlayerNameInput();
     
@@ -372,9 +411,13 @@ function addPlayerNameInputChangeListener() {
       game.client.chooseName(this.value); 
    });
 }
+
+//Update players online <span>
 function updatePlayersOnline(players) {
     document.getElementById('players-online').innerHTML = players.length;
 }
+
+//Update player character slider <div>
 function updatePlayerCharacterSlider(character) {
     var slider = document.getElementById('character-slider');
     var slides = slider.querySelectorAll('.slide');
@@ -391,26 +434,36 @@ function updatePlayerCharacterSlider(character) {
         }
     }
 }
+
+//Choose character on slider click
 function addCharacterChangeListener() {
     var slideControls = document.querySelectorAll('[data-char]');
     
-    console.log(slideControls);
+    //Function callback for loop
+    var chooseCharacter = function() {
+        var char = this.dataset.char;
+        
+        game.client.chooseCharacter(char);
+    };
     
     for(var i = 0; i < slideControls.length; i++) {
-        slideControls[i].addEventListener('click', function() {
-           var char = this.dataset.char;
-            
-            game.client.chooseCharacter(char);
-        });
+        slideControls[i].addEventListener('click', chooseCharacter);
     }
 }
 
 /**
+ * --------------------------
+ * 
  * LOBBY ROOMS FUNCTIONS
- */  
+ * 
+ * --------------------------
+ */
+//Return lobby rooms <ul>
 function getLobbyRoomsList() {
     return document.getElementById('all-rooms');
 }
+
+//Empty lobby rooms <ul>
 function emptyLobbyRooms() {
     var list = getLobbyRoomsList();
     
@@ -418,8 +471,15 @@ function emptyLobbyRooms() {
         list.removeChild(list.firstChild);
     }
 }
+
+//Fill lobby rooms <ul> with <li> element for each room
 function fillLobbyRooms(rooms) {
     var list = getLobbyRoomsList();
+    
+    //Button callback
+    var buttonCallbackFn = function() {
+        game.client.joinRoom(this.getAttribute('id'));
+    };
     
     if(rooms.length) {
         for(var i = 0; i < rooms.length; i++) {
@@ -439,10 +499,9 @@ function fillLobbyRooms(rooms) {
             //Configure button element
             button.innerHTML = '<span>+</span>';
             button.setAttribute('id', rooms[i].name);
-            button.addEventListener('click', function(e) {
-                game.client.joinRoom(this.getAttribute('id'));
-                //TODO: Change scene to room
-            });
+            
+            //Add click listener to button
+            button.addEventListener('click', buttonCallbackFn);
             
             //Append elements to item
             item.appendChild(name);
@@ -461,12 +520,14 @@ function fillLobbyRooms(rooms) {
         list.appendChild(notice);
     }
 }
+
+//Empty and then fill lobby rooms
 function updateLobbyRooms(rooms) {
-    var list = getLobbyRoomsList();
-    
     emptyLobbyRooms();
     fillLobbyRooms(rooms);
 }
+
+//Create room from input value
 function addCreateRoomListener() {
     var input = document.getElementById('new-room-name');
     var btn = document.getElementById('create-room-btn');

@@ -4,5 +4,10 @@ var game = game || {
         socket: {
             host: 'http://138.68.69.7'
         }
+    },
+    scenes: {
+        lobby: 526492,
+        room: 530819,
+        game: 526375
     }
 };
