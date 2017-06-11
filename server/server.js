@@ -231,7 +231,8 @@ function onCreateRoom(socket) {
 
             //Inform user about error
             socket.emit('room-created', {
-                state: 'error'
+                state: 'error',
+                message: "Couldn't create room"
             });
         }
     });
@@ -300,8 +301,10 @@ function onJoinRoom(socket) {
                 util.log();
                 util.log('ERROR_ROOM_JOINED.');
 
+                //Inform user of error
                 socket.emit('room-joined', {
-                    state: 'error'
+                    state: 'error',
+                    message: "Player couldn't join room."
                 });
             }
         }
@@ -309,6 +312,12 @@ function onJoinRoom(socket) {
             //Console
             util.log();
             util.log('ERROR_ROOM_JOINED. (ROOM_DOESNT_EXIST_OR_PLAYER_ALREADY_MEMBER)');
+
+            //Inform user of error
+            socket.emit('room-joined', {
+                state: 'error',
+                message: "Room doesn't exist or player is already member of a room."
+            });
         }
     });
 }
@@ -379,7 +388,8 @@ function onLeaveRoom(socket) {
                 util.log('ERROR_LEAVE_ROOM.');
 
                 socket.emit('room-left', {
-                    state: 'error'
+                    state: 'error',
+                    message: "Player couldn't leave room."
                 });
             }
         }
@@ -387,6 +397,12 @@ function onLeaveRoom(socket) {
             //Console
             util.log();
             util.log('ERROR_LEAVE_ROOM. (ROOM_DOESNT_EXIST)');
+
+            //Inform user of error
+            socket.emit('room-left', {
+                state: 'error',
+                message: "Room doesn't exist."
+            });
         }
     });
 }
@@ -431,12 +447,24 @@ function onChangeMap(socket) {
                 //Console
                 util.log();
                 util.log('DENY_CHANGE_MAP. (PLAYER_ISNT_OWNER)');
+
+                //Inform user of error
+                socket.emit('map-changed', {
+                    state: 'error',
+                    message: "Player can't change map, because he is not the room owner."
+                });
             }
         }
         else {
             //Console
             util.log();
             util.log('ERROR_CHANGE_MAP. (ROOM_DOESNT_EXIST)');
+
+            //Inform user of error
+            socket.emit('map-changed', {
+                state: 'error',
+                message: "Room doesn't exist."
+            });
         }
     });
 }
@@ -481,12 +509,24 @@ function onChangeMode(socket) {
                 //Console
                 util.log();
                 util.log('DENY_CHANGE_MODE. (PLAYER_ISNT_OWNER)');
+
+                //Inform user of error
+                socket.emit('mode-changed', {
+                    state: 'error',
+                    message: "Player can't change mode, because he is not the room owner."
+                });
             }
         }
         else {
             //Console
             util.log();
             util.log('ERROR_CHANGE_MODE. (ROOM_DOESNT_EXIST)');
+
+            //Inform user of error
+            socket.emit('mode-changed', {
+                state: 'error',
+                message: "Room doesn't exist."
+            });
         }
     });
 }
@@ -530,12 +570,24 @@ function onStartGame(socket) {
                 //Console
                 util.log();
                 util.log('DENY_START_GAME. (PLAYER_ISNT_OWNER)');
+
+                //Inform user of error
+                socket.emit('game-started', {
+                    state: 'error',
+                    message: "Player can't start game, because he is not the room owner."
+                });
             }
         }
         else {
             //Console
             util.log();
             util.log('ERROR_START_GAME. (ROOM_DOESNT_EXIST)');
+
+            //Inform user of error
+            socket.emit('game-started', {
+                state: 'error',
+                message: "Room doesn't exist."
+            });
         }
     });
 }
