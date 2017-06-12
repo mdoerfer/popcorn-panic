@@ -1,71 +1,69 @@
-var Lobby = pc.createScript('lobby');
+var UI = pc.createScript('ui');
 
 /**
  * Add component attributes
  */
-Lobby.attributes.add('headerLogo', {
+UI.attributes.add('headerLogo', {
     type: 'asset',
     title: 'Header Logo'
 });
 
-Lobby.attributes.add('headerBg', {
+UI.attributes.add('headerBg', {
     type: 'asset',
     title: 'Header Background'
 });
 
-Lobby.attributes.add('cornboyPic', {
+UI.attributes.add('cornboyPic', {
     type: 'asset',
     title: 'Cornboy'
 });
 
-Lobby.attributes.add('corngirlPic', {
+UI.attributes.add('corngirlPic', {
     type: 'asset',
     title: 'Corngirl'
 });
 
-Lobby.attributes.add('angrycornPic', {
+UI.attributes.add('angrycornPic', {
     type: 'asset',
     title: 'Angrycorn'
 });
 
-Lobby.attributes.add('chevron', {
+UI.attributes.add('chevron', {
     type: 'asset',
     title: 'Chevron'
 });
 
-Lobby.attributes.add('redplane', {
+UI.attributes.add('chevronsWhite', {
+    type: 'asset',
+    title: 'ChevronsWhite'
+});
+
+UI.attributes.add('redplane', {
     type: 'asset',
     title: 'redplane'
 });
 
-Lobby.attributes.add('play', {
+UI.attributes.add('play', {
     type: 'asset',
     title: 'play'
 });
 
-Lobby.attributes.add('lobbyClass', {
-    type: 'string',
-    title: 'Lobby Class',
-    placeholder: 'lobby',
-    default: 'lobby'
-});
-
-Lobby.attributes.add('lobbyHtml', {
+UI.attributes.add('html', {
     type: 'asset',
     assetType: 'html',
-    title: 'Lobby HTML'
+    title: 'HTML'
 });
 
-Lobby.attributes.add('lobbyCss', {
+UI.attributes.add('css', {
     type: 'asset',
     assetType: 'css',
-    title: 'Lobby CSS'
+    title: 'CSS'
 });
 
 /**
  * Initialize component
  */
-Lobby.prototype.initialize = function() {
+UI.prototype.initialize = function() {
     this.initializeUI();
     this.initializeClient();
 };
@@ -73,27 +71,28 @@ Lobby.prototype.initialize = function() {
 /**
  * Initialize UI
  */
-Lobby.prototype.initializeUI = function() {
-    this.loadLobby();
+UI.prototype.initializeUI = function() {
+    this.loadUI();
+    this.showUIPart('lobby');
 };
 
 /**
  * Load lobby 
  */
-Lobby.prototype.loadLobby = function() {
+UI.prototype.loadUI = function() {
     /**
      * Append CSS
      */
     var style = document.createElement('style');
-    style.innerHTML = this.lobbyCss.resource || '';
+    style.innerHTML = this.css.resource || '';
     document.head.appendChild(style);
     
     /**
      * Append HTML
      */
     var div = document.createElement('div');
-    div.classList.add(this.lobbyClass);
-    div.innerHTML = this.lobbyHtml.resource || '';
+    div.setAttribute('id', 'ui');
+    div.innerHTML = this.html.resource || '';
     document.body.appendChild(div);
     
     /**
@@ -114,16 +113,28 @@ Lobby.prototype.loadLobby = function() {
     var angrycornPic = document.getElementById('angrycorn-pic');
     angrycornPic.setAttribute('src', this.angrycornPic.getFileUrl());
     
-    var redplane = document.getElementById('redplane');
-    redplane.setAttribute('src', this.redplane.getFileUrl());
+    var redplanes = document.getElementsByClassName('redplane');
+    var play = document.getElementsByClassName('play');
     
-    var play = document.getElementById('play');
-    play.setAttribute('src', this.play.getFileUrl());
+    for(var c = 0; c < redplanes.length; c++) {
+        redplanes[c].setAttribute('src', this.redplane.getFileUrl());
+    }
+    
+    for(var d = 0; d < play.length; d++) {
+        play[d].setAttribute('src', this.play.getFileUrl());
+    }
+    
     
     var chevrons = document.getElementsByClassName('chevron');
     
     for(var i = 0; i < chevrons.length; i++) {
         chevrons[i].setAttribute('src', this.chevron.getFileUrl());
+    }
+    
+    var chevronsWhite = document.getElementsByClassName('chevronsWhite');
+    
+    for(var j = 0; j < chevronsWhite.length; j++) {
+        chevronsWhite[j].setAttribute('src', this.chevronsWhite.getFileUrl());
     }
     
     /**
@@ -133,10 +144,18 @@ Lobby.prototype.loadLobby = function() {
     this.bindHTMLEventListeners();
 };
 
+UI.prototype.showUIPart = function(selector) {
+    document.getElementById(selector).classList.remove('hidden');
+};
+
+UI.prototype.hideUIPart = function(selector) {
+    document.getElementById(selector).classList.add('hidden');
+};
+
 /**
  * Connect to game server, join lobby and set up event listeners
  */ 
-Lobby.prototype.initializeClient = function() {
+UI.prototype.initializeClient = function() {
     //Connect client
     game.client.connect();
     
@@ -147,16 +166,30 @@ Lobby.prototype.initializeClient = function() {
 /**
  * Bind data event listeners
  */
-Lobby.prototype.bindDataEventListeners = function() {
-    this.app.on('lobby:joined', function(player, rooms, players) {      
+UI.prototype.bindDataEventListeners = function() {
+    var self = this;
+    
+    this.app.on('lobby:you-joined', function(me, rooms, players) { 
         //Player name
-        updatePlayerNameInput(player.name);
+        updatePlayerNameInput(me.name);
+        
+        //Player character
+        updatePlayerCharacterSlider(me.character);
         
         //Players online
         updatePlayersOnline(players);
         
-        //Player character
-        updatePlayerCharacterSlider(player.character);
+        //Rooms
+        updateLobbyRooms(rooms);
+        
+        //Show lobby, hide room
+        self.hideUIPart('room');
+        self.showUIPart('lobby');
+    });
+    
+     this.app.on('lobby:someone-joined', function(rooms, players) {           
+        //Players online
+        updatePlayersOnline(players);
         
         //Rooms
         updateLobbyRooms(rooms);
@@ -172,36 +205,75 @@ Lobby.prototype.bindDataEventListeners = function() {
         updatePlayerCharacterSlider(character);
     });
     
-     this.app.on('lobby:room-created', function(rooms) {
+     this.app.on('lobby:you-created-a-room', function(room, rooms) {
+         updateRoom(room);
+         
+        //Rooms
+        updateLobbyRooms(rooms);
+         
+         //Show room, hide lobby
+        self.hideUIPart('lobby');
+        self.showUIPart('room');
+    });
+    
+    this.app.on('lobby:someone-created-a-room', function(rooms) {        
+        //Rooms
+        updateLobbyRooms(rooms);
+    });
+    
+    this.app.on('room:someone-joined-your-room', function(room, rooms) {    
+        updateRoom(room);
+        
+        //Rooms
+        updateLobbyRooms(rooms);
+        
+        //Show room, hide lobby
+        self.hideUIPart('lobby');
+        self.showUIPart('room');
+    });
+    
+    this.app.on('lobby:someone-joined-a-room', function(rooms) {  
+        //Rooms
+        updateLobbyRooms(rooms);
+    });
+    
+     this.app.on('lobby:someone-left-your-room', function(room, rooms) {
+        updateRoom(room);
+         
        //Rooms
         updateLobbyRooms(rooms);
     });
     
-    this.app.on('lobby:room-joined', function(rooms) {
+    this.app.on('lobby:you-left-a-room', function(rooms) { 
        //Rooms
         updateLobbyRooms(rooms);
     });
     
-     this.app.on('lobby:room-left', function(rooms) {
-       //Rooms
-        updateLobbyRooms(rooms);
+    this.app.on('room:map-changed', function(room) {
+       updateRoom(room);
     });
     
-    this.app.on('lobby:game-started', function(rooms) {
-       //Rooms
-        updateLobbyRooms(rooms);
+    this.app.on('room:mode-changed', function(room) {
+       updateRoom(room);
+    });
+    
+    this.app.on('room:game-started', function(room) {
+       updateRoom(room);
     });
 };
 
 /**
  * Bind html event listeners
  */
-Lobby.prototype.bindHTMLEventListeners = function() {
+UI.prototype.bindHTMLEventListeners = function() {
     addPlayerNameInputChangeListener();
     addPlayerCharacterChangeListener();
     addCreateRoomListener();
+    addLeaveRoomClickListener();
+    addJoinRandomGameClickListener();
+    addRoomModeChangeListener();
+    addRoomMapChangeListener();
 };
-
 
 /**
  * --------------------------
@@ -322,6 +394,7 @@ function fillLobbyRooms(rooms) {
             
             //Configure button element
             button.innerHTML = '<span>+</span>';
+            button.classList.add('btn');
             button.setAttribute('id', rooms[i].name);
             
             //Add click listener to button
@@ -362,6 +435,161 @@ function addCreateRoomListener() {
         }
         else {
             console.log('Error during room creation, room name must not be empty');
+        }
+    });
+}
+
+//Join random game
+function addJoinRandomGameClickListener() {
+    var btn = document.getElementById('join-random-game');
+    
+    btn.addEventListener('click', function() {
+       game.client.joinRandomRoom(); 
+    });
+}
+
+/**
+ * --------------------------
+ * 
+ * ROOM FUNCTIONS
+ * 
+ * --------------------------
+ */
+//Update room title
+function updateRoomTitle(title) {
+    var h1 = document.getElementById('room-title');
+    
+    h1.innerHTML = title;
+}
+
+//Update room mode slider <div>
+function updateRoomModeSlider(mode) {
+    var slider = document.getElementById('mode-slider');
+    var slides = slider.querySelectorAll('.slide');
+    
+    for(var i = 0; i < slides.length; i++) {
+        var slideMode = slides[i].getAttribute('id');
+        
+        //Hide inactive slides
+        if(slideMode !== mode) {
+            slides[i].classList.add('hidden');
+        }
+        else {
+            slides[i].classList.remove('hidden');
+        }
+    }
+}
+
+//Choose mode on mode slider click
+function addRoomModeChangeListener() {
+    var slideControls = document.querySelectorAll('[data-mode]');
+    
+    //Function callback for loop
+    var chooseMode = function() {
+        var mode = this.dataset.mode;
+        
+        game.client.changeMode(game.client.room.name, mode);
+    };
+    
+    for(var i = 0; i < slideControls.length; i++) {
+        slideControls[i].removeEventListener('click', chooseMode);
+        slideControls[i].addEventListener('click', chooseMode);
+    }
+}
+
+//Update room map slider <div>
+function updateRoomMapSlider(map) {
+    var slider = document.getElementById('map-slider');
+    var slides = slider.querySelectorAll('.slide');
+    
+    for(var i = 0; i < slides.length; i++) {
+        var slideMap = slides[i].getAttribute('id');
+        
+        //Hide inactive slides
+        if(slideMap !== map) {
+            slides[i].classList.add('hidden');
+        }
+        else {
+            slides[i].classList.remove('hidden');
+        }
+    }
+}
+
+//Choose map on map slider click
+function addRoomMapChangeListener() {
+    var slideControls = document.querySelectorAll('[data-map]');
+    
+    //Function callback for loop
+    var chooseMap = function() {
+        var map = this.dataset.map;
+        
+        game.client.changeMap(game.client.room.name, map);
+    };
+    
+    for(var i = 0; i < slideControls.length; i++) {
+        slideControls[i].removeEventListener('click', chooseMap);
+        slideControls[i].addEventListener('click', chooseMap);
+    }
+}
+
+//Update room player count
+function updateRoomPlayerCount(room) {
+    var count = document.getElementById('room-player-count');
+    
+    count.innerHTML = room.players.length + '/' + room.maxPlayers;
+}
+
+//Get player slots
+function getPlayerSlots() {
+    return document.querySelectorAll('.player-slot');
+}
+
+//Empty player slots
+function emptyPlayerSlots() {
+    var playerSlots = getPlayerSlots();
+    
+    for(var i = 0; i < playerSlots.length; i++) {
+        playerSlots[i].innerHTML = '';
+    }
+}
+
+//Fill player slots
+function fillPlayerSlots(room) {
+    var playerSlots = getPlayerSlots();
+    
+    for(var i = 0; i < room.players.length; i++) {   
+        if(room.players[i].id === room.owner) {
+            playerSlots[i].innerHTML = room.players[i].name + " (Owner) playing " + room.players[i].character;
+            
+        }
+        else {
+            playerSlots[i].innerHTML = room.players[i].name + " (Member) playing " + room.players[i].character;
+        }
+    }
+}
+
+//Update player slots
+function updatePlayerSlots(room) {
+    emptyPlayerSlots();
+    fillPlayerSlots(room);
+}
+
+//Update room
+function updateRoom(room) { 
+    updateRoomTitle(room.name);
+    updateRoomPlayerCount(room);
+    updateRoomModeSlider(room.mode);
+    updateRoomMapSlider(room.map);
+    updatePlayerSlots(room);
+}
+
+//Leave room
+function addLeaveRoomClickListener() {
+    var btn = document.getElementById('leave-room');
+    
+    btn.addEventListener('click', function() {
+        if(typeof game.client.room !== "undefined") {
+            game.client.leaveRoom(game.client.room.name);
         }
     });
 }

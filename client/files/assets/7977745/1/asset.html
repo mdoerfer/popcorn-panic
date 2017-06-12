@@ -1,114 +1,193 @@
-<div class="header">
-    <img id="header-bg">
-    <img id="header-logo">
-</div>
-<div class="container-center"> 
-    <div class="row">
-        <div class="left-col col">
-            <h2>Choose Arena</h2>
-            <div class="style-box">
-                <ul id="all-rooms">
-                </ul>
-                <div class="createRoom">
-                    <p class="players-online-wrap">
-                        Players online: <span id="players-online"></span>
-                     </p>  
-                    <input id="new-room-name" type="text" class="shadow" placeholder="New room name">
-                    <button id="create-room-btn" class="createRoomButton">New</button>
-                </div>
-            </div>
-        </div>
-        <div class="mid-col col">
-            <h2>Your nickname</h2>
-            <div class="style-box">
-                 <input id="my-username" type="text" class="shadow" placeholder="unknown unicorn">   
-            </div>
-            <br>
-            <h2>Play random</h2>
-            <div class="playButton">
-                <img id="redplane">
-                <img id="play">
-            </div>
-        </div>
-        <div class="right-col col">
-            <h2>Your character</h2>
-            <div class="style-box paddingBottom shadow">
-                <div id="character-slider">
-                    <div class="slide" id="Cornboy">
-                        <div class="slide-body">
-                            <img class="character-pic" id="cornboy-pic">
-                        </div>
-                        <div class="slide-head">
-                            <img class="slide-left chevron" data-char="Angrycorn">
-                            <span class="character">Cornboy</span>
-                            <img class="slide-right chevron" data-char="Corngirl">
-                        </div>
-                    </div>
-                    <div class="slide hidden" id="Corngirl">
-                        <div class="slide-body">
-                            <img class="character-pic" id="corngirl-pic">
-                        </div>
-                        <div class="slide-head">
-                            <img class="slide-left chevron" data-char="Cornboy">
-                            <span class="character">Corngirl</span>
-                            <img class="slide-right chevron" data-char="Angrycorn">
-                        </div>
-                    </div>
-                    <div class="slide hidden" id="Angrycorn">
-                        <div class="slide-body">
-                            <img class="character-pic" id="angrycorn-pic">
-                        </div>
-                        <div class="slide-head">
-                            <img class="slide-left chevron" data-char="Corngirl">
-                            <span class="character">Angrycorn</span>
-                            <img class="slide-right chevron" data-char="Cornboy">
-                        </div>
+<!-- all UI for Lobby-->
+<div id="lobby" class="lobby hidden">
+    <!-- Header of Site-->
+    <div class="header">
+        <img id="header-bg">
+        <img id="header-logo">
+    </div>
+    <!--Three column layout-->
+    <div class="container-center"> 
+        <div class="row">
+            <div class="left-col col">
+                <h2>Choose Arena</h2>
+                <div class="style-box">
+                    <ul id="all-rooms">
+                    </ul>
+                    <div class="createRoom">
+                        <p class="players-online-wrap">
+                            Players online: <span id="players-online"></span>
+                         </p>  
+                        <input id="new-room-name" type="text" class="shadow" placeholder="New room name">
+                        <button id="create-room-btn" class="createRoomButton btn">New</button>
                     </div>
                 </div>
             </div>
-        </div>
-        <div id="move" class="footer">
-            <div class="ribbon">
-                <a id="open-footer" href="#move">Settings</a>
-            </div>
-            <div class="banner">
-                <a class="closeBanner" href="#">X</a>
-                <div class="controls">
-                    <h2>Controls</h2>
-                    <div class="control-key" id="w">
-                        <p>
-                            W <br>
-                            <span>Forward</span>
-                        </p>
-                    </div>
-                    <div class="control-key" id="a">
-                        <p>
-                            A <br>
-                            <span>Left</span>
-                        </p>
-                    </div>
-                    <div class="control-key" id="s">
-                        <p>
-                            S <br>
-                            <span>Back</span>
-                        </p>
-                    </div>
-                    <div class="control-key" id="d">
-                        <p>
-                            D <br>
-                            <span>Right</span>
-                        </p>
-                    </div>
+            <div class="mid-col col">
+                <h2>Your nickname</h2>
+                <div class="style-box">
+                     <input id="my-username" type="text" class="shadow" placeholder="unknown unicorn">   
                 </div>
-                 <div class="settings">
-                     <h2>Music</h2>
-                     <input type="range">
-                     <h2>Effects</h2>
-                     <input type="range">
-                     <h2>Volume</h2>
-                     <input type="range">
+                <br>
+                <div id="join-random-game" class="playButton">
+                    <!-- TODO Implement random game creation -->
+                    <img id="redplane" class="redplane">
+                    <img id="play" class="play">
+                    <h3 id="random">Random <br>Game</h3>
+                </div>
+            </div>
+            <div class="right-col col">
+                <h2>Your character</h2>
+                <div class="style-box paddingBottom shadow">
+                    <div id="character-slider">
+                        <div class="slide" id="Cornboy">
+                            <div class="slide-body">
+                                <img class="character-pic" id="cornboy-pic">
+                            </div>
+                            <div class="slide-head">
+                                <img class="slide-left chevron" data-char="Angrycorn">
+                                <span class="character">Cornboy</span>
+                                <img class="slide-right chevron" data-char="Corngirl">
+                            </div>
+                        </div>
+                        <div class="slide hidden" id="Corngirl">
+                            <div class="slide-body">
+                                <img class="character-pic" id="corngirl-pic">
+                            </div>
+                            <div class="slide-head">
+                                <img class="slide-left chevron" data-char="Cornboy">
+                                <span class="character">Corngirl</span>
+                                <img class="slide-right chevron" data-char="Angrycorn">
+                            </div>
+                        </div>
+                        <div class="slide hidden" id="Angrycorn">
+                            <div class="slide-body">
+                                <img class="character-pic" id="angrycorn-pic">
+                            </div>
+                            <div class="slide-head">
+                                <img class="slide-left chevron" data-char="Corngirl">
+                                <span class="character">Angrycorn</span>
+                                <img class="slide-right chevron" data-char="Cornboy">
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+<!-- all UI for Room-->
+<div id="room" class="room hidden">
+    <div class="room-settings">
+        <div class="row">
+             <div class="left-col col">
+                <h2>Mode</h2>
+                 <div id="mode-slider">
+                     <div class="slide" id="Deathmatch">
+                         <div class="slide-head">
+                            <img class="chevronsWhite left" data-mode="CaptureTheFlag">
+                                <span class="mode slide-text">Deathmatch</span>
+                            <img class="chevronsWhite" data-mode="CaptureTheFlag">
+                         </div>
+                     </div>
+                     <div class="slide hidden" id="CaptureTheFlag">
+                        <div class="slide-head">
+                            <img class="chevronsWhite left" data-mode="Deathmatch">
+                                <span class="mode slide-text">Capture the Flag</span>
+                            <img class="chevronsWhite" data-mode="Deathmatch">
+                        </div>
+                    </div>
+                 </div>
+            </div>
+            <div class="right-col col">
+                <h2>Map</h2>
+                  <div id="map-slider">
+                     <div class="slide" id="Field">
+                         <div class="slide-head">
+                            <img class="chevronsWhite left" data-map="Pot">
+                                <span class="map slide-text">Field</span>
+                            <img class="chevronsWhite" data-map="Pot">
+                         </div>
+                     </div>
+                     <div class="slide hidden" id="Pot">
+                        <div class="slide-head">
+                            <img class="chevronsWhite left" data-map="Field">
+                                <span class="map slide-text">Pot</span>
+                            <img class="chevronsWhite" data-map="Field">
+                        </div>
+                    </div>
+                 </div>
+            </div>
+        </div> <!-- End of Header row -->
+        <div class="room-background">
+            <h1 id="room-title">ROOM</h1>
+            <span class="count" id="room-player-count">?/4</span>
+        </div> 
+    </div> <!-- End of room settings -->
+  
+    
+        <div class="row">
+            <div class="left-col col">
+                <div class="player-slot-1 player-slot"></div>
+                <div class="player-slot-2 player-slot"></div>
+                <div class="player-slot-3 player-slot"></div>
+                <div class="player-slot-4 player-slot"></div>
+            </div>
+            <div class="mid-col col">
+                <div  class="playButton">
+                    <img id="redplane" class="redplane">
+                    <img id="play" class="play">
+                    <h3 id="random">Start</h3>
+                </div>
+                <div class="leave"><button class="leave-button" id="leave-room">Leave room</button></div>
+
+            </div>
+        </div>
+        
+
+
+
+</div>
+
+<!-- all UI for Footer-->
+<div id="move" class="footer">
+    <div class="ribbon">
+        <a id="open-footer" href="#move">Settings</a>
+    </div>
+    <div class="banner">
+        <div class="closeBanner"><a  href="#">X</a></div>
+        <div class="controls">
+            <h2>Controls</h2>
+                <div class="control-key" id="key-w">
+                    <p><div>W</div>
+                        <span>Forward</span>
+                    </p>
+                </div>
+                <div class="keys-asd">
+                    <div class="control-key" id="key-a">
+                        <p><div>A</div>
+                            <span>Left</span>
+                        </p>
+                    </div>
+                    <div class="control-key" id="key-s">
+                        <p><div>S</div>
+                            <span>Back</span>
+                        </p>
+                    </div>
+                    <div class="control-key" id="key-d">
+                        <p><div>D</div>
+                            <span>Right</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            <div class="settings">
+                <h2 class="h2-sound">Music</h2>
+                <input type="range">
+                <h2 class="h2-sound">Effects</h2>
+                <input type="range">
+                <h2 class="h2-sound">Volume</h2>
+                <input type="range">
+            </div>
+        </div>
+    </div>
