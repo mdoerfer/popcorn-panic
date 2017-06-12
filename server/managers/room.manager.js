@@ -57,7 +57,7 @@ RoomManager.prototype.getRandomRoom = function() {
         i++;
     }
 
-    return foundRoom.getName();
+    return foundRoom;
 };
 
 /**

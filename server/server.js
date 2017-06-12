@@ -258,8 +258,29 @@ function onJoinRoom(socket) {
         var playerId = socket.id;
 
         //Handle random room joining
-        var randomRoom = payload.data.random;
-        var roomName = (randomRoom) ? game.roomManager.getRandomRoom() : payload.data.roomName;
+        var joinRandom = payload.data.random;
+        var roomName = '';
+
+        if(joinRandom) {
+            var randomRoom = game.roomManager.getRandomRoom();
+
+            if(randomRoom !== null) {
+                roomName = randomRoom.getName();
+            }
+            else {
+                //Inform user of error
+                socket.emit('room-joined', {
+                    state: 'error',
+                    target: 'me',
+                    message: "No random room found."
+                });
+
+                return;
+            }
+        }
+        else {
+            roomName = payload.data.roomName;
+        }
 
         //Check if room exists and player hasn't joined any rooms yet
         var playerMayJoin = game.roomManager.roomExists(roomName) && !game.roomManager.playerIsMemberAlready(playerId);
