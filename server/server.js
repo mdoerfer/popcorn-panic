@@ -219,7 +219,6 @@ function onCreateRoom(socket) {
             socket.broadcast.emit('room-created', {
                 state: 'success',
                 data: {
-                    room: room,
                     rooms: game.roomManager.getRooms()
                 }
             })
