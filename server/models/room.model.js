@@ -76,7 +76,6 @@ Room.prototype.removePlayer = function(playerId) {
             //Set new owner of room if owner is leaving
             if(self.hasOwner(playerId)) {
                 self.setOwner(self.getPlayers()[0]);
-                console.log('CHANGING_ROOM_OWNERSHIP_OWNER_LEFT');
             }
 
             removedPlayer = true;
