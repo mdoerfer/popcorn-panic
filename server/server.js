@@ -147,7 +147,7 @@ function onChooseName(socket) {
 
         //Get variables
         var playerId = socket.id;
-        var playerName = payload.name;
+        var playerName = payload.data.playerName;
 
         //Change player name
         var player = game.playerManager.getPlayer(playerId).setName(playerName);
@@ -174,7 +174,7 @@ function onChooseCharacter(socket) {
 
         //Get variables
         var playerId = socket.id;
-        var playerCharacter = payload.character;
+        var playerCharacter = payload.data.playerCharacter;
 
         //Change player character
         var player = game.playerManager.getPlayer(playerId).setCharacter(playerCharacter);
@@ -197,7 +197,7 @@ function onCreateRoom(socket) {
     socket.on('create-room', function(payload) {
         //Get variables
         var playerId = socket.id;
-        var roomName = payload.name;
+        var roomName = payload.data.roomName;
 
         //Try creating
         var roomCreated = game.roomManager.createRoom(roomName, playerId);
@@ -251,7 +251,7 @@ function onJoinRoom(socket) {
     socket.on('join-room', function(payload) {
         //Get variables
         var playerId = socket.id;
-        var roomName = payload.name;
+        var roomName = payload.data.roomName;
 
         //Check if room exists and player hasn't joined any rooms yet
         var playerMayJoin = game.roomManager.roomExists(roomName) && !game.roomManager.playerIsMemberAlready(playerId);
@@ -339,7 +339,7 @@ function onLeaveRoom(socket) {
     socket.on('leave-room', function(payload) {
         //Get variables
         var playerId = socket.id;
-        var roomName = payload.name;
+        var roomName = payload.data.roomName;
 
         //Check if room exists
         var roomExists = game.roomManager.roomExists(roomName);
@@ -429,8 +429,8 @@ function onChangeMap(socket) {
     socket.on('change-map', function(payload) {
         //Get variables
         var playerId = socket.id;
-        var roomName = payload.roomName;
-        var mapName = payload.mapName;
+        var roomName = payload.data.roomName;
+        var mapName = payload.data.mapName;
 
         //Check if room exists
         var roomExists = game.roomManager.roomExists(roomName);
@@ -494,8 +494,8 @@ function onChangeMode(socket) {
     socket.on('change-mode', function(payload) {
         //Get variables
         var playerId = socket.id;
-        var roomName = payload.roomName;
-        var modeName = payload.modeName;
+        var roomName = payload.data.roomName;
+        var modeName = payload.data.modeName;
 
         //Check if room exists
         var roomExists = game.roomManager.roomExists(roomName);
@@ -559,7 +559,7 @@ function onStartGame(socket) {
     socket.on('start-game', function(payload) {
         //Get variables
         var playerId = socket.id;
-        var roomName = payload.roomName;
+        var roomName = payload.data.roomName;
 
         //Check if room exists
         var roomExists = game.roomManager.roomExists(roomName);
