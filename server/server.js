@@ -116,6 +116,7 @@ function onJoinLobby(socket) {
         //Give lobby information to new player
         socket.emit('lobby-joined', {
             state: 'success',
+            target: 'me',
             data: {
                 myPlayer: game.playerManager.getPlayer(playerId),
                 players: game.playerManager.getPlayers(),
@@ -126,6 +127,7 @@ function onJoinLobby(socket) {
         //Inform all players about somebody joining the lobby
         socket.broadcast.emit('lobby-joined', {
             state: 'success',
+            target: 'other',
             data: {
                 players: game.playerManager.getPlayers(),
                 rooms: game.roomManager.getRooms()
@@ -153,6 +155,7 @@ function onChooseName(socket) {
         //Give new player new information about himself
         socket.emit('name-chosen', {
             state: 'success',
+            target: 'me',
             data: {
                 player: player
             }
@@ -179,6 +182,7 @@ function onChooseCharacter(socket) {
         //Give new player new information about himself
         socket.emit('character-chosen', {
             state: 'success',
+            target: 'me',
             data: {
                 player: player
             }
@@ -209,6 +213,7 @@ function onCreateRoom(socket) {
             //Inform user about room creation
             socket.emit('room-created', {
                 state: 'success',
+                target: 'me',
                 data: {
                     room: room,
                     rooms: game.roomManager.getRooms()
@@ -218,6 +223,7 @@ function onCreateRoom(socket) {
             //Inform all other users about room creation
             socket.broadcast.emit('room-created', {
                 state: 'success',
+                target: 'other',
                 data: {
                     rooms: game.roomManager.getRooms()
                 }
@@ -231,6 +237,7 @@ function onCreateRoom(socket) {
             //Inform user about error
             socket.emit('room-created', {
                 state: 'error',
+                target: 'me',
                 message: "Couldn't create room"
             });
         }
@@ -271,18 +278,19 @@ function onJoinRoom(socket) {
                 //Inform game room about user joining
                 io.to(room.getName()).emit('room-joined', {
                     state: 'success',
+                    target: 'room',
                     data: {
                         room: room,
-                        rooms: game.roomManager.getRooms(),
-                        player: newPlayer,
-                        players: roomPlayers
+                        newPlayer: newPlayer
                     }
                 });
 
                 //Inform user about joining the room
                 socket.emit('room-joined', {
                     state: 'success',
+                    target: 'me',
                     data: {
+                        room: room,
                         rooms: game.roomManager.getRooms()
                     }
                 });
@@ -290,6 +298,7 @@ function onJoinRoom(socket) {
                 //Inform all other users that someone joined a room
                 socket.broadcast.emit('room-joined', {
                     state: 'success',
+                    target: 'other',
                     data: {
                         rooms: game.roomManager.getRooms()
                     }
@@ -303,6 +312,7 @@ function onJoinRoom(socket) {
                 //Inform user of error
                 socket.emit('room-joined', {
                     state: 'error',
+                    target: 'me',
                     message: "Player couldn't join room."
                 });
             }
@@ -315,6 +325,7 @@ function onJoinRoom(socket) {
             //Inform user of error
             socket.emit('room-joined', {
                 state: 'error',
+                target: 'me',
                 message: "Room doesn't exist or player is already member of a room."
             });
         }
@@ -354,7 +365,9 @@ function onLeaveRoom(socket) {
                 //Inform game room about user leaving
                 io.to(room.getName()).emit('room-left', {
                     state: 'success',
+                    target: 'room',
                     data: {
+                        room: room,
                         player: player
                     }
                 });
@@ -362,6 +375,7 @@ function onLeaveRoom(socket) {
                 //Inform player about leaving the room
                 socket.emit('room-left', {
                     state: 'success',
+                    target: 'me',
                     data: {
                         player: player
                     }
@@ -388,6 +402,7 @@ function onLeaveRoom(socket) {
 
                 socket.emit('room-left', {
                     state: 'error',
+                    target: 'me',
                     message: "Player couldn't leave room."
                 });
             }
@@ -400,6 +415,7 @@ function onLeaveRoom(socket) {
             //Inform user of error
             socket.emit('room-left', {
                 state: 'error',
+                target: 'me',
                 message: "Room doesn't exist."
             });
         }
@@ -437,6 +453,7 @@ function onChangeMap(socket) {
                 //Inform game room about map change
                 io.to(room.getName()).emit('map-changed', {
                     state: 'success',
+                    target: 'room',
                     data: {
                         room: room
                     }
@@ -450,6 +467,7 @@ function onChangeMap(socket) {
                 //Inform user of error
                 socket.emit('map-changed', {
                     state: 'error',
+                    target: 'me',
                     message: "Player can't change map, because he is not the room owner."
                 });
             }
@@ -462,6 +480,7 @@ function onChangeMap(socket) {
             //Inform user of error
             socket.emit('map-changed', {
                 state: 'error',
+                target: 'me',
                 message: "Room doesn't exist."
             });
         }
@@ -499,6 +518,7 @@ function onChangeMode(socket) {
                 //Inform game room about mode change
                 io.to(room.getName()).emit('mode-changed', {
                     state: 'success',
+                    target: 'room',
                     data: {
                         room: room
                     }
@@ -512,6 +532,7 @@ function onChangeMode(socket) {
                 //Inform user of error
                 socket.emit('mode-changed', {
                     state: 'error',
+                    target: 'me',
                     message: "Player can't change mode, because he is not the room owner."
                 });
             }
@@ -524,6 +545,7 @@ function onChangeMode(socket) {
             //Inform user of error
             socket.emit('mode-changed', {
                 state: 'error',
+                target: 'me',
                 message: "Room doesn't exist."
             });
         }
@@ -560,6 +582,7 @@ function onStartGame(socket) {
                 //Inform game room about mode change
                 io.to(room.getName()).emit('game-started', {
                     state: 'success',
+                    target: 'room',
                     data: {
                         room: room
                     }
@@ -573,6 +596,7 @@ function onStartGame(socket) {
                 //Inform user of error
                 socket.emit('game-started', {
                     state: 'error',
+                    target: 'me',
                     message: "Player can't start game, because he is not the room owner."
                 });
             }
@@ -585,6 +609,7 @@ function onStartGame(socket) {
             //Inform user of error
             socket.emit('game-started', {
                 state: 'error',
+                target: 'me',
                 message: "Room doesn't exist."
             });
         }
