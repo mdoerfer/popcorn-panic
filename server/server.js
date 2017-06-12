@@ -118,7 +118,7 @@ function onJoinLobby(socket) {
             state: 'success',
             target: 'me',
             data: {
-                myPlayer: game.playerManager.getPlayer(playerId),
+                me: game.playerManager.getPlayer(playerId),
                 players: game.playerManager.getPlayers(),
                 rooms: game.roomManager.getRooms()
             }
