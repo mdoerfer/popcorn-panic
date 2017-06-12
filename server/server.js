@@ -207,6 +207,9 @@ function onCreateRoom(socket) {
             util.log();
             util.log('ROOM_CREATED.');
 
+            //Join socket room
+            socket.join(room.getName());
+
             //Get room
             var room = game.roomManager.getRoom(roomName);
 
@@ -281,16 +284,8 @@ function onJoinRoom(socket) {
                     target: 'room',
                     data: {
                         room: room,
-                        newPlayer: newPlayer
-                    }
-                });
-
-                //Inform user about joining the room
-                socket.emit('room-joined', {
-                    state: 'success',
-                    target: 'me',
-                    data: {
-                        room: room,
+                        roomPlayers: roomPlayers,
+                        newPlayer: newPlayer,
                         rooms: game.roomManager.getRooms()
                     }
                 });
@@ -359,22 +354,29 @@ function onLeaveRoom(socket) {
                 //Leave socket room
                 socket.leave(room.getName());
 
-                //Get leaving player
-                var player = game.playerManager.getPlayer(playerId);
+                //Payload variables
+                var leavingPlayer = game.playerManager.getPlayer(playerId),
+                    roomPlayers = game.playerManager.getPlayers(room.getPlayers());
 
                 //Inform game room about user leaving
                 io.to(room.getName()).emit('room-left', {
                     state: 'success',
                     target: 'room',
                     data: {
-                        leavingPlayer: player
+                        room: room,
+                        roomPlayers: roomPlayers,
+                        leavingPlayer: leavingPlayer,
+                        rooms: game.roomManager.getRooms()
                     }
                 });
 
                 //Inform player about leaving the room
                 socket.emit('room-left', {
                     state: 'success',
-                    target: 'me'
+                    target: 'me',
+                    data: {
+                        rooms: game.roomManager.getRooms()
+                    }
                 });
 
                 //If room is empty now, remove it
