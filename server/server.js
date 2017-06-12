@@ -207,11 +207,12 @@ function onCreateRoom(socket) {
             util.log();
             util.log('ROOM_CREATED.');
 
-            //Join socket room
-            socket.join(roomName);
-
             //Get room
-            var room = game.roomManager.getRoom(roomName);
+            var room = game.roomManager.getRoom(roomName),
+                roomPlayers = game.playerManager.getPlayers(room.getPlayers());
+
+            //Join socket room
+            socket.join(room.getName());
 
             //Inform user about room creation
             socket.emit('room-created', {
@@ -219,6 +220,7 @@ function onCreateRoom(socket) {
                 target: 'me',
                 data: {
                     room: room,
+                    roomPlayers: roomPlayers,
                     rooms: game.roomManager.getRooms()
                 }
             });
