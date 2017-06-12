@@ -16,10 +16,12 @@ const Room = function(roomName, ownerId) {
     this.maxPlayers = 4;
     this.started = false;
     this.possibleModes = [
-        'Deathmatch'
+        'Deathmatch',
+        'CaptureTheFlag'
     ];
     this.possibleMaps = [
-        'Field'
+        'Field',
+        'Pot'
     ];
     this.mode = this.possibleModes[0];
     this.map = this.possibleMaps[0];
