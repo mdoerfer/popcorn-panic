@@ -146,7 +146,12 @@ RoomManager.prototype.removeLeftovers = function(playerId) {
       }
 
       if(this.hasOwner(playerId)) {
-          self.removeRoom(this.getName());
+          if(this.wouldBeEmpty()) {
+              self.removeRoom(this.getName());
+          }
+          else {
+              this.setOwner(this.getPlayers()[0]);
+          }
       }
   });
 };
