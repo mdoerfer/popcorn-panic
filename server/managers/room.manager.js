@@ -41,6 +41,26 @@ RoomManager.prototype.getRoom = function(roomName) {
 };
 
 /**
+ * Return single room by random
+ *
+ * @returns {null|String}
+ */
+RoomManager.prototype.getRandomRoom = function() {
+    var foundRoom = null;
+    var i = 0;
+
+    while(foundRoom === null && i < this.rooms.length) {
+        if(this.rooms[i].isntFull()) {
+            foundRoom = this.rooms[i];
+        }
+
+        i++;
+    }
+
+    return foundRoom.getName();
+};
+
+/**
  * Create room
  *
  * @param roomName

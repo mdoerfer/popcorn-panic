@@ -256,7 +256,10 @@ function onJoinRoom(socket) {
     socket.on('join-room', function(payload) {
         //Get variables
         var playerId = socket.id;
-        var roomName = payload.data.roomName;
+
+        //Handle random room joining
+        var randomRoom = payload.data.random;
+        var roomName = (randomRoom) ? game.roomManager.getRandomRoom() : payload.data.roomName;
 
         //Check if room exists and player hasn't joined any rooms yet
         var playerMayJoin = game.roomManager.roomExists(roomName) && !game.roomManager.playerIsMemberAlready(playerId);
