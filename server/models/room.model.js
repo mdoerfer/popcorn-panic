@@ -13,10 +13,16 @@ const Room = function(roomName, ownerId) {
     this.owner = ownerId;
     this.name = roomName;
     this.players = [];
-    this.mode = '';
-    this.map = '';
     this.maxPlayers = 4;
     this.started = false;
+    this.possibleModes = [
+        'Deathmatch'
+    ];
+    this.possibleMaps = [
+        'Field'
+    ];
+    this.mode = this.possibleModes[0];
+    this.map = this.possibleMaps[0];
 };
 
 /**
@@ -91,7 +97,12 @@ Room.prototype.removePlayer = function(playerId) {
  * @param roomMode
  */
 Room.prototype.setMode = function(roomMode) {
-    this.mode = roomMode;
+    if(this.possibleModes.indexOf(roomMode) !== -1) {
+        this.mode = roomMode;
+    }
+    else {
+        this.mode = this.possibleModes[0];
+    }
 
     return this;
 };
@@ -102,7 +113,12 @@ Room.prototype.setMode = function(roomMode) {
  * @param roomMap
  */
 Room.prototype.setMap = function(roomMap) {
-    this.map = roomMap;
+    if(this.possibleMaps.indexOf(roomMap) !== -1) {
+        this.map = roomMap;
+    }
+    else {
+        this.map = this.possibleMaps[0];
+    }
 
     return this;
 };
