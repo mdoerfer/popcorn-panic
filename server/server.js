@@ -208,8 +208,10 @@ function onCreateRoom(socket) {
             util.log('ROOM_CREATED.');
 
             //Get room
-            var room = game.roomManager.getRoom(roomName),
-                roomPlayers = game.playerManager.getPlayers(room.getPlayers());
+            var room = game.roomManager.getRoom(roomName);
+
+            //Replace player ids with player data
+            room.players = game.playerManager.getPlayers(room.getPlayers());
 
             //Join socket room
             socket.join(room.getName());
@@ -220,7 +222,6 @@ function onCreateRoom(socket) {
                 target: 'me',
                 data: {
                     room: room,
-                    roomPlayers: roomPlayers,
                     rooms: game.roomManager.getRooms()
                 }
             });
@@ -277,8 +278,10 @@ function onJoinRoom(socket) {
                 socket.join(room.getName());
 
                 //Payload variables
-                var newPlayer = game.playerManager.getPlayer(playerId),
-                    roomPlayers = game.playerManager.getPlayers(room.getPlayers());
+                var newPlayer = game.playerManager.getPlayer(playerId);
+
+                //Replace player ids with player data
+                room.players = game.playerManager.getPlayers(room.getPlayers());
 
                 //Inform game room about user joining
                 io.to(room.getName()).emit('room-joined', {
@@ -286,7 +289,6 @@ function onJoinRoom(socket) {
                     target: 'room',
                     data: {
                         room: room,
-                        roomPlayers: roomPlayers,
                         newPlayer: newPlayer,
                         rooms: game.roomManager.getRooms()
                     }
@@ -357,8 +359,10 @@ function onLeaveRoom(socket) {
                 socket.leave(room.getName());
 
                 //Payload variables
-                var leavingPlayer = game.playerManager.getPlayer(playerId),
-                    roomPlayers = game.playerManager.getPlayers(room.getPlayers());
+                var leavingPlayer = game.playerManager.getPlayer(playerId);
+
+                //Replace player ids with player data
+                room.players = game.playerManager.getPlayers(room.getPlayers());
 
                 //Inform game room about user leaving
                 io.to(room.getName()).emit('room-left', {
@@ -366,7 +370,6 @@ function onLeaveRoom(socket) {
                     target: 'room',
                     data: {
                         room: room,
-                        roomPlayers: roomPlayers,
                         leavingPlayer: leavingPlayer,
                         rooms: game.roomManager.getRooms()
                     }
@@ -450,6 +453,9 @@ function onChangeMap(socket) {
                 //Set the map
                 room.setMap(mapName);
 
+                //Replace player ids with player data
+                room.players = game.playerManager.getPlayers(room.getPlayers());
+
                 //Inform game room about map change
                 io.to(room.getName()).emit('map-changed', {
                     state: 'success',
@@ -515,6 +521,9 @@ function onChangeMode(socket) {
                 //Set the mode
                 room.setMode(modeName);
 
+                //Replace player ids with player data
+                room.players = game.playerManager.getPlayers(room.getPlayers());
+
                 //Inform game room about mode change
                 io.to(room.getName()).emit('mode-changed', {
                     state: 'success',
@@ -578,6 +587,9 @@ function onStartGame(socket) {
 
                 //Start the game
                 room.startGame();
+
+                //Replace player ids with player data
+                room.players = game.playerManager.getPlayers(room.getPlayers());
 
                 //Inform game room about mode change
                 io.to(room.getName()).emit('game-started', {
