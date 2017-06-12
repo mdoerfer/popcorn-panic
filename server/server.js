@@ -157,7 +157,7 @@ function onChooseName(socket) {
             state: 'success',
             target: 'me',
             data: {
-                player: player
+                me: player
             }
         });
     });
@@ -184,7 +184,7 @@ function onChooseCharacter(socket) {
             state: 'success',
             target: 'me',
             data: {
-                player: player
+                me: player
             }
         });
     });
@@ -367,18 +367,14 @@ function onLeaveRoom(socket) {
                     state: 'success',
                     target: 'room',
                     data: {
-                        room: room,
-                        player: player
+                        leavingPlayer: player
                     }
                 });
 
                 //Inform player about leaving the room
                 socket.emit('room-left', {
                     state: 'success',
-                    target: 'me',
-                    data: {
-                        player: player
-                    }
+                    target: 'me'
                 });
 
                 //If room is empty now, remove it
@@ -576,7 +572,7 @@ function onStartGame(socket) {
                 util.log();
                 util.log('START_GAME.');
 
-                //Set the mode
+                //Start the game
                 room.startGame();
 
                 //Inform game room about mode change
