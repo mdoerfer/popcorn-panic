@@ -63,45 +63,6 @@ Lobby.attributes.add('lobbyCss', {
 });
 
 /**
- * Change scene
- * 
- * @param sceneId
- */
-Lobby.prototype.changeScenes = function(sceneId) {
-    // Get a reference to the current root object
-    var oldHierarchy = this.app.root.findByName ('Root');
-    
-    // Load the new scene. The scene ID is found by loading the scene in the editor and 
-    // taking the number from the URL
-    // e.g. If the URL when Scene 1 is loaded is: https://playcanvas.com/editor/scene/475211
-    // The ID is the number on the end (475211)
-    this.loadScene (sceneId, function () {
-        // Once the new scene has been loaded, destroy the old one
-        oldHierarchy.destroy ();
-    });
-};
-
-/**
- * Load scene
- * 
- * @param id
- * @param callback
- */
-Lobby.prototype.loadScene = function (id, callback) {
-    // Get the path to the scene
-    var url = id  + ".json";
-    
-    // Load the scenes entity hierarchy
-    this.app.loadSceneHierarchy(url, function (err, parent) {
-        if (!err) {
-            callback(parent);
-        } else {
-            console.error (err);
-        }
-    });
-};
-
-/**
  * Initialize component
  */
 Lobby.prototype.initialize = function() {
@@ -164,6 +125,12 @@ Lobby.prototype.loadLobby = function() {
     for(var i = 0; i < chevrons.length; i++) {
         chevrons[i].setAttribute('src', this.chevron.getFileUrl());
     }
+    
+    /**
+     * Bind event listeners
+     */
+    this.bindDataEventListeners();
+    this.bindHTMLEventListeners();
 };
 
 /**
@@ -174,215 +141,67 @@ Lobby.prototype.initializeClient = function() {
     game.client.connect();
     
     //Join lobby
-    game.client.joinLobby();
-    
-    //Bind event listeners
-    game.client.socket.on('lobby-joined', this.onLobbyJoined);
-    game.client.socket.on('name-chosen', this.onNameChosen);
-    game.client.socket.on('character-chosen', this.onCharacterChosen);
-    game.client.socket.on('room-created', this.onRoomCreated);
-    game.client.socket.on('room-joined', this.onRoomJoined);
-    game.client.socket.on('room-left', this.onRoomLeft);
-    game.client.socket.on('game-started', this.onGameStarted);
-    game.client.socket.on('map-changed', this.onMapChanged);
-    game.client.socket.on('mode-changed', this.onModeChanged);
+    game.client.joinLobby();  
 };
 
 /**
- * React on lobby joined
+ * Bind data event listeners
  */
-Lobby.prototype.onLobbyJoined = function(payload) {
-   if(payload.state === 'success') {
-       //Console
-        console.info('Lobby joined');
-        console.log(payload.data);
-       
-       //Get variables
-       var myPlayer = payload.data.myPlayer;
-       var rooms = payload.data.rooms;
-       var players = payload.data.players;
-       
-       //Set initial name
-       if(typeof myPlayer !== "undefined") {
-           //Set player name input
-           updatePlayerNameInput(myPlayer.name);
-           
-           //Set character slider to initial character
-           updatePlayerCharacterSlider(myPlayer.character);
-           
-           //Update character on change
-           addCharacterChangeListener();
-       }
-       
-       //Set initial rooms
-       updateLobbyRooms(rooms);
-       
-       //Add listener for room creation
-       addCreateRoomListener();
-       
-       //Show players online
-       updatePlayersOnline(players);
-       
-       //Update name on change
-       addPlayerNameInputChangeListener();
-    }
-    else {
-        //Console
-        console.log('Error joining lobby');
-    }
-};
-
-/**
- * React on name chosen
- */ 
-Lobby.prototype.onNameChosen = function(payload) {
-    if(payload.state === 'success') {
-        //Console
-        console.info('Name chosen.');
-        
-        //Get variables
-        var player = payload.data.player;
-        
-        //Set new name
+Lobby.prototype.bindDataEventListeners = function() {
+    this.app.on('lobby:joined', function(player, rooms, players) {      
+        //Player name
         updatePlayerNameInput(player.name);
-    }
-    else {
-        //Console
-        console.log('Error during name change');
-    } 
-};
-
-/**
- * React on name chosen
- */ 
-Lobby.prototype.onCharacterChosen = function(payload) {
-    if(payload.state === 'success') {
-        //Console
-        console.info('Character chosen.');
         
-        //Get variables
-        var character = payload.data.player.character;
+        //Players online
+        updatePlayersOnline(players);
         
-        //Update character slider
+        //Player character
+        updatePlayerCharacterSlider(player.character);
+        
+        //Rooms
+        updateLobbyRooms(rooms);
+    });
+    
+    this.app.on('lobby:name-chosen', function(name) {
+       //Player name
+        updatePlayerNameInput(name);
+    });
+    
+    this.app.on('lobby:character-chosen', function(character) {
+       //Player character
         updatePlayerCharacterSlider(character);
-    }
-    else {
-        //Console
-        console.log('Error during character change');
-    } 
-};
-
-/**
- * React on room created
- */
-Lobby.prototype.onRoomCreated = function(payload) {
-    if(payload.state === 'success') {
-        //Console
-        console.info('Room created.');
-        
-        //Get variables
-        var room = payload.data.room;
-        var rooms = payload.data.rooms;
-        
-        //Join room
-        if(room.owner === game.client.socket.id) {
-            game.client.joinRoom(room.name);
-        }
-        
-        //Update lobby rooms
+    });
+    
+     this.app.on('lobby:room-created', function(rooms) {
+       //Rooms
         updateLobbyRooms(rooms);
-    }
-    else {
-        //Console
-        console.log('Error during room creation');
-    }
-};
-
-/**
- * React on room joined
- */
-Lobby.prototype.onRoomJoined = function(payload) {
-   if(payload.state === 'success') {
-       //Console
-       console.info('Room joined.');
-       var rooms = payload.data.rooms;
-       
+    });
+    
+    this.app.on('lobby:room-joined', function(rooms) {
+       //Rooms
         updateLobbyRooms(rooms);
-       
-       if(typeof payload.data.room !== "undefined") {
-           //TODO: Change scene to room
-           console.log('TODO: CHANGE SCENE TO ROOM');
-       }
-    }
-    else {
-        console.log('Error joining room');
-    }
+    });
+    
+     this.app.on('lobby:room-left', function(rooms) {
+       //Rooms
+        updateLobbyRooms(rooms);
+    });
+    
+    this.app.on('lobby:game-started', function(rooms) {
+       //Rooms
+        updateLobbyRooms(rooms);
+    });
 };
 
 /**
- * React on room left
+ * Bind html event listeners
  */
-Lobby.prototype.onRoomLeft = function(payload) {
-   if(payload.state === 'success') {
-       //Console
-       console.info('Room left.');
-       
-       //Join lobby
-        game.client.joinLobby();
-    }
-    else {
-        //Console
-        console.log('Error leaving room.');
-    }
+Lobby.prototype.bindHTMLEventListeners = function() {
+    addPlayerNameInputChangeListener();
+    addPlayerCharacterChangeListener();
+    addCreateRoomListener();
 };
 
-/**
- * React on game started
- */
-Lobby.prototype.onGameStarted = function(payload) {
-   if(payload.state === 'success') {
-        //Console
-        console.info('Game started.');
-        console.log(payload.data);
-       
-       //TODO: Change scene to game scene
-       console.log('TODO: CHANGE SCENE TO GAME');
-    }
-    else {
-        //Console
-        console.info('Error starting game.');
-    } 
-};
-
-/**
- * React on map changed
- */
-Lobby.prototype.onMapChanged = function(payload) {
-   if(payload.state === 'success') {
-       //Console
-        console.info('Changed map.');
-        console.log(payload.data);
-    }
-    else {
-        //Console
-        console.log('Error changing map.');
-    }
-};
-
-/**
- * React on mode changed
- */
-Lobby.prototype.onModeChanged = function(payload) {
-   if(payload.state === 'success') {
-       //Console
-        console.info('Changed mode.');
-        console.log(payload.data);
-    }
-    else {
-        //Console
-        console.log('Error changing mode.');
-    }
-};
 
 /**
  * --------------------------
@@ -436,7 +255,7 @@ function updatePlayerCharacterSlider(character) {
 }
 
 //Choose character on slider click
-function addCharacterChangeListener() {
+function addPlayerCharacterChangeListener() {
     var slideControls = document.querySelectorAll('[data-char]');
     
     //Function callback for loop
@@ -483,6 +302,11 @@ function fillLobbyRooms(rooms) {
     
     if(rooms.length) {
         for(var i = 0; i < rooms.length; i++) {
+            //Skip room if game already started
+            if(rooms[i].started) continue;
+            //Skip room if it's full
+            if(rooms[i].players.length >= rooms[i].maxPlayers) continue;
+            
             var item = document.createElement('li');
             var name = document.createElement('h3');
             var count = document.createElement('span');

@@ -106,9 +106,9 @@ RoomManager.prototype.playerIsOwnerAlready = function(playerId) {
     var isOwnerAlready = false;
 
     _.foreach(this.rooms, function() {
-       if(this.hasOwner(playerId)) {
-           isOwnerAlready = true;
-       }
+        if(this.hasOwner(playerId)) {
+            isOwnerAlready = true;
+        }
     });
 
     return isOwnerAlready;
@@ -140,20 +140,20 @@ RoomManager.prototype.removeLeftovers = function(playerId) {
     var self = this;
 
     //Remove player from rooms he was in
-  _.foreach(this.rooms, function() {
-      if(this.hasPlayer(playerId)) {
-          this.removePlayer(playerId);
-      }
+    _.foreach(this.rooms, function() {
+        if(this.hasPlayer(playerId)) {
+            this.removePlayer(playerId);
+        }
 
-      if(this.hasOwner(playerId)) {
-          if(this.wouldBeEmpty()) {
-              self.removeRoom(this.getName());
-          }
-          else {
-              this.setOwner(this.getPlayers()[0]);
-          }
-      }
-  });
+        if(this.hasOwner(playerId)) {
+            if(this.wouldBeEmpty()) {
+                self.removeRoom(this.getName());
+            }
+            else {
+                this.setOwner(this.getPlayers()[0]);
+            }
+        }
+    });
 };
 
 module.exports = RoomManager;
