@@ -235,4 +235,8 @@ Room.prototype.stopGame = function() {
   this.started = false;
 };
 
+Room.prototype.hasStarted = function() {
+  return this.started;
+};
+
 module.exports = Room;

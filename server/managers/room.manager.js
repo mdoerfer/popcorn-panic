@@ -155,6 +155,24 @@ RoomManager.prototype.playerIsMemberAlready = function(playerId) {
 };
 
 /**
+ * Check if game has started already by room name
+ *
+ * @param roomName
+ * @returns {boolean}
+ */
+RoomManager.prototype.gameHasStarted = function(roomName) {
+    var hasStarted = false;
+
+    _.foreach(this.rooms, function() {
+        if((this.getName() === roomName) && this.hasStarted()) {
+            hasStarted = true;
+        }
+    });
+
+    return hasStarted;
+};
+
+/**
  * Remove players from rooms he joined and remove his created rooms
  *
  * @param playerId
