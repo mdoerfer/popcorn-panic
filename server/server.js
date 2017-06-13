@@ -81,6 +81,7 @@ function bindEventHandlers(socket) {
     onChangeMap(socket);
     onChangeMode(socket);
     onStartGame(socket);
+    onMovePlayer(socket);
 }
 
 /**
@@ -657,5 +658,25 @@ function onStartGame(socket) {
                 message: "Room doesn't exist."
             });
         }
+    });
+}
+
+function onMovePlayer(socket) {
+    socket.on('move-player', function(payload) {
+        var playerId = socket.id;
+        var room = payload.data.room;
+        var playerLocation = payload.data.location;
+        var playerRotation = payload.data.rotation;
+
+        var player = game.playerManager.getPlayer(playerId);
+        player.setLocation(playerLocation.x, playerLocation.y, playerLocation.z);
+        player.setRotation(playerRotation.x, playerRotation.y, playerRotation.z);
+
+        io.to(room.name).emit('player-moved', {
+           state: 'success',
+            data: {
+               player: player
+            }
+        });
     });
 }
