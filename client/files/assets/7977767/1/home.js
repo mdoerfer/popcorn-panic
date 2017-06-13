@@ -136,6 +136,7 @@ UI.prototype.loadUI = function() {
     game.images.dummyCorn = (this.dummyCorn !== null) ? this.dummyCorn.getFileUrl() : '';
     game.images.productions = (this.productions !== null) ? this.productions.getFileUrl() : '';
     game.images.tutorial01 = (this.tutorial01 !== null) ? this.tutorial01.getFileUrl() : '';
+    game.images.tutorial02 = (this.tutorial02 !== null) ? this.tutorial02.getFileUrl() : '';
 
     document.getElementById('header-bg').setAttribute('src', game.images.headerBg);
     document.getElementById('header-logo').setAttribute('src', game.images.headerLogo);
@@ -144,6 +145,7 @@ UI.prototype.loadUI = function() {
     document.getElementById('angrycorn-pic').setAttribute('src', game.images.angrycorn);
     document.getElementById('productions').setAttribute('src', game.images.productions);
     document.getElementById('tutorial01').setAttribute('src', game.images.tutorial01);
+    document.getElementById('tutorial02').setAttribute('src', game.images.tutorial02);
 
     var redplanes = document.getElementsByClassName('redplane');
     var play = document.getElementsByClassName('play');
@@ -204,40 +206,50 @@ UI.prototype.showGame = function() {
     this.hideUIPart('room');
     this.hideUIPart('lobby');
     this.hideUIPart('tutorial');
-
+    this.hideUIPart('game');
 
     this.changeScenes(game.scenes.field);
-    //this.showTutorial();
-    this.showUIPart('game');
-
+    
+    this.showTutorial();
 };
 
 UI.prototype.showTutorial = function() {
-
     this.showUIPart('tutorial');
     this.playTutorial();
 
 };
 
 UI.prototype.playTutorial = function() {
-    this.wait(2);
-    // document.getElementById('bg-black').style.backgroundColor="background-color: rgba(0,0,0,0);";
-    console.log(document.getElementById('bg-black'));
+    var self = this;
+    var bgBlack = document.getElementById('bg-black');
+    var productions = document.getElementById('productions');
+    var tutorial01 = document.getElementById('tutorial-part-01');
+    var tutorial02 = document.getElementById('tutorial-part-02');
+    
+    //Fade out bg and logo after 2s
+    setTimeout(function() {
+        bgBlack.style.backgroundColor = "rgba(0,0,0,0.8)";
+        productions.style.opacity = "0";
+        
+        //Fade in tutorial01
+        setTimeout(function() {
+            tutorial01.style.opacity = "1";
+            
+            //Fade in tutorial02
+            setTimeout(function() {
+                tutorial01.style.opacity = "0";
+                tutorial02.style.opacity = "1";
+                
+                //Fade in tutorial01
+                setTimeout(function() {
+                    self.hideUIPart('tutorial');
+                    self.showUIPart('game');
+                }, 2000);
+            }, 2000);
+        }, 500);
+    }, 2000);
 };
 
-UI.prototype.wait = function(timeToWait) {
-    timeToWait *= 1000; // Umrechnung in Millisekunden 
-    var eDate = null;
-    var MilliSecTime = 0;
-    var SysDate = new Date();
-    var SysDateMilli = SysDate.getTime();
-
-    do {
-        eDate = new Date();
-        MilliSecTime = eDate.getTime();
-    }
-    while((MilliSecTime - SysDateMilli) < timeToWait);
-};
 
 UI.prototype.changeScenes = function(sceneId) {
     var oldHierarchy = this.app.root.findByName('Root');

@@ -795,7 +795,7 @@ a:active {
 }
 
 #bg-black {
-    background-color: rgba(0,0,0,1);
+    background-color: black;
     position: absolute; 
     width: 100%;
     height: 100%;
@@ -812,12 +812,19 @@ a:active {
     transition: all 1s ease;
 }
 
-#tutorial01 {
+.tutorial-part {
     position: absolute; 
     left: 50%; 
     transform: translate(-50%, -50%);
     top: 50%; 
     width: 50%;
+    opacity: 0;
+    transition: all 1s ease;
+}
+
+.tutorial-part img{
+    max-width: 100%;
+    height: auto;
 }
 
 .productions{
@@ -826,22 +833,12 @@ a:active {
     
 }
 
-.tutorial01{
-    opacity:0;
-    transition: all 1s ease;
-}
-
-tutorial02{
-    opacity:1;
-    transition: all 1s ease;
-}
-
 .funny-claim {
     position: absolute; 
     left: 50%; 
-    top: 73%; 
+    top: 103%; 
     transform: translate(-50%, -80%);
-    width: 50%;
+    width: 100%;
     color: white; 
     font-family: Open Sans; 
     text-align: center; 
