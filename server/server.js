@@ -96,8 +96,8 @@ function onDisconnect(socket) {
 
         //Remove player from players and clear up leftovers
         var playerId = socket.id;
-        game.playerManager.removePlayer(playerId);
         game.roomManager.removeLeftovers(game, io, playerId);
+        game.playerManager.removePlayer(playerId);
     });
 }
 
