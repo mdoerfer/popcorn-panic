@@ -97,19 +97,7 @@ function onDisconnect(socket) {
         //Remove player from players and clear up leftovers
         var playerId = socket.id;
         game.playerManager.removePlayer(playerId);
-        game.roomManager.removeLeftovers(playerId);
-
-        //Leave room if joined one
-        var playerHasRoom = game.roomManager.playerIsMemberAlready(playerId) || game.roomManager.playerIsOwnerAlready(playerId);
-
-        if(playerHasRoom) {
-            var playersRoomName = game.roomManager.getPlayersRoomName(playerId);
-
-            console.log(playersRoomName);
-
-            socketLeaveRoom(socket, playersRoomName);
-        }
-
+        game.roomManager.removeLeftovers(game, io, playerId);
     });
 }
 
@@ -456,100 +444,6 @@ function onLeaveRoom(socket, roomName) {
             });
         }
     });
-}
-
-/**
- * Make socket leave room
- *
- * @param socket
- * @param socketRoomName
- */
-function socketLeaveRoom(socket, socketRoomName) {
-    //Get variables
-    var playerId = socket.id;
-    var roomName = socketRoomName;
-
-    //Check if room exists
-    var roomExists = game.roomManager.roomExists(roomName);
-
-    //If room exists, try leaving
-    if(roomExists) {
-        var room = game.roomManager.getRoom(roomName);
-
-        //Try leaving
-        var roomLeft = room.removePlayer(playerId);
-
-        if(roomLeft) {
-            //Console
-            util.log();
-            util.log('LEAVE_ROOM.');
-
-            //Payload variables
-            var leavingPlayer = game.playerManager.getPlayer(playerId),
-                roomPlayers = game.playerManager.getPlayers(room.getPlayers());
-
-            //Inform game room about user leaving
-            io.to(room.getName()).emit('room-left', {
-                state: 'success',
-                target: 'room',
-                data: {
-                    room: room,
-                    roomPlayers: roomPlayers,
-                    leavingPlayer: leavingPlayer,
-                    rooms: game.roomManager.getRooms()
-                }
-            });
-
-            //Leave socket room
-            socket.leave(room.getName());
-
-            //Inform player about leaving the room
-            socket.emit('room-left', {
-                state: 'success',
-                target: 'me',
-                data: {
-                    rooms: game.roomManager.getRooms()
-                }
-            });
-
-            //If room is empty now, remove it
-            if(room.isEmpty()) {
-                var removedRoom = game.roomManager.removeRoom(room.getName());
-
-                if(removedRoom) {
-                    //Console
-                    util.log('REMOVE_ROOM_BECAUSE_EMPTY.');
-                }
-                else {
-                    //Console
-                    util.log('ERROR_REMOVE_ROOM_BECAUSE_EMPTY.');
-                }
-            }
-        }
-        else {
-            //Console
-            util.log();
-            util.log('ERROR_LEAVE_ROOM.');
-
-            socket.emit('room-left', {
-                state: 'error',
-                target: 'me',
-                message: "Player couldn't leave room."
-            });
-        }
-    }
-    else {
-        //Console
-        util.log();
-        util.log('ERROR_LEAVE_ROOM. (ROOM_DOESNT_EXIST)');
-
-        //Inform user of error
-        socket.emit('room-left', {
-            state: 'error',
-            target: 'me',
-            message: "Room doesn't exist."
-        });
-    }
 }
 
 /**

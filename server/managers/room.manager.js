@@ -187,21 +187,43 @@ RoomManager.prototype.gameHasStarted = function(roomName) {
 /**
  * Remove players from rooms he joined and remove his created rooms
  *
+ * @param game
+ * @param io
  * @param playerId
  */
-RoomManager.prototype.removeLeftovers = function(playerId) {
+RoomManager.prototype.removeLeftovers = function(game, io, playerId) {
     var self = this;
 
     //Remove player from rooms he was in
     _.foreach(this.rooms, function() {
         if(this.hasPlayer(playerId)) {
             this.removePlayer(playerId);
+
+            //Payload variables
+            var leavingPlayer = game.playerManager.getPlayer(playerId),
+                roomPlayers = game.playerManager.getPlayers(this.getPlayers());
+
+            //Inform game room about user leaving
+            io.to(this.getName()).emit('room-left', {
+                state: 'success',
+                target: 'room',
+                data: {
+                    room: this,
+                    roomPlayers: roomPlayers,
+                    leavingPlayer: leavingPlayer,
+                    rooms: game.roomManager.getRooms()
+                }
+            });
         }
 
         if(this.hasOwner(playerId) || this.isEmpty()) {
             self.removeRoom(this.getName());
         }
     });
+
+
+
+
 };
 
 module.exports = RoomManager;
