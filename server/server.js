@@ -663,10 +663,6 @@ function onStartGame(socket) {
 
 function onMovePlayer(socket) {
     socket.on('move-player', function(payload) {
-        //Console
-        util.log();
-        util.log('MOVE_PLAYER');
-
         var playerId = socket.id;
         var roomName = payload.data.roomName;
         var x = payload.data.x;
