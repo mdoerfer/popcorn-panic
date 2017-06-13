@@ -25,6 +25,7 @@ const Room = function(roomName, ownerId) {
     ];
     this.mode = this.possibleModes[0];
     this.map = this.possibleMaps[0];
+    this.gameTime = 2;
 };
 
 /**
@@ -125,6 +126,30 @@ Room.prototype.setMap = function(roomMap) {
     return this;
 };
 
+/**
+ * Set room game time
+ *
+ * @returns {*}
+ */
+Room.prototype.setGameTime = function(time) {
+  if(time > 10) {
+      this.gameTime = 10;
+  }
+  else if(time <= 0) {
+      this.gameTime = 2;
+  }
+  else {
+      this.time = time;
+  }
+
+  return this;
+};
+
+/**
+ * Get room owner
+ *
+ * @returns {*}
+ */
 Room.prototype.getOwner = function() {
     return this.owner;
 };
@@ -163,6 +188,15 @@ Room.prototype.getMode = function() {
  */
 Room.prototype.getMap = function() {
     return this.map;
+};
+
+/**
+ * Get room game time
+ *
+ * @returns {number}
+ */
+Room.prototype.getGameTime = function() {
+  return this.gameTime;
 };
 
 /**
@@ -227,14 +261,25 @@ Room.prototype.hasPlayer = function(playerId) {
     return this.players.indexOf(playerId) !== -1;
 };
 
+/**
+ * Start the game
+ */
 Room.prototype.startGame = function() {
   this.started = true;
 };
 
+/**
+ * Stop the game
+ */
 Room.prototype.stopGame = function() {
   this.started = false;
 };
 
+/**
+ * Check if game has started
+ *
+ * @returns {boolean}
+ */
 Room.prototype.hasStarted = function() {
   return this.started;
 };

@@ -14,6 +14,9 @@ const Player = function(playerId) {
     this.x = 0;
     this.y = 0;
     this.z = 0;
+    this.rotX = 0;
+    this.rotY = 0;
+    this.rotZ = 0;
     this.pressure = 0;
     this.maxPressure = 100;
     this.defaultName = 'Unknown Unicorn';
@@ -24,6 +27,7 @@ const Player = function(playerId) {
     ];
     this.name = this.defaultName;
     this.character = this.possibleCharacters[0];
+    this.kills = 0;
 };
 
 /**
@@ -129,6 +133,54 @@ Player.prototype.setZ = function(playerZ) {
 };
 
 /**
+ * Set player rotation
+ *
+ * @param playerRotationX
+ * @param playerRotationY
+ * @param playerRotationZ
+ */
+Player.prototype.setRotation = function(playerRotationX, playerRotationY, playerRotationZ) {
+    this.rotX = playerRotationX;
+    this.rotY = playerRotationY;
+    this.rotZ = playerRotationZ;
+
+    return this;
+};
+
+/**
+ * Set player X rotation
+ *
+ * @param playerRotationX
+ */
+Player.prototype.setRotationX = function(playerRotationX) {
+    this.rotX = playerRotationX;
+
+    return this;
+};
+
+/**
+ * Set player Y rotation
+ *
+ * @param playerRotationY
+ */
+Player.prototype.setRotationY = function(playerRotationY) {
+    this.rotY = playerRotationY;
+
+    return this;
+};
+
+/**
+ * Set player Z rotation
+ *
+ * @param playerRotationZ
+ */
+Player.prototype.setRotationZ = function(playerRotationZ) {
+    this.rotZ = playerRotationZ;
+
+    return this;
+};
+
+/**
  * Get player name
  *
  * @returns {string|*}
@@ -205,19 +257,87 @@ Player.prototype.getZ = function() {
 };
 
 /**
+ * Get player rotation
+ *
+ * @returns {{x: *, y: *, z: *}}
+ */
+Player.prototype.getRotation = function() {
+    return {
+        x: this.rotX,
+        y: this.rotY,
+        z: this.rotZ
+    };
+};
+
+/**
+ * Get player X rotation
+ *
+ * @returns {number|*}
+ */
+Player.prototype.getRotationX = function() {
+    return this.rotX;
+};
+
+/**
+ * Get player Y rotation
+ *
+ * @returns {number|*}
+ */
+Player.prototype.getRotationY = function() {
+    return this.rotY;
+};
+
+/**
+ * Get player Z rotation
+ *
+ * @returns {*|number}
+ */
+Player.prototype.getRotationZ = function() {
+    return this.rotZ;
+};
+
+/**
  * Let the player take damage by a certain amount
  *
  * @param amount
+ * @returns {boolean} true if player died after taking damage
  */
 Player.prototype.takeDamage = function(amount) {
+    var died = false;
     var newPressure = this.getPressure() + amount;
 
     if(newPressure > this.maxPressure) {
-        this.pressure = this.maxPressure;
+        this.pressure = 0;
+        died = true;
     }
     else {
         this.pressure = newPressure;
     }
+
+    return died;
+};
+
+/**
+ * Get amount of kills
+ *
+ * @returns {number}
+ */
+Player.prototype.getKills = function() {
+  return this.kills;
+};
+
+/**
+ * Add kill
+ */
+Player.prototype.addKill = function() {
+  this.kills++;
+};
+
+/**
+ * Remove kill
+ */
+Player.prototype.removeKill = function() {
+  this.kills--;
 };
 
 /**
@@ -225,10 +345,13 @@ Player.prototype.takeDamage = function(amount) {
  */
 Player.prototype.reset = function() {
     this.pressure = 0;
-    this.character = 'Default';
     this.x = 0;
     this.y = 0;
     this.z = 0;
+    this.rotX = 0;
+    this.rotY = 0;
+    this.rotZ = 0;
+    this.kills = 0;
 };
 
 module.exports = Player;
