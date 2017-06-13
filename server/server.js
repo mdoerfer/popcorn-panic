@@ -377,9 +377,6 @@ function onLeaveRoom(socket) {
                 util.log();
                 util.log('LEAVE_ROOM.');
 
-                //Leave socket room
-                socket.leave(room.getName());
-
                 //Payload variables
                 var leavingPlayer = game.playerManager.getPlayer(playerId),
                     roomPlayers = game.playerManager.getPlayers(room.getPlayers());
@@ -395,6 +392,9 @@ function onLeaveRoom(socket) {
                         rooms: game.roomManager.getRooms()
                     }
                 });
+
+                //Leave socket room
+                socket.leave(room.getName());
 
                 //Inform player about leaving the room
                 socket.emit('room-left', {
