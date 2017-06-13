@@ -22,6 +22,7 @@ var game = game || {
         play: '',
         crown: '',
         dummyCorn: '',
-        productions: ''
+        productions: '',
+        tutorial01: ''
     }
 };

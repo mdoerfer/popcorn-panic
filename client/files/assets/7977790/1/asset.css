@@ -766,6 +766,7 @@ a:active {
     position: relative;
     border: 0px solid black;
     border-radius: 100px;
+    margin: 0 auto;
 }
 
 .actual-pressure {
@@ -793,12 +794,13 @@ a:active {
     transform: translateX(-50%);
 }
 
-.bg-black {
-    background-color: black; 
+#bg-black {
+    background-color: rgba(0,0,0,1);
     position: absolute; 
     width: 100%;
     height: 100%;
     z-index: 1000;
+    transition: all 2s ease;
 }
 
 #productions {
@@ -807,6 +809,41 @@ a:active {
     transform: translate(-50%, -50%);
     top: 50%; 
     width: 50%;
-    opacity: 0; 
-    transition: opacity 1s linear;
+    transition: all 1s ease;
+}
+
+#tutorial01 {
+    position: absolute; 
+    left: 50%; 
+    transform: translate(-50%, -50%);
+    top: 50%; 
+    width: 50%;
+}
+
+.productions{
+    opacity:1;
+    transition: all 2s ease;
+    
+}
+
+.tutorial01{
+    opacity:0;
+    transition: all 1s ease;
+}
+
+tutorial02{
+    opacity:1;
+    transition: all 1s ease;
+}
+
+.funny-claim {
+    position: absolute; 
+    left: 50%; 
+    top: 73%; 
+    transform: translate(-50%, -80%);
+    width: 50%;
+    color: white; 
+    font-family: Open Sans; 
+    text-align: center; 
+    
 }

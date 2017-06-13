@@ -169,7 +169,7 @@
 <!-- all UI for Game-->
 <div id="game" class="game hidden">
     <div id="players" class="players">
-        <div id="player-1" class="player">
+        <div id="player-1" class="player player-hud">
             <div class="player-inner">
                 <p class="player-name">Player 1</p>
                 <div class="pressure">
@@ -180,7 +180,7 @@
                  </p>
             </div>
         </div>
-         <div id="player-2" class="player">
+         <div id="player-2" class="player player-hud">
              <div class="player-inner">
                 <p class="player-name">Player 2</p>
                 <div class="pressure">
@@ -192,9 +192,9 @@
             </div>
         </div>
         <div class="timer">
-            <p class="time">2:00</p>
+            <p id="game-time" class="time"><span class="minutes">2</span>:<span class="seconds">00</span></p>
         </div>
-         <div id="player-3" class="player">
+         <div id="player-3" class="player player-hud">
              <div class="player-inner">
                 <p class="player-name">Player 3</p>
                 <div class="pressure">
@@ -205,7 +205,7 @@
                  </p>
             </div>
         </div>
-         <div id="player-4" class="player">
+         <div id="player-4" class="player player-hud">
              <div class="player-inner">
                 <p class="player-name">Player 4</p>
                 <div class="pressure">
@@ -222,7 +222,16 @@
 <!-- all UI for Tutorial-->
 <div id="tutorial" class="tutorial hidden">
     <div class="bg-black">
-        <img id="productions">
+        <div class="productions">
+          <img id="productions">
+        </div>
+        <div class="tutorial01">
+          <img id="tutorial01">
+          <p class="funny-claim">Heidi is searching for Germany's next Corn Model...</p>
+        </div>
+        <div class="tutorial02">
+          <img id="tutorial02">
+        </div>
     </div>
 </div>
 
