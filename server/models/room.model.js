@@ -25,7 +25,10 @@ const Room = function(roomName, ownerId) {
     ];
     this.mode = this.possibleModes[0];
     this.map = this.possibleMaps[0];
-    this.gameTime = 2;
+    this.maxGameTime = 10;
+    this.minGameTime = 1;
+    this.defaultGameTime = 2;
+    this.gameTime = this.defaultGameTime;
 };
 
 /**
@@ -132,17 +135,20 @@ Room.prototype.setMap = function(roomMap) {
  * @returns {*}
  */
 Room.prototype.setGameTime = function(time) {
-  if(time > 10) {
-      this.gameTime = 10;
-  }
-  else if(time <= 0) {
-      this.gameTime = 2;
-  }
-  else {
-      this.time = time;
-  }
+    if(typeof time !== "number") {
+        this.gameTime = this.defaultGameTime;
+    }
+    else if(time > this.maxGameTime) {
+        this.gameTime = this.defaultGameTime;
+    }
+    else if(time <= this.minGameTime) {
+        this.gameTime = this.defaultGameTime;
+    }
+    else {
+        this.time = time;
+    }
 
-  return this;
+    return this;
 };
 
 /**
@@ -196,7 +202,7 @@ Room.prototype.getMap = function() {
  * @returns {number}
  */
 Room.prototype.getGameTime = function() {
-  return this.gameTime;
+    return this.gameTime;
 };
 
 /**
@@ -265,14 +271,14 @@ Room.prototype.hasPlayer = function(playerId) {
  * Start the game
  */
 Room.prototype.startGame = function() {
-  this.started = true;
+    this.started = true;
 };
 
 /**
  * Stop the game
  */
 Room.prototype.stopGame = function() {
-  this.started = false;
+    this.started = false;
 };
 
 /**
@@ -281,7 +287,7 @@ Room.prototype.stopGame = function() {
  * @returns {boolean}
  */
 Room.prototype.hasStarted = function() {
-  return this.started;
+    return this.started;
 };
 
 module.exports = Room;
