@@ -620,7 +620,8 @@ function onStartGame(socket) {
                     target: 'room',
                     data: {
                         room: room,
-                        roomPlayers: roomPlayers
+                        roomPlayers: roomPlayers,
+                        rooms: game.roomManager.getRooms()
                     }
                 });
             }
