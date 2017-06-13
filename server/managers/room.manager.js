@@ -198,7 +198,7 @@ RoomManager.prototype.removeLeftovers = function(game, io, playerId) {
     _.foreach(this.rooms, function() {
         if(this.hasPlayer(playerId)) {
             this.removePlayer(playerId);
-            
+
             //Payload variables
             var leavingPlayer = game.playerManager.getPlayer(playerId),
                 roomPlayers = game.playerManager.getPlayers(this.getPlayers());
