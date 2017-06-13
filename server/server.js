@@ -620,8 +620,15 @@ function onStartGame(socket) {
                     target: 'room',
                     data: {
                         room: room,
-                        roomPlayers: roomPlayers,
-                        rooms: game.roomManager.getRooms()
+                        roomPlayers: roomPlayers
+                    }
+                });
+
+                socket.broadcast.emit('game-started', {
+                   state: 'success',
+                    target: 'other',
+                    data: {
+                       rooms: game.roomManager.getRooms()
                     }
                 });
             }
