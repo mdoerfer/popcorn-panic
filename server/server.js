@@ -341,13 +341,13 @@ function onJoinRoom(socket) {
         else {
             //Console
             util.log();
-            util.log('ERROR_ROOM_JOINED. (ROOM_DOESNT_EXIST_OR_PLAYER_ALREADY_MEMBER)');
+            util.log('ERROR_ROOM_JOINED. (ROOM_DOESNT_EXIST_OR_PLAYER_ALREADY_MEMBER_OR_GAME_HAS_STARTED)');
 
             //Inform user of error
             socket.emit('room-joined', {
                 state: 'error',
                 target: 'me',
-                message: "Room doesn't exist or player is already member of a room."
+                message: "Room doesn't exist, player is already member of a room or game has already started."
             });
         }
     });
