@@ -443,12 +443,28 @@ var client = client || function() {
     */
    this.onGameStarted = function(payload) {
       if (payload.state === 'success') {
-         //Update self
-         game.client.room = payload.data.room;
-          game.client.room.players = payload.data.roomPlayers;
+          if(payload.target === 'room') {
+              //Console
+             console.info('Your game started.');
               
-          //Fire game events
-          pc.app.fire('room:game-started', game.client.room);
+              //Update self
+             game.client.room = payload.data.room;
+              game.client.room.players = payload.data.roomPlayers;
+
+              //Fire game events
+              pc.app.fire('room:your-game-started', game.client.room);
+          }
+          else if(payload.target === 'other') {
+              //Console
+             console.info('Someone started a game.');
+              
+              //Update self
+              game.client.rooms = payload.data.rooms;
+              
+              //Fire game events
+              pc.app.fire('lobby:someones-game-started', game.client.rooms);
+          }
+         
       } else {
          //Console
          console.info('Error starting game.');

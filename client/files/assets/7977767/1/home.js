@@ -48,6 +48,16 @@ UI.attributes.add('play', {
     title: 'play'
 });
 
+UI.attributes.add('crown', {
+    type: 'asset',
+    title: 'Crown'
+});
+
+UI.attributes.add('dummyCorn', {
+    type: 'asset',
+    title: 'DummyCorn'
+});
+
 UI.attributes.add('html', {
     type: 'asset',
     assetType: 'html',
@@ -58,6 +68,11 @@ UI.attributes.add('css', {
     type: 'asset',
     assetType: 'css',
     title: 'CSS'
+});
+
+UI.attributes.add('productions', {
+    type: 'asset',
+    title: 'Productions'
 });
 
 /**
@@ -98,43 +113,48 @@ UI.prototype.loadUI = function() {
     /**
      * Add images 
      */
-    var headerBg = document.getElementById('header-bg');
-    headerBg.setAttribute('src', this.headerBg.getFileUrl());
+    game.images.headerBg = (this.headerBg !== null) ? this.headerBg.getFileUrl() : '';
+    game.images.headerLogo = (this.headerLogo !== null) ? this.headerLogo.getFileUrl() : '';
+    game.images.cornboy = (this.cornboyPic !== null) ? this.cornboyPic.getFileUrl() : '';
+    game.images.corngirl = (this.corngirlPic !== null) ? this.corngirlPic.getFileUrl() : '';
+    game.images.angrycorn = (this.angrycornPic !== null) ? this.angrycornPic.getFileUrl() : '';
+    game.images.chevron = (this.chevron !== null) ? this.chevron.getFileUrl() : '';
+    game.images.chevronWhite = (this.chevronsWhite !== null) ? this.chevronsWhite.getFileUrl() : '';
+    game.images.redplane = (this.redplane !== null) ? this.redplane.getFileUrl() : '';
+    game.images.play = (this.play !== null) ? this.play.getFileUrl() : '';
+    game.images.crown = (this.crown !== null) ? this.crown.getFileUrl() : '';
+    game.images.dummyCorn = (this.dummyCorn !== null) ? this.dummyCorn.getFileUrl() : '';
+    game.images.productions = (this.productions !== null) ? this.productions.getFileUrl() : '';
     
-    var headerLogo = document.getElementById('header-logo');
-    headerLogo.setAttribute('src', this.headerLogo.getFileUrl());
-    
-    var cornboyPic = document.getElementById('cornboy-pic');
-    cornboyPic.setAttribute('src', this.cornboyPic.getFileUrl());
-    
-    var corngirlPic = document.getElementById('corngirl-pic');
-    corngirlPic.setAttribute('src', this.corngirlPic.getFileUrl());
-    
-    var angrycornPic = document.getElementById('angrycorn-pic');
-    angrycornPic.setAttribute('src', this.angrycornPic.getFileUrl());
+    document.getElementById('header-bg').setAttribute('src', game.images.headerBg);
+    document.getElementById('header-logo').setAttribute('src', game.images.headerLogo);
+    document.getElementById('cornboy-pic').setAttribute('src', game.images.cornboy);
+    document.getElementById('corngirl-pic').setAttribute('src', game.images.corngirl);
+    document.getElementById('angrycorn-pic').setAttribute('src', game.images.angrycorn);
+    document.getElementById('productions').setAttribute('src', game.images.productions);
     
     var redplanes = document.getElementsByClassName('redplane');
     var play = document.getElementsByClassName('play');
     
     for(var c = 0; c < redplanes.length; c++) {
-        redplanes[c].setAttribute('src', this.redplane.getFileUrl());
+        redplanes[c].setAttribute('src', game.images.redplane);
     }
     
     for(var d = 0; d < play.length; d++) {
-        play[d].setAttribute('src', this.play.getFileUrl());
+        play[d].setAttribute('src', game.images.play);
     }
     
     
     var chevrons = document.getElementsByClassName('chevron');
     
     for(var i = 0; i < chevrons.length; i++) {
-        chevrons[i].setAttribute('src', this.chevron.getFileUrl());
+        chevrons[i].setAttribute('src', game.images.chevron);
     }
     
     var chevronsWhite = document.getElementsByClassName('chevronsWhite');
     
     for(var j = 0; j < chevronsWhite.length; j++) {
-        chevronsWhite[j].setAttribute('src', this.chevronsWhite.getFileUrl());
+        chevronsWhite[j].setAttribute('src', game.images.chevronWhite);
     }
     
     /**
@@ -150,6 +170,50 @@ UI.prototype.showUIPart = function(selector) {
 
 UI.prototype.hideUIPart = function(selector) {
     document.getElementById(selector).classList.add('hidden');
+};
+
+UI.prototype.showLobby = function() {
+    this.hideUIPart('room');
+    this.hideUIPart('game');
+    
+    this.showUIPart('lobby');
+};
+
+UI.prototype.showRoom = function() {
+    this.hideUIPart('lobby');
+    this.hideUIPart('game');
+    
+    this.showUIPart('room');
+};
+
+UI.prototype.showGame = function() {
+    this.hideUIPart('room');
+    this.hideUIPart('lobby');
+    
+    this.showUIPart('game');
+    this.changeScenes(game.scenes.field);
+};
+
+UI.prototype.changeScenes = function(sceneId) {
+    var oldHierarchy = this.app.root.findByName ('Root');
+    
+    this.loadScene (sceneId, function () {
+        oldHierarchy.destroy ();
+    });
+};
+
+UI.prototype.loadScene = function (id, callback) {
+    // Get the path to the scene
+    var url = id  + ".json";
+    
+    // Load the scenes entity hierarchy
+    this.app.loadSceneHierarchy(url, function (err, parent) {
+        if (!err) {
+            callback(parent);
+        } else {
+            console.error (err);
+        }
+    });
 };
 
 /**
@@ -182,9 +246,8 @@ UI.prototype.bindDataEventListeners = function() {
         //Rooms
         updateLobbyRooms(rooms);
         
-        //Show lobby, hide room
-        self.hideUIPart('room');
-        self.showUIPart('lobby');
+        //Show lobby
+        self.showLobby();
     });
     
      this.app.on('lobby:someone-joined', function(rooms, players) {           
@@ -206,14 +269,14 @@ UI.prototype.bindDataEventListeners = function() {
     });
     
      this.app.on('lobby:you-created-a-room', function(room, rooms) {
+         //Room
          updateRoom(room);
          
         //Rooms
         updateLobbyRooms(rooms);
          
-         //Show room, hide lobby
-        self.hideUIPart('lobby');
-        self.showUIPart('room');
+         //Show room
+         self.showRoom();
     });
     
     this.app.on('lobby:someone-created-a-room', function(rooms) {        
@@ -222,14 +285,14 @@ UI.prototype.bindDataEventListeners = function() {
     });
     
     this.app.on('room:someone-joined-your-room', function(room, rooms) {    
+        //Room
         updateRoom(room);
         
         //Rooms
         updateLobbyRooms(rooms);
         
-        //Show room, hide lobby
-        self.hideUIPart('lobby');
-        self.showUIPart('room');
+        //Show room
+         self.showRoom();
     });
     
     this.app.on('lobby:someone-joined-a-room', function(rooms) {  
@@ -238,6 +301,7 @@ UI.prototype.bindDataEventListeners = function() {
     });
     
      this.app.on('lobby:someone-left-your-room', function(room, rooms) {
+         //Room
         updateRoom(room);
          
        //Rooms
@@ -250,15 +314,26 @@ UI.prototype.bindDataEventListeners = function() {
     });
     
     this.app.on('room:map-changed', function(room) {
+        //Room
        updateRoom(room);
     });
     
     this.app.on('room:mode-changed', function(room) {
+        //Room
        updateRoom(room);
     });
     
-    this.app.on('room:game-started', function(room) {
+    this.app.on('room:your-game-started', function(room) {
+        //Room
        updateRoom(room);
+        
+        //Show game
+        self.showGame();
+    });
+    
+    this.app.on('lobby:someones-game-started', function(rooms) {
+        //Rooms
+        updateLobbyRooms(rooms);
     });
 };
 
@@ -273,6 +348,7 @@ UI.prototype.bindHTMLEventListeners = function() {
     addJoinRandomGameClickListener();
     addRoomModeChangeListener();
     addRoomMapChangeListener();
+    addStartGameClickListener();
 };
 
 /**
@@ -366,6 +442,7 @@ function emptyLobbyRooms() {
 //Fill lobby rooms <ul> with <li> element for each room
 function fillLobbyRooms(rooms) {
     var list = getLobbyRoomsList();
+    var roomsAvailable = 0;
     
     //Button callback
     var buttonCallbackFn = function() {
@@ -379,6 +456,10 @@ function fillLobbyRooms(rooms) {
             //Skip room if it's full
             if(rooms[i].players.length >= rooms[i].maxPlayers) continue;
             
+            //Count rooms available
+            roomsAvailable++;
+            
+            //Create items
             var item = document.createElement('li');
             var name = document.createElement('h3');
             var count = document.createElement('span');
@@ -407,6 +488,14 @@ function fillLobbyRooms(rooms) {
             
             //Append item to list
             list.appendChild(item);
+        }
+        
+        if(roomsAvailable === 0) {
+            var allFull = document.createElement('li');
+        
+            allFull.innerHTML = 'All rooms are full or already started playing. Go ahead and create your own!';
+
+            list.appendChild(allFull);
         }
     }
     else {
@@ -532,6 +621,15 @@ function addRoomMapChangeListener() {
     }
 }
 
+//Start game
+function addStartGameClickListener() {
+    var startGameBtn = document.getElementById('start-game');
+    
+    startGameBtn.addEventListener('click', function() {
+       game.client.startGame(game.client.room.name); 
+    });
+}
+
 //Update room player count
 function updateRoomPlayerCount(room) {
     var count = document.getElementById('room-player-count');
@@ -549,7 +647,14 @@ function emptyPlayerSlots() {
     var playerSlots = getPlayerSlots();
     
     for(var i = 0; i < playerSlots.length; i++) {
-        playerSlots[i].innerHTML = '';
+        var playerSlotImg = playerSlots[i].querySelector('.player-slot-img');
+        var playerSlotName = playerSlots[i].querySelector('.player-slot-name');
+        var playerSlotRole = playerSlots[i].querySelector('.player-slot-role');
+        
+        playerSlotImg.setAttribute('src', game.images.dummyCorn);
+        playerSlotRole.setAttribute('src', '');
+        playerSlotRole.classList.add('hidden');
+        playerSlotName.innerHTML = 'Empty';
     }
 }
 
@@ -557,14 +662,35 @@ function emptyPlayerSlots() {
 function fillPlayerSlots(room) {
     var playerSlots = getPlayerSlots();
     
-    for(var i = 0; i < room.players.length; i++) {   
+    for(var i = 0; i < room.players.length; i++) {  
+        var playerSlotImg = playerSlots[i].querySelector('.player-slot-img');
+        var playerSlotName = playerSlots[i].querySelector('.player-slot-name');
+        var playerSlotRole = playerSlots[i].querySelector('.player-slot-role');
+        
+        //Set role
         if(room.players[i].id === room.owner) {
-            playerSlots[i].innerHTML = room.players[i].name + " (Owner) playing " + room.players[i].character;
-            
+            playerSlotRole.setAttribute('src', game.images.crown);
+            playerSlotRole.classList.remove('hidden');
         }
-        else {
-            playerSlots[i].innerHTML = room.players[i].name + " (Member) playing " + room.players[i].character;
+        
+        //Set character
+        switch(room.players[i].character) {
+            case 'Cornboy': 
+                playerSlotImg.setAttribute('src', game.images.cornboy);
+                break;
+            case 'Corngirl': 
+                playerSlotImg.setAttribute('src', game.images.corngirl);
+                break;
+            case 'Angrycorn': 
+                playerSlotImg.setAttribute('src', game.images.angrycorn);
+                break;
+            default:
+                playerSlotImg.setAttribute('src', game.images.cornboy);
+                break;
         }
+        
+        //Set name
+        playerSlotName.innerHTML = room.players[i].name;
     }
 }
 

@@ -3,6 +3,7 @@
     <!-- Header of Site-->
     <div class="header">
         <img id="header-bg">
+        <div id="header-bg-img"></div>
         <img id="header-logo">
     </div>
     <!--Three column layout-->
@@ -124,29 +125,105 @@
             <span class="count" id="room-player-count">?/4</span>
         </div> 
     </div> <!-- End of room settings -->
-  
     
+    <!-- Players -->
         <div class="row">
             <div class="left-col col">
-                <div class="player-slot-1 player-slot"></div>
-                <div class="player-slot-2 player-slot"></div>
-                <div class="player-slot-3 player-slot"></div>
-                <div class="player-slot-4 player-slot"></div>
+                <div class="player-slot-1 player-slot">
+                    <img class="player-slot-role">
+                    <img class="player-slot-img">
+                    <p class="player-slot-name"></p>
+                </div>
+                <div class="player-slot-3 player-slot">
+                    <img class="player-slot-role">
+                    <img class="player-slot-img">
+                    <p class="player-slot-name"></p>
+                </div>
             </div>
+            
             <div class="mid-col col">
-                <div  class="playButton">
+                <div id="start-game" class="playButton">
                     <img id="redplane" class="redplane">
                     <img id="play" class="play">
                     <h3 id="random">Start</h3>
                 </div>
                 <div class="leave"><button class="leave-button" id="leave-room">Leave room</button></div>
+            </div>
+            
+            <div class="right-col col">
+                <div class="player-slot-2 player-slot">
+                    <img class="player-slot-role">
+                    <img class="player-slot-img">
+                    <p class="player-slot-name"></p>
+                </div>
+                <div class="player-slot-4 player-slot">
+                    <img class="player-slot-role">
+                    <img class="player-slot-img">
+                    <p class="player-slot-name"></p>
+                </div>
+            </div>
+        </div><!-- End of Players row -->
 
+</div> <!-- End of room -->
+
+<!-- all UI for Game-->
+<div id="game" class="game hidden">
+    <div id="players" class="players">
+        <div id="player-1" class="player">
+            <div class="player-inner">
+                <p class="player-name">Player 1</p>
+                <div class="pressure">
+                    <div class="actual-pressure"></div>
+                </div>
+                <p class="player-kills">
+                   <span class="numberKills">5</span> Kills
+                 </p>
             </div>
         </div>
-        
+         <div id="player-2" class="player">
+             <div class="player-inner">
+                <p class="player-name">Player 2</p>
+                <div class="pressure">
+                    <div class="actual-pressure"></div>
+                </div>
+                 <p class="player-kills">
+                     <span class="numberKills">0</span> Kills
+                 </p>
+            </div>
+        </div>
+        <div class="timer">
+            <p class="time">2:00</p>
+        </div>
+         <div id="player-3" class="player">
+             <div class="player-inner">
+                <p class="player-name">Player 3</p>
+                <div class="pressure">
+                    <div class="actual-pressure"></div>
+                </div>
+                 <p class="player-kills">
+                     <span class="numberKills">5</span> Kills
+                 </p>
+            </div>
+        </div>
+         <div id="player-4" class="player">
+             <div class="player-inner">
+                <p class="player-name">Player 4</p>
+                <div class="pressure">
+                    <div class="actual-pressure"></div>
+                </div>
+                 <p class="player-kills">
+                     <span class="numberKills">5</span> Kills
+                 </p>
+            </div>
+        </div>
+    </div>
+</div>
 
-
-
+<!-- all UI for Tutorial-->
+<div id="tutorial" class="tutorial hidden">
+    <div class="bg-black">
+        <img id="productions">
+    </div>
 </div>
 
 <!-- all UI for Footer-->
@@ -182,12 +259,18 @@
                 </div>
             </div>
             <div class="settings">
-                <h2 class="h2-sound">Music</h2>
-                <input type="range">
-                <h2 class="h2-sound">Effects</h2>
-                <input type="range">
-                <h2 class="h2-sound">Volume</h2>
-                <input type="range">
+                <div>
+                    <h2 class="h2-sound">Music</h2>
+                    <input type="range">
+                </div>
+                <div>
+                    <h2 class="h2-sound">Effects</h2>
+                    <input type="range">
+                </div>
+                <div>
+                    <h2 class="h2-sound">Volume</h2>
+                    <input type="range">
+                </div>
             </div>
         </div>
     </div>

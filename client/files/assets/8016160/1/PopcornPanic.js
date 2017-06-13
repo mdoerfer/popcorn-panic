@@ -8,6 +8,20 @@ var game = game || {
     scenes: {
         lobby: 526492,
         room: 530819,
-        game: 526375
+        field: 531055
+    },
+    images: {
+        headerLogo: '',
+        headerBg: '',
+        cornboy: '',
+        corngirl: '',
+        angrycorn: '',
+        chevron: '',
+        chevronWhite: '',
+        redplane: '',
+        play: '',
+        crown: '',
+        dummyCorn: '',
+        productions: ''
     }
 };
