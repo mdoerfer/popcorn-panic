@@ -98,6 +98,15 @@ function onDisconnect(socket) {
         var playerId = socket.id;
         game.playerManager.removePlayer(playerId);
         game.roomManager.removeLeftovers(playerId);
+
+        var playerHasRoom = game.roomManager.playerIsMemberAlready(playerId) || game.roomManager.playerIsOwnerAlready(playerId);
+
+        if(playerHasRoom) {
+            var playersRoomName = game.roomManager.getPlayersRoomName(playerId);
+
+            onLeaveRoom(socket, playersRoomName);
+        }
+
     });
 }
 
@@ -356,11 +365,11 @@ function onJoinRoom(socket) {
 /**
  * On 'leave-room'
  */
-function onLeaveRoom(socket) {
+function onLeaveRoom(socket, roomName) {
     socket.on('leave-room', function(payload) {
         //Get variables
         var playerId = socket.id;
-        var roomName = payload.data.roomName;
+        var roomName = payload.data.roomName || roomName;
 
         //Check if room exists
         var roomExists = game.roomManager.roomExists(roomName);

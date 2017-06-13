@@ -154,6 +154,18 @@ RoomManager.prototype.playerIsMemberAlready = function(playerId) {
     return isMemberAlready;
 };
 
+RoomManager.prototype.getPlayersRoomName = function(playerId) {
+  var roomName = '';
+
+  _.foreach(this.rooms, function() {
+     if(this.hasPlayer(playerId) || this.hasOwner(playerId)) {
+         roomName = this.getName();
+     }
+  });
+
+  return roomName;
+};
+
 /**
  * Check if game has started already by room name
  *
