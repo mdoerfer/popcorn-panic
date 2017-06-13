@@ -674,6 +674,7 @@ function onMovePlayer(socket) {
 
         io.to(room.name).emit('player-moved', {
            state: 'success',
+            target: 'room',
             data: {
                player: player
             }
