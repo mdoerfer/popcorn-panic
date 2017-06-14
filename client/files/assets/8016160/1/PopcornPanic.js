@@ -23,6 +23,12 @@ var game = game || {
         crown: '',
         dummyCorn: '',
         productions: '',
-        tutorial01: ''
+        tutorial01: '',
+        tutorial02: '',
+        winner: '',
+        winner2: '',
+        winner3: '',
+        loser: '',
+        podium: ''
     }
 };

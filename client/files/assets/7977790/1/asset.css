@@ -77,6 +77,10 @@ body, html{
 .style-box {
     margin: 1em;
     text-align: center;
+    padding-left: 10px; 
+    padding-right: 10px;
+    padding-top: 0;
+    text-align: center;
 }
 
 .paddingBottom {
@@ -761,7 +765,7 @@ a:active {
 
 .pressure {
     background-color: rgba(255,255,255,0.8);
-    width: 100px;
+    width: 70%;
     height: 12px;
     position: relative;
     border: 0px solid black;
@@ -784,10 +788,10 @@ a:active {
     border: 1px solid #black;
     border-radius: 100px;
     position: absolute;
-    padding-top: 5px;
+    padding-top: 2px;
     padding-left: 20px;
     padding-right: 20px; 
-    padding-bottom: 0px;
+    padding-bottom: 3px;
     text-align: center; 
     top: 48px;
     left: 50%; 
@@ -795,7 +799,7 @@ a:active {
 }
 
 #bg-black {
-    background-color: black;
+    background-color: rgba(0,0,0,1);
     position: absolute; 
     width: 100%;
     height: 100%;
@@ -843,4 +847,64 @@ a:active {
     font-family: Open Sans; 
     text-align: center; 
     
+}
+
+.countdown {
+    position: absolute; 
+    width: 50%;
+    left: 50%; 
+    top: 50%; 
+    transform: translate(-50%, -50%);
+    opacity: 0;
+    transition: all 1s ease;
+    text-align: center; 
+}
+
+#counter-number{
+    max-width: 100%;
+    height: auto;
+    font-size: 200px;
+    font-family: Luckiest Guy;
+}
+
+#bg-black-end {
+    background-color: rgba(0,0,0,1);
+    position: absolute; 
+    width: 100%;
+    height: 100%;
+    z-index: 1000;
+    transition: all 2s ease;
+}
+
+#score {
+    background-color: white;  
+    width: 500px;
+    position: absolute; 
+    width: 50%;
+    left: 50%; 
+    top: 50%; 
+    transform: translate(-50%, -50%);
+    text-align: center;
+    border: 0px solid #white;
+    border-radius: 100px;
+    
+}
+
+#score-text {
+    color: black; 
+    font-family: Luckiest Guy; 
+    font-size: 50px;
+    padding: 10px;
+}
+
+#loser {
+    width: 50%;
+    left: 50%; 
+    top: 100%; 
+    transform: translate(-50%, -50%);
+    position: absolute; 
+}
+
+#podium {
+    width: 100%;
 }

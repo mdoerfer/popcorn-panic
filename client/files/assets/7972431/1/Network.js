@@ -5,6 +5,7 @@ var client = client || function() {
         this.rooms = [];
         this.players = [];
         this.room = null;
+        this.tutorialDone = false;
 
         /**
          * Connect to websocket and save socket
@@ -182,6 +183,22 @@ var client = client || function() {
                 });
             }
         };
+    
+        /**
+         * Take damage
+         */
+        this.takeDamage = function(playerId) {
+            var self = this;
+            
+            if(this.room !== null) {
+                this.socket.emit('take-damage', {
+                   data: {
+                       roomName: self.room.name,
+                       targetPlayerId: playerId
+                   } 
+                });
+            }
+        };
 
         /**
          * Disconnect from websocket
@@ -210,6 +227,7 @@ var client = client || function() {
                 this.socket.on('map-changed', this.onMapChanged);
                 this.socket.on('mode-changed', this.onModeChanged);
                 this.socket.on('player-moved', this.onPlayerMoved);
+                this.socket.on('took-damage', this.onTookDamage);
             } else {
                 console.error("Couldn't bind socket event listeners. Socket is null");
             }
@@ -402,6 +420,7 @@ var client = client || function() {
 
                     //Update client data
                     game.client.room = null;
+                    game.client.tutorialDone = false;
                     game.client.rooms = payload.data.rooms;
 
                     game.client.joinLobby();
@@ -515,6 +534,28 @@ var client = client || function() {
             else {
                 //Console
                 console.info('Error moving player.');
+            }
+        };
+    
+        /**
+         * onPlayerDamaged
+         */
+        this.onTookDamage = function(payload) {
+            if(payload.state === 'success') {
+                if(payload.target === 'room') {
+                    console.info('Player damaged');
+                    
+                    //Update self
+                    this.room = payload.data.room;
+                    this.room.players = payload.data.roomPlayers;
+                    
+                    //Fire game events
+                    pc.app.fire('game:player-damaged', this.room);
+                }
+            }
+            else {
+                //Console
+                console.info('Error damaging player.');
             }
         };
     };

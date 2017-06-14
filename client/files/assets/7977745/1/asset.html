@@ -37,13 +37,13 @@
             </div>
             <div class="right-col col">
                 <h2>Your character</h2>
-                <div class="style-box paddingBottom shadow">
+                <div class="paddingBottom">
                     <div id="character-slider">
                         <div class="slide" id="Cornboy">
                             <div class="slide-body">
                                 <img class="character-pic" id="cornboy-pic">
                             </div>
-                            <div class="slide-head">
+                            <div class="slide-head shadow style-box">
                                 <img class="slide-left chevron" data-char="Angrycorn">
                                 <span class="character">Cornboy</span>
                                 <img class="slide-right chevron" data-char="Corngirl">
@@ -53,7 +53,7 @@
                             <div class="slide-body">
                                 <img class="character-pic" id="corngirl-pic">
                             </div>
-                            <div class="slide-head">
+                            <div class="slide-head shadow style-box">
                                 <img class="slide-left chevron" data-char="Cornboy">
                                 <span class="character">Corngirl</span>
                                 <img class="slide-right chevron" data-char="Angrycorn">
@@ -63,7 +63,7 @@
                             <div class="slide-body">
                                 <img class="character-pic" id="angrycorn-pic">
                             </div>
-                            <div class="slide-head">
+                            <div class="slide-head shadow style-box">
                                 <img class="slide-left chevron" data-char="Corngirl">
                                 <span class="character">Angrycorn</span>
                                 <img class="slide-right chevron" data-char="Cornboy">
@@ -191,7 +191,7 @@
             </div>
         </div>
         <div class="timer">
-            <p id="game-time" class="time"><span class="minutes">2</span>:<span class="seconds">00</span></p>
+            <p id="game-time" class="time"><span id="minutes" class="minutes">2</span>:<span id="seconds" class="seconds">00</span></p>
         </div>
          <div id="player-3" class="player player-hud">
              <div class="player-inner">
@@ -218,6 +218,33 @@
     </div>
 </div>
 
+<!-- all UI for Game End-->
+<div id="game-end" class="game-end hidden">
+    <div class="bg-black" id="bg-black-end">
+        <div id="score">
+            <p id="score-text"> you win </p>
+            <img id="winner">
+            <span id="winner-name"></span>
+            <p class="player-kills">
+                <span class="numberKills">5</span> Kills
+            </p>
+            <img id="winner2">
+            <span id="2nd-name"></span>
+            <p class="player-kills">
+                <span class="numberKills">5</span> Kills
+            </p>
+            <img id="winner3">
+            <span id="3rd-name"></span>
+            <p class="player-kills">
+                <span class="numberKills">5</span> Kills
+            </p>
+            <img id="podium">
+            <img id="loser">
+            <span id="loser-name"></span>
+        </div>
+    </div>
+</div>
+
 <!-- all UI for Tutorial-->
 <div id="tutorial" class="tutorial hidden">
     <div id="bg-black" class="bg-black">
@@ -230,7 +257,11 @@
         </div>
         <div id="tutorial-part-02" class="tutorial02 tutorial-part">
           <img id="tutorial02">
-            <p class="funny-claim">Cornboy smells like Urin...</p>
+            <p class="funny-claim">Corns look best in fullscreen mode...</p>
+        </div>
+        <div id="countdown" class="countdown">
+            <span id="counter-number">3</span>
+             <p class="funny-claim">Corngirl is doing her make-up...</p>
         </div>
     </div>
 </div>
