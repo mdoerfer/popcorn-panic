@@ -626,10 +626,10 @@ function onStartGame(socket) {
                 });
 
                 socket.broadcast.emit('game-started', {
-                   state: 'success',
+                    state: 'success',
                     target: 'other',
                     data: {
-                       rooms: game.roomManager.getRooms()
+                        rooms: game.roomManager.getRooms()
                     }
                 });
             }
@@ -683,6 +683,37 @@ function onMovePlayer(socket) {
                 target: 'room',
                 data: {
                     player: player
+                }
+            });
+        }
+    });
+}
+
+function onTakeDamage(socket) {
+    socket.on('take-damage', function(payload) {
+        var inflictingPlayerId = socket.id;
+        var targetPlayerId = payload.data.targetPlayerId;
+        var roomName = payload.data.roomName;
+
+        var inflictingPlayer = game.playerManager.getPlayer(inflictingPlayerId);
+        var targetPlayer = game.playerManager.getPlayer(targetPlayerId);
+        var room = game.roomManager.getRoom(roomName);
+
+        if(inflictingPlayer !== null && targetPlayer !== null) {
+            var died = targetPlayer.takeDamage(10);
+
+            if(died) {
+                inflictingPlayer.addKill();
+            }
+
+            var roomPlayers = game.playerManager.getPlayers(room.getPlayers());
+
+            io.to(roomName).emit('took-damage', {
+                state: 'success',
+                target: 'room',
+                data: {
+                    room: room,
+                    roomPlayers: roomPlayers
                 }
             });
         }

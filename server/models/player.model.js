@@ -28,6 +28,7 @@ const Player = function(playerId) {
     this.name = this.defaultName;
     this.character = this.possibleCharacters[0];
     this.kills = 0;
+    this.deaths = 0;
 };
 
 /**
@@ -309,6 +310,7 @@ Player.prototype.takeDamage = function(amount) {
     if(newPressure > this.maxPressure) {
         this.pressure = 0;
         died = true;
+        this.addDeath();
     }
     else {
         this.pressure = newPressure;
@@ -341,6 +343,29 @@ Player.prototype.removeKill = function() {
 };
 
 /**
+ * Get amount of deaths
+ *
+ * @returns {number}
+ */
+Player.prototype.getDeaths = function() {
+    return this.deaths;
+};
+
+/**
+ * Add death
+ */
+Player.prototype.addDeath = function() {
+    this.deaths++;
+};
+
+/**
+ * Remove death
+ */
+Player.prototype.removeDeath = function() {
+    this.deaths--;
+};
+
+/**
  * Reset player
  */
 Player.prototype.reset = function() {
@@ -352,6 +377,7 @@ Player.prototype.reset = function() {
     this.rotY = 0;
     this.rotZ = 0;
     this.kills = 0;
+    this.deaths = 0;
 };
 
 module.exports = Player;
