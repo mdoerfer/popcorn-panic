@@ -82,6 +82,7 @@ function bindEventHandlers(socket) {
     onChangeMode(socket);
     onStartGame(socket);
     onMovePlayer(socket);
+    onTakeDamage(socket);
 }
 
 /**
