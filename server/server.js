@@ -702,8 +702,12 @@ function onTakeDamage(socket) {
         if(inflictingPlayer !== null && targetPlayer !== null) {
             var died = targetPlayer.takeDamage(10);
 
+            util.log();
+            util.log(inflictingPlayer.getName() + ' DAMAGED ' + targetPlayer.getName());
+
             if(died) {
                 inflictingPlayer.addKill();
+                util.log(inflictingPlayer.getName() + ' KILLED ' + targetPlayer.getName());
             }
 
             var roomPlayers = game.playerManager.getPlayers(room.getPlayers());
