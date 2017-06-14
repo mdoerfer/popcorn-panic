@@ -1,5 +1,8 @@
 var Movement = pc.createScript('movement');
 
+/**
+ * Component attributes
+ */
 Movement.attributes.add('hspeed', {
     type: 'number',
     default: 10,
@@ -54,12 +57,9 @@ Movement.attributes.add('MAX_ROTSPEED', {
     title: 'Maximum rotation speed'
 });
 
-/*Mirjams Hüpfanimation
- Movement.attributes.add("offsetCurve", {type: "curve", title: "Offset Curve", curves: [ 'x', 'y', 'z' ]});
- Movement.attributes.add("duration", {type: "number", default: 3, title: "Duration (secs)"});*/
-
-
-// initialize code called once per entity
+/**
+ * Initialize
+ */
 Movement.prototype.initialize = function() {
     console.log('Loading game scene');
 
@@ -68,15 +68,12 @@ Movement.prototype.initialize = function() {
     this.corngirl = this.app.root.findByName('Corngirl');
 
     this.spawnPlayers();
-    this.addPlayerMoveListener();
-
-    /*
-     this.startPosition = this.entity.getPosition().clone();
-     this.position = new pc.Vec3();
-     this.time = 0;
-     */
+    this.addPlayerMoveListener();  
 };
 
+/**
+ * Spawn players
+ */
 Movement.prototype.spawnPlayers = function() {
     console.log('Spawning players');
 
@@ -135,7 +132,9 @@ Movement.prototype.spawnPlayers = function() {
     }
 };
 
-// update code called every frame
+/**
+ * Update player
+ */
 Movement.prototype.update = function(dt) {
     var moved = false;
 
@@ -176,33 +175,28 @@ Movement.prototype.update = function(dt) {
     }
 };
 
+/**
+ * React on game events
+ */
 Movement.prototype.addPlayerMoveListener = function() {
     var self = this;
-
+    
+    //Move player
     this.app.on('game:player-moved', function(player) {
         var entity = self.app.root.findByName(player.id);
 
-        entity.setLocalEulerAngles(new pc.Vec3(player.rotX, player.rotY, player.rotZ));
-        entity.rigidbody.teleport(new pc.Vec3(player.x, player.y, player.z));
+        if(entity !== null) {
+            entity.setLocalEulerAngles(new pc.Vec3(player.rotX, player.rotY, player.rotZ));
+            entity.rigidbody.teleport(new pc.Vec3(player.x, player.y, player.z));
+        }
+    });
+    
+    //Remove leaving player entity
+    this.app.on('game:someone-left', function(leavingPlayer) {
+       var entity = self.app.root.findByName(leavingPlayer.id);
+        
+        if(entity !== null) {
+           entity.destroy(); 
+        }
     });
 };
-
-/*
- Movement.prototype.jump = function(dt){
- this.time += dt;
-
- if (this.time > this.duration) {
- this.time -= this.duration;
- }
-
- var percent = this.time / this.duration;
- var curveValue = this.offsetCurve.value();
-
- this.position.copy(this.startPosition);
- this.position.z += curveValue[0];
- this.position.x += curveValue[1];
- this.position.y += curveValue[2];
-
- this.playerEntity.setPosition(this.position);
- };
- */

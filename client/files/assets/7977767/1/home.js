@@ -244,8 +244,8 @@ UI.prototype.playTutorial = function() {
                 setTimeout(function() {
                     self.hideUIPart('tutorial');
                     self.showUIPart('game');
-                }, 2000);
-            }, 2000);
+                }, 3000);
+            }, 3000);
         }, 500);
     }, 2000);
 };

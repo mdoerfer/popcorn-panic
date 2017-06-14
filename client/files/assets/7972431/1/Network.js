@@ -394,6 +394,7 @@ var client = client || function() {
 
                     //Fire game events
                     pc.app.fire('lobby:someone-left-your-room', game.client.room, game.client.rooms);
+                    pc.app.fire('game:someone-left', payload.data.leavingPlayer);
                 }
                 else if(payload.target === 'me') {
                     //Console
