@@ -673,15 +673,18 @@ function onMovePlayer(socket) {
         var rotZ = payload.data.rotZ;
 
         var player = game.playerManager.getPlayer(playerId);
-        player.setLocation(x, y, z);
-        player.setRotation(rotX, rotY, rotZ);
 
-        io.to(roomName).emit('player-moved', {
-           state: 'success',
-            target: 'room',
-            data: {
-               player: player
-            }
-        });
+        if(player !== null) {
+            player.setLocation(x, y, z);
+            player.setRotation(rotX, rotY, rotZ);
+
+            io.to(roomName).emit('player-moved', {
+                state: 'success',
+                target: 'room',
+                data: {
+                    player: player
+                }
+            });
+        }
     });
 }
