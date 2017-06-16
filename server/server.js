@@ -81,6 +81,7 @@ function bindEventHandlers(socket) {
     onChangeMap(socket);
     onChangeMode(socket);
     onStartGame(socket);
+    onStartTimer(socket);
     onMovePlayer(socket);
     onTakeDamage(socket);
 }
@@ -110,7 +111,7 @@ function onJoinLobby(socket) {
     socket.on('join-lobby', function(payload) {
         //Console
         util.log();
-        util.log('JOIN_LOBBY.');
+        util.log('JOIN_LOBBY. (' + socket.id + ')');
 
         //Player ID
         var playerId = socket.id;
@@ -662,6 +663,77 @@ function onStartGame(socket) {
     });
 }
 
+/**
+ * On 'start-timer'
+ *
+ * @param socket
+ */
+function onStartTimer(socket) {
+    socket.on('start-timer', function(payload) {
+        //Get variables
+        var playerId = socket.id;
+        var roomName = payload.data.roomName;
+
+        //Check if room exists
+        var roomExists = game.roomManager.roomExists(roomName);
+
+        if(roomExists) {
+            //Get room
+            var room = game.roomManager.getRoom(roomName);
+
+            //Check if player is owner
+            var playerIsOwner = room.hasOwner(playerId);
+
+            if(playerIsOwner) {
+                //Console
+                util.log();
+                util.log('START_TIMER.');
+
+                //Inform game room about timer starting
+                io.to(room.getName()).emit('timer-started', {
+                    state: 'success',
+                    target: 'room'
+                });
+
+                //End game after timer is over
+                //Give back podium info
+                //Reset room and players
+                setTimeout(function() {
+                    var roomPlayers = game.playerManager.getPlayers(room.getPlayers());
+
+                    var podium = roomPlayers.sort(function(a,b) {
+                       if(a.getKills() < b.getKills) {
+                            return -1;
+                       }
+                       else if(a.getKills() > b.getKills) {
+                           return 1;
+                       }
+
+                       return 0;
+                    });
+
+                    io.to(room.getName()).emit('game-ended', {
+                        state: 'success',
+                        target: 'room',
+                        data: {
+                            podium: podium
+                        }
+                    });
+
+                    //Reset players and room
+                    room.stopGame();
+                    game.playerManager.resetPlayers(room.getPlayers());
+                }, room.getGameTimeInMs());
+            }
+        }
+    });
+}
+
+/**
+ * On 'move-player'
+ *
+ * @param socket
+ */
 function onMovePlayer(socket) {
     socket.on('move-player', function(payload) {
         var playerId = socket.id;
@@ -690,6 +762,11 @@ function onMovePlayer(socket) {
     });
 }
 
+/**
+ * On 'take-damage'
+ *
+ * @param socket
+ */
 function onTakeDamage(socket) {
     socket.on('take-damage', function(payload) {
         var inflictingPlayerId = socket.id;

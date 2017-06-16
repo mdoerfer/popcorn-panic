@@ -89,4 +89,21 @@ PlayerManager.prototype.removePlayer = function(playerId) {
     return removedPlayer;
 };
 
+/**
+ * Reset players
+ *
+ * @param playerIds
+ */
+PlayerManager.prototype.resetPlayers = function(playerIds) {
+    if(playerIds !== undefined) {
+        for(var i = 0; i < this.players.length; i++) {
+            for(var c = 0; c < playerIds.length; c++) {
+                if(this.players[i].getId() === playerIds[c]) {
+                    this.players[i].reset();
+                }
+            }
+        }
+    }
+};
+
 module.exports = PlayerManager;

@@ -152,6 +152,20 @@ Room.prototype.setGameTime = function(time) {
 };
 
 /**
+ * Increase room game time
+ */
+Room.prototype.increaseGameTime = function() {
+  this.setGameTime(this.getGameTime()+1);
+};
+
+/**
+ * Decrease room game time
+ */
+Room.prototype.decreaseGameTime = function() {
+    this.setGameTime(this.getGameTime()-1);
+};
+
+/**
  * Get room owner
  *
  * @returns {*}
@@ -203,6 +217,15 @@ Room.prototype.getMap = function() {
  */
 Room.prototype.getGameTime = function() {
     return this.gameTime;
+};
+
+/**
+ * Get room game time in milliseconds
+ *
+ * @returns {number}
+ */
+Room.prototype.getGameTimeInMs = function() {
+    return this.gameTime * 60 * 1000;
 };
 
 /**
