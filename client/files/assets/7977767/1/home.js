@@ -120,6 +120,16 @@ UI.attributes.add('bgRoom', {
     title: 'BackgroundRoom'
 });
 
+UI.attributes.add('deathsIcon', {
+    type: 'asset',
+    title: 'DeathsIcon'
+});
+
+UI.attributes.add('killsIcon', {
+    type: 'asset',
+    title: 'KillsIcon'
+});
+
 
 
 /**
@@ -184,6 +194,8 @@ UI.prototype.loadUI = function() {
     game.images.podium = (this.podium !== null) ? this.podium.getFileUrl() : '';
     game.images.leaveRoom = (this.leaveRoom !== null) ? this.leaveRoom.getFileUrl() : '';
     game.images.bgRoom = (this.bgRoom !== null) ? this.bgRoom.getFileUrl() : '';
+    game.images.deathsIcon = (this.deathsIcon !== null) ? this.deathsIcon.getFileUrl() : '';
+    game.images.killsIcon = (this.killsIcon !== null) ? this.killsIcon.getFileUrl() : '';
 
     document.getElementById('header-bg').setAttribute('src', game.images.headerBg);
     document.getElementById('header-logo').setAttribute('src', game.images.headerLogo);
@@ -204,6 +216,8 @@ UI.prototype.loadUI = function() {
 
     var redplanes = document.getElementsByClassName('redplane');
     var play = document.getElementsByClassName('play');
+    var deathsIcon = document.getElementsByClassName('player-deaths-pic');
+    var killsIcon = document.getElementsByClassName('player-kills-pic');
 
     for(var c = 0; c < redplanes.length; c++) {
         redplanes[c].setAttribute('src', game.images.redplane);
@@ -211,6 +225,14 @@ UI.prototype.loadUI = function() {
 
     for(var d = 0; d < play.length; d++) {
         play[d].setAttribute('src', game.images.play);
+    }
+    
+    for(var e = 0; e < play.length; e++) {
+       deathsIcon[e].setAttribute('src', game.images.deathsIcon);
+    }
+    
+    for(var f = 0; f < play.length; f++) {
+       killsIcon[f].setAttribute('src', game.images.killsIcon);
     }
 
 
@@ -485,6 +507,11 @@ UI.prototype.bindDataEventListeners = function() {
         //Room
         updateRoom(room);
     });
+    
+    this.app.on('room:game-time-updated', function(room) {
+       //Room
+       updateRoom(room); 
+    });
 
     this.app.on('room:mode-changed', function(room) {
         //Room
@@ -538,6 +565,7 @@ UI.prototype.bindHTMLEventListeners = function() {
     addRoomModeChangeListener();
     addRoomMapChangeListener();
     addStartGameClickListener();
+    addGameTimeChangeListener();
     
     //Return to room
     var returnToRoomBtn = document.getElementById('return-to-room-btn');
@@ -822,6 +850,24 @@ function addRoomMapChangeListener() {
     }
 }
 
+function addGameTimeChangeListener() {
+    var gameTimeSetter = document.getElementById('game-time-setter');
+    var btns = gameTimeSetter.querySelectorAll('.time-setter');
+    
+    var updateGameTime = function() {
+       game.client.updateGameTime(game.client.room.name, this.dataset.action);
+    };
+    
+    for(var i = 0; i < btns.length; i++) {
+        btns[i].addEventListener('click', updateGameTime);
+    }
+}
+
+function updateGameTimeSlider(time) {
+    console.log(time);
+    document.getElementById('game-time-minutes').innerHTML = time;
+}
+
 //Start game
 function addStartGameClickListener() {
     var startGameBtn = document.getElementById('start-game');
@@ -885,6 +931,7 @@ function updateRoom(room) {
     updateRoomTitle(room.name);
     updateRoomModeSlider(room.mode);
     updateRoomMapSlider(room.map);
+    updateGameTimeSlider(room.gameTime);
     updatePlayerSlots(room);
 }
 

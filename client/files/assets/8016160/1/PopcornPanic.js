@@ -29,7 +29,9 @@ var game = game || {
         podium3: '',
         podium: '',
         leaveRoome: '',
-        bgRoom: ''
+        bgRoom: '',
+        deathsIcon: '',
+        killsIcon: ''
     },
     ui: {
         initialized: false

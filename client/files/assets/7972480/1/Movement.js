@@ -120,6 +120,16 @@ Arena.prototype.onOtherCollisionStart = function(result) {
     }
 };
 
+//Mirjam
+/**
+Arena.prototype.onOtherCollisionStart = function(result) {
+    if(result.other.tags.has('water')) {    
+        //Play sound
+        result.other.sound.play("water");
+    }
+};
+*/
+
 /**
  * Update player
  */

@@ -377,7 +377,6 @@ h3 {
     color: #070707;
     position: absolute;
     left: 50%;
-    top: 57%;
     transform: translateX(-50%);
 }
 
@@ -666,9 +665,32 @@ a:active {
     border: solid 0px white;
     border-radius: 90px;
     font-family: Luckiest Guy;
+    font-size: 20px;
     margin-top: 60px;
     margin-bottom: 60px;
     position: relative;
+    padding-top: 0;
+}
+
+#timer-room-heading {
+    margin-bottom: 0;
+    padding-top: 5px;
+}
+
+#timer-room {
+    margin: 0;
+}
+
+.increase {
+    padding: 0; 
+    margin: 0;
+    transform: rotate(90deg);
+}
+
+.decrease {
+    padding: 0; 
+    margin: 0;
+    transform: rotate(270deg);
 }
 
 #room .play-btn-helper{
@@ -824,20 +846,6 @@ a:active {
     font-family: Luckiest Guy;
 }
 
-#player-kills-big-1 {
-    top: 60%;
-    left: 50%;
-}
-
-#player-kills-big-2 {
-    top: 80%;
-    left: 28%;
-}
-
-#player-kills-big-3 {
-    top: 80%;
-    left: 73%;
-}
 
 #bg-black {
     background-color: rgba(0,0,0,1);
@@ -954,15 +962,15 @@ a:active {
 #podium2{
     position: absolute;
     width: 38%;
-    top: 30%;
+    top: 27%;
     left: 9%;
 }
 
 #podium3{
     position: absolute;
     width: 38%;
-    left: 53%;
-    top: 30%;
+    left: 50%;
+    top: 27%;
 }
 
 #podium4 {
@@ -974,7 +982,7 @@ a:active {
 }
 
 .podium-character {
-    width: 360px;
+    width: 89%;
     height: auto;
     position: relative;
     left: 0px;
@@ -982,6 +990,26 @@ a:active {
 
 #podium3 .podium-character {
     left: 20px;
+}
+
+.podium-name {
+    
+}
+
+.player-kills-pic{
+    
+}
+
+.player-deaths-pic{
+    
+}
+
+.numberdeaths{
+    
+}
+
+.numberKillss{
+    
 }
 
 #podium {

@@ -147,6 +147,22 @@ var client = client || function() {
                 console.log('"change-mode": Room name and mode name must be provided.');
             }
         };
+    
+        /**
+         * Update game time
+         */
+        this.updateGameTime = function(roomName, action) {
+            if(typeof roomName !== "undefined" && typeof action !== "undefined") {
+                this.socket.emit('update-game-time', {
+                    data: {
+                        roomName: roomName,
+                        action: action
+                    }
+                });
+            } else {
+                console.log('"update-game-time": Action must be provided.');
+            }
+        };
 
         /**
          * Start game
@@ -246,6 +262,7 @@ var client = client || function() {
                 this.socket.on('game-ended', this.onGameEnded);
                 this.socket.on('map-changed', this.onMapChanged);
                 this.socket.on('mode-changed', this.onModeChanged);
+                this.socket.on('game-time-updated', this.onGameTimeUpdated);
                 this.socket.on('player-moved', this.onPlayerMoved);
                 this.socket.on('took-damage', this.onTookDamage);
             } else {
@@ -497,6 +514,29 @@ var client = client || function() {
             } else {
                 //Console
                 console.log('Error changing mode.');
+                console.log(payload.message);
+            }
+        };
+    
+         /**
+         * React on game time updated
+         */
+        this.onGameTimeUpdated = function(payload) {
+            if(payload.state === 'success') {
+                if(payload.target === 'room') {
+                    //Console
+                    console.info('Changed game time.');
+
+                    //Update self
+                    game.client.room = payload.data.room;
+                    game.client.room.players = payload.data.roomPlayers;
+
+                    //Fire game events
+                    pc.app.fire('room:game-time-updated', game.client.room);
+                }
+            } else {
+                //Console
+                console.log('Error changing gaming time.');
                 console.log(payload.message);
             }
         };
