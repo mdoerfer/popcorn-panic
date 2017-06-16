@@ -307,7 +307,7 @@ Player.prototype.takeDamage = function(amount) {
     var died = false;
     var newPressure = this.getPressure() + amount;
 
-    if(newPressure > this.maxPressure) {
+    if(newPressure >= this.maxPressure) {
         this.pressure = 0;
         died = true;
         this.addDeath();
