@@ -859,6 +859,8 @@ function onMovePlayer(socket) {
  */
 function onTakeDamage(socket) {
     socket.on('take-damage', function(payload) {
+        var payloadData = {};
+
         var inflictingPlayerId = socket.id;
         var targetPlayerId = payload.data.targetPlayerId;
         var roomName = payload.data.roomName;
@@ -872,17 +874,18 @@ function onTakeDamage(socket) {
 
             if(died) {
                 inflictingPlayer.addKill();
+                payloadData.playerThatDied = targetPlayerId;
             }
 
             var roomPlayers = game.playerManager.getPlayers(room.getPlayers());
 
+            payloadData.room = room;
+            payloadData.roomPlayers = roomPlayers;
+
             io.to(roomName).emit('took-damage', {
                 state: 'success',
                 target: 'room',
-                data: {
-                    room: room,
-                    roomPlayers: roomPlayers
-                }
+                data: payloadData
             });
         }
     });
