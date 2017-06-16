@@ -1,24 +1,24 @@
-var Movement = pc.createScript('movement');
+var Arena = pc.createScript('arena');
 
 /**
  * Component attributes
  */
-Movement.attributes.add('playerSpeed', {
+Arena.attributes.add('playerSpeed', {
     type: 'number',
-    default: 30,
+    default: 500,
     title: 'Player Speed'
 });
 
-Movement.attributes.add('playerTorque', {
+Arena.attributes.add('playerTorque', {
     type: 'number',
-    default: 5,
+    default: 300,
     title: 'Player Torque'
 });
 
 /**
  * Initialize
  */
-Movement.prototype.initialize = function() {
+Arena.prototype.initialize = function() {
     console.log('Loading game scene');
 
     this.angrycorn = this.app.root.findByName('Angrycorn');
@@ -34,7 +34,7 @@ Movement.prototype.initialize = function() {
 /**
  * Spawn players
  */
-Movement.prototype.spawnPlayers = function() { 
+Arena.prototype.spawnPlayers = function() { 
     console.log('Spawning players');
 
     //Get room info
@@ -67,6 +67,9 @@ Movement.prototype.spawnPlayers = function() {
 
         //Create player entity
         playerEntity = originalEntity.clone();
+        
+        //Save other players
+        this.otherEntities = [];
 
         //If player entity is mine, save it for later use
         if(this.room.players[i].id === game.client.me.id) {
@@ -75,6 +78,8 @@ Movement.prototype.spawnPlayers = function() {
             this.playerEntity.findByName('damage').collision.on('collisionstart', this.onCollisionStart, this); 
         }
         else {
+            this.otherEntities.push(playerEntity);
+            
             playerEntity.findByName('damage').collision.on('collisionstart', this.onOtherCollisionStart, this);
         }
 
@@ -85,41 +90,40 @@ Movement.prototype.spawnPlayers = function() {
         playerEntity.enabled = true;
 
         //Teleport entity to spawnpoint
-        playerEntity.rigidbody.teleport(spawnpoint.getPosition());
-        
-         
+        playerEntity.rigidbody.teleport(spawnpoint.getPosition());    
 
         //Add entity to hierarchy
         this.app.root.addChild(playerEntity);
     }
 };
 
-Movement.prototype.onCollisionStart = function (result) {
+Arena.prototype.onCollisionStart = function (result) {
     var hit = 0;
     
     //TODO: Debounce attack rate
-    if(result.other.tags.has('attackable') && result.other.tags.has('Player') && hit === 0) {    
+    if(result.other.tags.has('Attackable') && result.other.tags.has('Player') && hit === 0) {    
         //Send player taking damage to server
         game.client.takeDamage(result.other.name);
         
         //Play sound
-        this.entity.sound.play('fire');
+        result.other.sound.play("fire");
         
         hit = 1;
     }
 };
 
-Movement.prototype.onOtherCollisionStart = function(result) {
-    if(result.other.tags.has('attackable') && result.other.tags.has('Player')) {    
+
+Arena.prototype.onOtherCollisionStart = function(result) {
+    if(result.other.tags.has('Attackable') && result.other.tags.has('Player')) {    
         //Play sound
-        this.entity.sound.play("fire");
+        result.other.sound.play("fire");
     }
 };
 
 /**
  * Update player
  */
-Movement.prototype.update = function(dt) {
+Arena.prototype.update = function(dt) {
     var moved = false;
     var currPos = this.playerEntity.getPosition();
     
@@ -178,7 +182,7 @@ Movement.prototype.update = function(dt) {
 /**
  * React on game events
  */
-Movement.prototype.addGameListeners = function() {
+Arena.prototype.addGameListeners = function() {
     var self = this;
     
     //Move player
@@ -203,5 +207,13 @@ Movement.prototype.addGameListeners = function() {
         if(entity !== null) {
            entity.destroy();
         }
+    });
+    
+    //End game
+    this.app.on('game:game-ended', function(room) {
+       //Hier alles was passieren muss wenn game fertig ist
+       self.app.root.findByName('Root').sound.stop('music');
+       self.app.root.findByName('Root').sound.play('hero');
+      
     });
 };

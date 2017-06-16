@@ -99,6 +99,10 @@
                     </div>
                  </div>
             </div>
+            <div class="mid-col col">
+                    <h1 id="room-title">ROOM</h1>
+                    <div class="leave"><img id="leave-icon"><button class="leave-button" id="leave-room">Leave room</button></div>
+            </div>
             <div class="right-col col">
                 <h2>Map</h2>
                   <div id="map-slider">
@@ -119,14 +123,11 @@
                  </div>
             </div>
         </div> <!-- End of Header row -->
-        <div class="room-background">
-            <h1 id="room-title">ROOM</h1>
-            <span class="count" id="room-player-count">?/4</span>
-        </div> 
     </div> <!-- End of room settings -->
     
     <!-- Players -->
         <div class="row">
+            <img id="bg-room">
             <div class="left-col col">
                 <div class="player-slot-1 player-slot">
                     <img class="player-slot-role">
@@ -140,13 +141,16 @@
                 </div>
             </div>
             
-            <div class="mid-col col">
+            <div class="mid-col col play-btn-helper">
+                <div id="game-time-setter">
+                    <p>Game Time <span id="game-time-set">2</span>:00</p>
+                    <input type="range">
+                </div>
                 <div id="start-game" class="playButton">
                     <img id="redplane" class="redplane">
                     <img id="play" class="play">
                     <h3 id="random">Start</h3>
                 </div>
-                <div class="leave"><button class="leave-button" id="leave-room">Leave room</button></div>
             </div>
             
             <div class="right-col col">
@@ -191,7 +195,9 @@
             </div>
         </div>
         <div class="timer">
-            <p id="game-time" class="time"><span id="minutes" class="minutes">2</span>:<span id="seconds" class="seconds">00</span></p>
+            <p id="game-time" class="time">
+                <span id="minutes" class="minutes">2</span>:<span id="seconds" class="seconds">00</span>
+            </p>
         </div>
          <div id="player-3" class="player player-hud">
              <div class="player-inner">
@@ -220,27 +226,60 @@
 
 <!-- all UI for Game End-->
 <div id="game-end" class="game-end hidden">
-    <div class="bg-black" id="bg-black-end">
+    <div class="bg-black bg-black-end" id="winnerEffect">
         <div id="score">
             <p id="score-text"> you win </p>
-            <img id="winner">
-            <span id="winner-name"></span>
-            <p class="player-kills">
-                <span class="numberKills">5</span> Kills
-            </p>
-            <img id="winner2">
-            <span id="2nd-name"></span>
-            <p class="player-kills">
-                <span class="numberKills">5</span> Kills
-            </p>
-            <img id="winner3">
-            <span id="3rd-name"></span>
-            <p class="player-kills">
-                <span class="numberKills">5</span> Kills
-            </p>
+            <div id="podium1" class="podium">
+                <img class="podium-character">
+                <span class="podium-name">Player1</span>
+                <p class="player-kills">
+                    <img class="player-kills-pic">
+                    <span class="numberKills">5</span> Kills
+                </p>
+                <p class="player-deaths">
+                    <img class="player-deaths-pic">
+                    <span class="numberdeaths">5</span> Deaths
+                </p>
+            </div>
+            <div id="podium2" class="podium">
+                <img class="podium-character">
+                <span class="podium-name">Player1</span>
+                <p class="player-kills">
+                    <img class="player-kills-pic">
+                    <span class="numberKills">5</span> Kills
+                </p>
+                <p class="player-deaths">
+                    <img class="player-deaths-pic">
+                    <span class="numberdeaths">5</span> Deaths
+                </p>
+            </div>
+            <div id="podium3" class="podium">
+                <img class="podium-character">
+                <span class="podium-name">Player1</span>
+                <p class="player-kills">
+                    <img class="player-kills-pic">
+                    <span class="numberKills">5</span> Kills
+                </p>
+                <p class="player-deaths">
+                    <img class="player-deaths-pic">
+                    <span class="numberdeaths">5</span> Deaths
+                </p>
+            </div>
+            <div id="podium4" class="podium">
+                <span class="podium-name">Looser</span>
+                <p class="player-kills">
+                    <img class="player-kills-pic">
+                    <span class="numberKills">5</span> Kills
+                </p>
+                <p class="player-deaths">
+                    <img class="player-deaths-pic">
+                    <span class="numberdeaths">5</span> Deaths
+                </p>
+            </div>
             <img id="podium">
-            <img id="loser">
-            <span id="loser-name"></span>
+            
+            <button id="return-to-room-btn">Play again</button>
+            <button id="return-to-lobby-btn">Cancel</button>
         </div>
     </div>
 </div>

@@ -162,6 +162,23 @@ var client = client || function() {
                 console.log('"start-game": Room name must be provided.');
             }
         };
+    
+        /**
+         * Start timer
+         */
+        this.startTimer = function(roomName) {
+            var self = this;
+            
+          if(typeof self.room.name !== "undefined") {
+                this.socket.emit('start-timer', {
+                    data: {
+                        roomName: self.room.name
+                    }
+                });
+            } else {
+                console.log('"start-timer": Room name must be provided.');
+            }
+        };
 
         /**
          * Move player
@@ -224,6 +241,9 @@ var client = client || function() {
                 this.socket.on('room-joined', this.onRoomJoined);
                 this.socket.on('room-left', this.onRoomLeft);
                 this.socket.on('game-started', this.onGameStarted);
+                this.socket.on('timer-started', this.onTimerStarted);
+                this.socket.on('timer-update', this.onTimerUpdate);
+                this.socket.on('game-ended', this.onGameEnded);
                 this.socket.on('map-changed', this.onMapChanged);
                 this.socket.on('mode-changed', this.onModeChanged);
                 this.socket.on('player-moved', this.onPlayerMoved);
@@ -514,6 +534,58 @@ var client = client || function() {
                 console.log(payload.message);
             }
         };
+    
+        /**
+         * onTimerStarted
+         */
+        this.onTimerStarted = function(payload) {
+            if(payload.state === 'success') {
+                if(payload.target === 'room') {
+                    //Console
+                    console.info('Your game timer started');
+
+                    //Fire game events
+                    pc.app.fire('room:your-timer-started', payload.data.secondsLeft);
+                }
+            }
+            else {
+                console.info('Error starting game timer.');
+            }
+        };
+    
+        /**
+         * onTimerUpdate
+         */
+        this.onTimerUpdate = function(payload) {
+          if(payload.state === 'success') {
+              if(payload.target === 'room') {
+                  //Fire game events
+                  pc.app.fire('room:your-timer-updated', payload.data.secondsLeft);
+              }
+          }  
+            else {
+                console.log('Error updating game timer.');
+            }
+        };
+    
+        /**
+         * onGameEnded
+         */
+        this.onGameEnded = function(payload) {
+            if(payload.state === 'success') {
+                if(payload.target === 'room') {
+                    //Console
+                    console.info('Your game ended');
+
+                    //Fire game events
+                    pc.app.fire('room:your-game-ended', payload.data.podium);
+                    pc.app.fire('game:game-ended');
+                }
+            }
+            else {
+                console.info('Error ending game.');
+            }
+        };
 
         /**
          * onPlayerMoved
@@ -523,9 +595,6 @@ var client = client || function() {
                 if(payload.target === 'room') {
                     //Skip if it's myself that moved
                     if(payload.data.player.id === game.client.me.id) return;
-
-                    //Console
-                    console.info('Player moved');
 
                     //Fire game events
                     pc.app.fire('game:player-moved', payload.data.player);
@@ -542,15 +611,13 @@ var client = client || function() {
          */
         this.onTookDamage = function(payload) {
             if(payload.state === 'success') {
-                if(payload.target === 'room') {
-                    console.info('Player damaged');
-                    
+                if(payload.target === 'room') {   
                     //Update self
-                    this.room = payload.data.room;
-                    this.room.players = payload.data.roomPlayers;
+                    game.client.room = payload.data.room;
+                    game.client.room.players = payload.data.roomPlayers;
                     
                     //Fire game events
-                    pc.app.fire('game:player-damaged', this.room);
+                    pc.app.fire('game:player-damaged', game.client.room);
                 }
             }
             else {

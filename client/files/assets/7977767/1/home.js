@@ -85,19 +85,19 @@ UI.attributes.add('tutorial02', {
     title: 'Tutorial02'
 });
 
-UI.attributes.add('winner', {
+UI.attributes.add('podium1', {
     type: 'asset',
-    title: 'Winner'
+    title: 'Podium1'
 });
 
-UI.attributes.add('winner2', {
+UI.attributes.add('podium2', {
     type: 'asset',
-    title: 'Winner2'
+    title: 'Podium2'
 });
 
-UI.attributes.add('winner3', {
+UI.attributes.add('podium3', {
     type: 'asset',
-    title: 'Winner3'
+    title: 'Podium3'
 });
 
 UI.attributes.add('loser', {
@@ -110,12 +110,28 @@ UI.attributes.add('podium', {
     title: 'Podium'
 });
 
+UI.attributes.add('leaveRoom', {
+    type: 'asset',
+    title: 'LeaveRoom'
+});
+
+UI.attributes.add('bgRoom', {
+    type: 'asset',
+    title: 'BackgroundRoom'
+});
+
+
+
 /**
  * Initialize component
  */
 UI.prototype.initialize = function() {
-    this.initializeUI();
-    this.initializeClient();
+    if(!game.ui.initialized) {
+        this.initializeUI();
+        this.initializeClient();
+    }
+    
+    game.ui.initialized = true;
 };
 
 /**
@@ -162,11 +178,12 @@ UI.prototype.loadUI = function() {
     game.images.productions = (this.productions !== null) ? this.productions.getFileUrl() : '';
     game.images.tutorial01 = (this.tutorial01 !== null) ? this.tutorial01.getFileUrl() : '';
     game.images.tutorial02 = (this.tutorial02 !== null) ? this.tutorial02.getFileUrl() : '';
-    game.images.winner = (this.winner !== null) ? this.winner.getFileUrl() : '';
-    game.images.winner2 = (this.winner2 !== null) ? this.winner2.getFileUrl() : '';
-    game.images.winner3 = (this.winner3 !== null) ? this.winner3.getFileUrl() : '';
-    game.images.loser = (this.loser !== null) ? this.loser.getFileUrl() : '';
+    game.images.podium1 = (this.podium1 !== null) ? this.podium1.getFileUrl() : '';
+    game.images.podium2 = (this.podium2 !== null) ? this.podium2.getFileUrl() : '';
+    game.images.podium3 = (this.podium3 !== null) ? this.podium3.getFileUrl() : '';
     game.images.podium = (this.podium !== null) ? this.podium.getFileUrl() : '';
+    game.images.leaveRoom = (this.leaveRoom !== null) ? this.leaveRoom.getFileUrl() : '';
+    game.images.bgRoom = (this.bgRoom !== null) ? this.bgRoom.getFileUrl() : '';
 
     document.getElementById('header-bg').setAttribute('src', game.images.headerBg);
     document.getElementById('header-logo').setAttribute('src', game.images.headerLogo);
@@ -176,11 +193,14 @@ UI.prototype.loadUI = function() {
     document.getElementById('productions').setAttribute('src', game.images.productions);
     document.getElementById('tutorial01').setAttribute('src', game.images.tutorial01);
     document.getElementById('tutorial02').setAttribute('src', game.images.tutorial02);
-    document.getElementById('winner').setAttribute('src', game.images.winner);
-    document.getElementById('winner2').setAttribute('src', game.images.winner2);
-    document.getElementById('winner3').setAttribute('src', game.images.winner3);
-    document.getElementById('loser').setAttribute('src', game.images.loser);
+    document.getElementById('podium1').setAttribute('src', game.images.cornboy);
+    document.getElementById('podium2').setAttribute('src', game.images.corngirl);
+    document.getElementById('podium3').setAttribute('src', game.images.angrycorn);
     document.getElementById('podium').setAttribute('src', game.images.podium);
+    document.getElementById('leave-icon').setAttribute('src', game.images.leaveRoom);
+    document.getElementById('bg-room').setAttribute('src', game.images.bgRoom);
+    
+    
 
     var redplanes = document.getElementsByClassName('redplane');
     var play = document.getElementsByClassName('play');
@@ -225,6 +245,7 @@ UI.prototype.showLobby = function() {
     this.hideUIPart('room');
     this.hideUIPart('game');
     this.hideUIPart('tutorial');
+    this.hideUIPart('game-end');
 
     this.showUIPart('lobby');
 };
@@ -233,6 +254,7 @@ UI.prototype.showRoom = function() {
     this.hideUIPart('lobby');
     this.hideUIPart('game');
     this.hideUIPart('tutorial');
+    this.hideUIPart('game-end');
 
     this.showUIPart('room');
 };
@@ -242,7 +264,9 @@ UI.prototype.showGame = function() {
     this.hideUIPart('lobby');
     this.hideUIPart('tutorial');
     this.hideUIPart('game');
-
+    this.hideUIPart('game-end');
+    
+    //TODO: Change to chosen map
     this.changeScenes(game.scenes.field);
     
     this.showTutorial();
@@ -251,12 +275,35 @@ UI.prototype.showGame = function() {
 UI.prototype.showTutorial = function() {
     this.showUIPart('tutorial');
     this.playTutorial();
-
 };
 
 UI.prototype.showGameEnd = function() {
      this.hideUIPart('game');
      this.showUIPart('game-end');
+};
+
+UI.prototype.returnToRoom = function() {
+    //Change scenes to lobby
+    this.changeScenes(game.scenes.lobby);
+    
+    //TODO: Fix script/scene change errors
+    
+    //Show room
+    this.showRoom();
+};
+
+UI.prototype.returnToLobby = function() {
+    //Change scenes to lobby (also contains room)
+    this.changeScenes(game.scenes.lobby);
+    
+    //Reset
+    resetGame();
+    
+    //Leave room
+    game.client.leaveRoom(game.client.room.name);
+    
+    //Show lobby
+    this.showLobby();
 };
 
 UI.prototype.playTutorial = function() {
@@ -266,6 +313,7 @@ UI.prototype.playTutorial = function() {
     var tutorial01 = document.getElementById('tutorial-part-01');
     var tutorial02 = document.getElementById('tutorial-part-02');
     var coutdown = document.getElementById('countdown');
+    var counter = document.getElementById('counter-number');
     
     //Fade out bg and logo after 2s
     setTimeout(function() {
@@ -285,8 +333,7 @@ UI.prototype.playTutorial = function() {
                 setTimeout(function() {
                     tutorial02.style.opacity = "0";
                     coutdown.style.opacity = "1";
-                    var counterNumber = document.getElementById('counter-number').innerHTML;
-                    countdown(counterNumber);
+                    countdown(counter.innerHTML);
                 
                         //Fade in tutorial01
                         setTimeout(function() {
@@ -296,50 +343,21 @@ UI.prototype.playTutorial = function() {
                             //Mark tutorial as done
                             game.client.tutorialDone = true;
                             
-                            //TODO: Start timer on server
-                            //game.client.startTimer();
+                            //Start timer on server
+                            game.client.startTimer();
                             
-                            //Start timer
-                            startTimer();
-                            
+                            //Reset tutorial
+                            productions.style.opacity = "1";
+                            tutorial01.style.opacity = "0";
+                            tutorial02.style.opacity = "0";
+                            coutdown.style.opacity = "0";
+                            counter.innerHTML = "3";
                         }, 4000);
                   }, 3000);
             }, 3000);
         }, 500);
     }, 2000);
 };
-
-//Counting function
-function countdown (time) {
-      document.getElementById('counter-number').innerHTML=time;
-      time -= 1;  
-      if (time > -1) {
-         setTimeout( countdown, 1000, time);
-      }
-      else if (time < 0) {
-          document.getElementById('counter-number').innerHTML= "Fight";
-      }
-   }
-
-//Game Timer
-function startTimer() {
-  var m = document.getElementById('minutes').innerHTML;
-  var s = checkSecond((document.getElementById('seconds').innerHTML - 1));
-  if(s==59){m=m-1;}
-  if(m<0){return;}
-  
-    
-    document.getElementById('minutes').innerHTML = m;
-    document.getElementById('seconds').innerHTML = s;
-
-  setTimeout(startTimer, 1000);
-}
-
-function checkSecond(sec) {
-  if (sec < 10 && sec >= 0) {sec = "0" + sec;} // add zero in front of numbers < 10
-  if (sec < 0) {sec = "59";}
-  return sec;
-}
 
 UI.prototype.changeScenes = function(sceneId) {
     var oldHierarchy = this.app.root.findByName('Root');
@@ -488,8 +506,19 @@ UI.prototype.bindDataEventListeners = function() {
         //Rooms
         updateLobbyRooms(rooms);
     });
+
+    this.app.on('room:your-timer-started', function(secondsLeft) {
+        updateTimer(secondsLeft);
+    });
     
-    this.app.on('room:your-game-ended', function(room) {
+    this.app.on('room:your-timer-updated', function(secondsLeft) {
+        updateTimer(secondsLeft);
+    });
+    
+    this.app.on('room:your-game-ended', function(podium) {
+        //Update game end
+        updateGameEnd(podium);
+        
         //Show game end screen
         self.showGameEnd();
     });
@@ -499,6 +528,8 @@ UI.prototype.bindDataEventListeners = function() {
  * Bind html event listeners
  */
 UI.prototype.bindHTMLEventListeners = function() {
+    var self = this;
+    
     addPlayerNameInputChangeListener();
     addPlayerCharacterChangeListener();
     addCreateRoomListener();
@@ -507,6 +538,18 @@ UI.prototype.bindHTMLEventListeners = function() {
     addRoomModeChangeListener();
     addRoomMapChangeListener();
     addStartGameClickListener();
+    
+    //Return to room
+    var returnToRoomBtn = document.getElementById('return-to-room-btn');
+    returnToRoomBtn.addEventListener('click', function() {
+        self.returnToRoom();
+    });
+    
+    //Return to lobby
+    var returnToLobbyBtn = document.getElementById('return-to-lobby-btn');
+    returnToLobbyBtn.addEventListener('click', function() {
+        self.returnToLobby();
+    });
 };
 
 /**
@@ -788,13 +831,6 @@ function addStartGameClickListener() {
     });
 }
 
-//Update room player count
-function updateRoomPlayerCount(room) {
-    var count = document.getElementById('room-player-count');
-
-    count.innerHTML = room.players.length + '/' + room.maxPlayers;
-}
-
 //Get player slots
 function getPlayerSlots() {
     return document.querySelectorAll('.player-slot');
@@ -830,22 +866,8 @@ function fillPlayerSlots(room) {
             playerSlotRole.setAttribute('src', game.images.crown);
             playerSlotRole.classList.remove('hidden');
         }
-
-        //Set character
-        switch(room.players[i].character) {
-            case 'Cornboy':
-                playerSlotImg.setAttribute('src', game.images.cornboy);
-                break;
-            case 'Corngirl':
-                playerSlotImg.setAttribute('src', game.images.corngirl);
-                break;
-            case 'Angrycorn':
-                playerSlotImg.setAttribute('src', game.images.angrycorn);
-                break;
-            default:
-                playerSlotImg.setAttribute('src', game.images.cornboy);
-                break;
-        }
+        
+        playerSlotImg.setAttribute('src', getCharImg(room.players[i].character));
 
         //Set name
         playerSlotName.innerHTML = room.players[i].name;
@@ -861,7 +883,6 @@ function updatePlayerSlots(room) {
 //Update room
 function updateRoom(room) {
     updateRoomTitle(room.name);
-    updateRoomPlayerCount(room);
     updateRoomModeSlider(room.mode);
     updateRoomMapSlider(room.map);
     updatePlayerSlots(room);
@@ -961,8 +982,129 @@ function updateGameTime(gameTime) {
     }
 }
 
+function resetGameTime() {
+    var timeEl = document.getElementById('game-time');
+    
+    timeEl.classList.remove('has-been-set');
+}
+
 //Update game
 function updateGame(room) {
     updatePlayerHuds(room);
     updateGameTime(room.gameTime);
+}
+
+//Reset game
+function resetGame() {
+    resetGameTime();
+}
+
+/**
+ * --------------------------
+ *
+ * GAME TIMER FUNCTIONS
+ *
+ * --------------------------
+ */
+//Counting function
+function countdown (time) {
+      document.getElementById('counter-number').innerHTML=time;
+      time -= 1;  
+      if (time > -1) {
+         setTimeout( countdown, 1000, time);
+      }
+      else if (time < 0) {
+          document.getElementById('counter-number').innerHTML= "Fight";
+      }
+   }
+
+//Game Timer
+function updateTimer(secondsLeft) {
+    var m = document.getElementById('minutes');
+    var s = document.getElementById('seconds');
+    
+    var minVal = Math.floor(secondsLeft/60);
+    var secVal = secondsLeft % 60;
+    
+    secVal = (secVal < 10) ? "0" + secVal : secVal;
+
+    m.innerHTML = minVal;
+    s.innerHTML = secVal;
+}
+
+/**
+ * --------------------------
+ *
+ * GAME END FUNCTIONS
+ *
+ * --------------------------
+ */
+function updateScoreText(podium) {
+    var scoreText = document.getElementById('score-text');
+    
+    if(podium[0].id === game.client.me.id) {
+        scoreText.innerHTML = 'YOU WIN';
+    }
+    else {
+        scoreText.innerHTML = 'YOU LOSE';
+    }
+}
+
+function updatePodium(podium) {
+    var podiums = document.getElementsByClassName('podium');
+    console.log(podiums);
+    console.log(podium);
+    
+    var charSelector = '.podium-character';
+    var nameSelector = '.podium-name';
+    var killsSelector = '.numberKills';
+    var deathsSelector = '.numberdeaths';
+    
+    for(var i = 0; i < podiums.length; i++) {
+        if(typeof podium[i] !== "undefined") {
+            if(podiums[i].querySelector(charSelector) !== null) {
+                podiums[i].querySelector(charSelector).setAttribute('src', getCharImg(podium[i].character));
+            }
+            podiums[i].querySelector(nameSelector).innerHTML = podium[i].name;
+            podiums[i].querySelector(killsSelector).innerHTML = podium[i].kills;
+            podiums[i].querySelector(deathsSelector).innerHTML = podium[i].deaths;
+            podiums[i].classList.remove('hidden');
+        }
+        else {
+            podiums[i].classList.add('hidden');
+        }
+    }
+}
+
+function updateGameEnd(podium) {
+    updateScoreText(podium);
+    updatePodium(podium);
+}
+
+/**
+ * --------------------------
+ *
+ * PLAYER FUNCTIONS
+ *
+ * --------------------------
+ */
+function getCharImg(char) {
+    var imgUrl = game.images.cornboy;
+
+    switch(char) {
+        case 'Cornboy':
+            imgUrl = game.images.cornboy;
+            break;
+        case 'Corngirl':
+            imgUrl = game.images.corngirl;
+            break;
+        case 'Angrycorn':
+            imgUrl = game.images.angrycorn;
+            break;
+        default:
+            imgUrl = game.images.cornboy;
+            break;
+    }
+
+    return imgUrl;
 }

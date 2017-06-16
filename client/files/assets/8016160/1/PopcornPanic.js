@@ -7,7 +7,6 @@ var game = game || {
     },
     scenes: {
         lobby: 526492,
-        room: 530819,
         field: 531055
     },
     images: {
@@ -25,10 +24,14 @@ var game = game || {
         productions: '',
         tutorial01: '',
         tutorial02: '',
-        winner: '',
-        winner2: '',
-        winner3: '',
-        loser: '',
-        podium: ''
+        podium1: '',
+        podium2: '',
+        podium3: '',
+        podium: '',
+        leaveRoome: '',
+        bgRoom: ''
+    },
+    ui: {
+        initialized: false
     }
 };
