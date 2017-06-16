@@ -657,7 +657,7 @@ var client = client || function() {
                     game.client.room.players = payload.data.roomPlayers;
                     
                     //Fire game events
-                    pc.app.fire('game:player-damaged', game.client.room);
+                    pc.app.fire('game:player-damaged', game.client.room, payload.data.playerThatDied);
                 }
             }
             else {

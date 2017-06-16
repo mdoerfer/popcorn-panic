@@ -205,15 +205,15 @@ UI.prototype.loadUI = function() {
     document.getElementById('productions').setAttribute('src', game.images.productions);
     document.getElementById('tutorial01').setAttribute('src', game.images.tutorial01);
     document.getElementById('tutorial02').setAttribute('src', game.images.tutorial02);
-    document.getElementById('podium1').setAttribute('src', game.images.cornboy);
-    document.getElementById('podium2').setAttribute('src', game.images.corngirl);
-    document.getElementById('podium3').setAttribute('src', game.images.angrycorn);
     document.getElementById('podium').setAttribute('src', game.images.podium);
     document.getElementById('leave-icon').setAttribute('src', game.images.leaveRoom);
     document.getElementById('bg-room').setAttribute('src', game.images.bgRoom);
     
+    //Placeholder
+    document.querySelector('#podium1 .podium-character').setAttribute('src', game.images.cornboy);
+    document.querySelector('#podium2 .podium-character').setAttribute('src', game.images.corngirl);
+    document.querySelector('#podium3 .podium-character').setAttribute('src', game.images.angrycorn);
     
-
     var redplanes = document.getElementsByClassName('redplane');
     var play = document.getElementsByClassName('play');
     var deathsIcon = document.getElementsByClassName('player-deaths-pic');
@@ -330,6 +330,9 @@ UI.prototype.returnToLobby = function() {
 
 UI.prototype.playTutorial = function() {
     var self = this;
+    
+    pc.app.fire('game:tutorial-start');
+    
     var bgBlack = document.getElementById('bg-black');
     var productions = document.getElementById('productions');
     var tutorial01 = document.getElementById('tutorial-part-01');
@@ -374,6 +377,7 @@ UI.prototype.playTutorial = function() {
                             tutorial02.style.opacity = "0";
                             coutdown.style.opacity = "0";
                             counter.innerHTML = "3";
+                            pc.app.fire('game:tutorial-end');
                         }, 4000);
                   }, 3000);
             }, 3000);
@@ -420,7 +424,7 @@ UI.prototype.initializeClient = function() {
 UI.prototype.bindDataEventListeners = function() {
     var self = this;
 
-    this.app.on('lobby:you-joined', function(me, rooms, players) {
+    this.app.on('lobby:you-joined', function(me, rooms, players) {   
         //Player name
         updatePlayerNameInput(me.name);
 
@@ -864,7 +868,6 @@ function addGameTimeChangeListener() {
 }
 
 function updateGameTimeSlider(time) {
-    console.log(time);
     document.getElementById('game-time-minutes').innerHTML = time;
 }
 
@@ -1058,9 +1061,11 @@ function countdown (time) {
       document.getElementById('counter-number').innerHTML=time;
       time -= 1;  
       if (time > -1) {
+          pc.app.fire('game:countdown-sound');
          setTimeout( countdown, 1000, time);
       }
       else if (time < 0) {
+          pc.app.fire('game:countdown-fight');
           document.getElementById('counter-number').innerHTML= "Fight";
       }
    }
@@ -1089,12 +1094,17 @@ function updateTimer(secondsLeft) {
 function updateScoreText(podium) {
     var scoreText = document.getElementById('score-text');
     
-    if(podium[0].id === game.client.me.id) {
-        scoreText.innerHTML = 'YOU WIN';
+    if(typeof podium[0] !== undefined) {
+        if(podium[0].id === game.client.me.id) {
+            scoreText.innerHTML = 'YOU WIN';
+        }
+        else {
+            scoreText.innerHTML = 'YOU LOSE';
+        }
     }
     else {
-        scoreText.innerHTML = 'YOU LOSE';
-    }
+        scoreText.innerHTML = 'MIMIMI';
+    } 
 }
 
 function updatePodium(podium) {

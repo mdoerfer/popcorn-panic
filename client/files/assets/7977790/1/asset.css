@@ -226,8 +226,12 @@ h3 {
     display: none;
 }
 
+.slide-body {
+    text-align: center;
+}
+
 .character-pic{
-    width: 108%;
+    width: 50%;
     margin-top: 5%;
 }
 
@@ -661,7 +665,7 @@ a:active {
 }
 
 #game-time-setter {
-    background-color: white;
+    background-color: rgba(255,255,255,0.8);;
     border: solid 0px white;
     border-radius: 90px;
     font-family: Luckiest Guy;
@@ -716,7 +720,8 @@ a:active {
 
 .player-slot {
     width: 70%;
-    margin: 30px;;
+    margin: 30px;
+    margin-top: 80px;
     padding: 5px;
     font-family: Open Sans; 
     font-weight: bold; 
@@ -728,17 +733,19 @@ a:active {
 .player-slot-role {
     position: absolute;
     left: 47%;
-    transform: translateX(-50%);
+    top:-30px;
+    transform: translateX(-47%);
     width: 50px;
 }
 
 .player-slot-img {
-    width: 300px;
+    width: 50%;
+    margin-bottom: 5px;
 }
 
 .player-slot-name {
     margin-top: 0;
-    background-color: white;
+    background-color: rgba(255,255,255,0.8);
     border: solid 0px white;
     border-radius: 90px;
 }
@@ -835,14 +842,13 @@ a:active {
     color: white;
     background-color: black;
     border-radius: 100px;
-    position: absolute;
-    padding-top: 2px;
+    padding-top: 5px;
     padding-left: 20px;
     padding-right: 20px;
-    padding-bottom: 3px;
-    text-align: center;
-    width: 11%;
-    transform: translateX(-60%);
+    padding-bottom: 5px;
+    text-align: left;
+    width: 37%;
+    margin: 5px auto;
     font-family: Luckiest Guy;
 }
 
@@ -931,7 +937,7 @@ a:active {
     width: 75%;
     left: 50%;
     top: 50%;
-    transform: translate(-50%, -58%);
+    transform: translate(-50%, -40%);
     text-align: center;
     
 }
@@ -954,23 +960,26 @@ a:active {
 
 #podium1{
     position: absolute;
-    width: 38%;
-    left: 31%;
+    width: 34%;
+    left: 48.5%;
     top: 10%;
+    transform: translateX(-50%);
 }
 
 #podium2{
     position: absolute;
-    width: 38%;
-    top: 27%;
-    left: 9%;
+    width: 34%;
+    left: 26%;
+    top: 22%;
+    transform: translateX(-50%);
 }
 
 #podium3{
     position: absolute;
-    width: 38%;
-    left: 50%;
-    top: 27%;
+    width: 34%;
+    left: 71%;
+    top: 25.5%;
+    transform: translateX(-50%);
 }
 
 #podium4 {
@@ -982,25 +991,48 @@ a:active {
 }
 
 .podium-character {
-    width: 89%;
+    width: 42%;
     height: auto;
-    position: relative;
-    left: 0px;
+    left: 19%;
+    margin: 10% auto 0px auto;
+    display: block;
 }
 
-#podium3 .podium-character {
-    left: 20px;
-}
 
 .podium-name {
+    margin: 29px auto 8px auto;
+    display: inline-block;
+    font-family: Luckiest Guy;
+    width: 50%;
+    font-size: 110%;
     
 }
 
+.player-deaths{
+    color: white;
+    background-color: #ED1A15;
+    border-radius: 100px;
+    padding-top: 5px;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-bottom: 5px;
+    text-align: left;
+    width: 37%;
+    margin: 5px auto;
+    font-family: Luckiest Guy;
+}
+
 .player-kills-pic{
+    width: 21%;
+    vertical-align: sub;
+    padding-right: 10%;
     
 }
 
 .player-deaths-pic{
+    width: 21%;
+    vertical-align: sub;
+    padding-right: 10%;
     
 }
 

@@ -75,7 +75,7 @@ Arena.prototype.spawnPlayers = function() {
         if(this.room.players[i].id === game.client.me.id) {
             this.playerEntity = playerEntity;
   
-            this.playerEntity.findByName('damage').collision.on('collisionstart', this.onCollisionStart, this); 
+            this.playerEntity.findByName('damage').collision.on('collisionstart', this.onCollisionStart, this);
         }
         else {
             this.otherEntities.push(playerEntity);
@@ -110,6 +110,11 @@ Arena.prototype.onCollisionStart = function (result) {
         
         hit = 1;
     }
+    
+    if(result.other.tags.has('water')) {    
+        //Play sound
+        result.other.sound.play("water");
+    }
 };
 
 
@@ -118,17 +123,13 @@ Arena.prototype.onOtherCollisionStart = function(result) {
         //Play sound
         result.other.sound.play("fire");
     }
-};
-
-//Mirjam
-/**
-Arena.prototype.onOtherCollisionStart = function(result) {
+    
     if(result.other.tags.has('water')) {    
         //Play sound
         result.other.sound.play("water");
     }
 };
-*/
+
 
 /**
  * Update player
@@ -151,28 +152,20 @@ Arena.prototype.update = function(dt) {
 
     if(this.app.keyboard.isPressed(pc.KEY_D)) {
         this.playerEntity.rigidbody.applyTorque(0, -this.playerTorque, 0);
-        
-        moved = true;
     }
 
     if(this.app.keyboard.isPressed(pc.KEY_A)) {
         this.playerEntity.rigidbody.applyTorque(0, this.playerTorque, 0);
-
-        moved = true;
     }
 
     if(this.app.keyboard.isPressed(pc.KEY_S)) {
         x += forward.x;
         z += forward.z;
-
-        moved = true;
     }
 
     if(this.app.keyboard.isPressed(pc.KEY_W)) {
         x -= forward.x;
         z -= forward.z;
-
-        moved = true;
     }
     
     if (x !== 0 || z !== 0) {
@@ -182,11 +175,9 @@ Arena.prototype.update = function(dt) {
         this.force.set(x, 0, z).normalize().scale((this.playerSpeed));
         this.playerEntity.rigidbody.applyForce(this.force);
     }
-
-    if(moved) {    
-        //Move player
-        game.client.movePlayer(this.playerEntity.getPosition(), this.playerEntity.getLocalEulerAngles());
-    }
+    
+    //Move player
+    game.client.movePlayer(this.playerEntity.getPosition(), this.playerEntity.getLocalEulerAngles());
 };
 
 /**
@@ -194,6 +185,26 @@ Arena.prototype.update = function(dt) {
  */
 Arena.prototype.addGameListeners = function() {
     var self = this;
+    
+    this.app.on('game:tutorial-start', function() {
+        console.log('Tutorial started');
+        self.app.root.findByName('Root').sound.play('tutorial');
+    });
+
+    this.app.on('game:countdown-sound', function() {
+        self.app.root.findByName('Root').sound.play('countdown');
+    });
+    
+
+    this.app.on('game:countdown-fight', function() {
+        self.app.root.findByName('Root').sound.play('fight');
+    });
+
+
+    this.app.on('game:tutorial-end', function() {
+        self.app.root.findByName('Root').sound.play('music');
+    });
+
     
     //Move player
     this.app.on('game:player-moved', function(player) {
@@ -206,8 +217,27 @@ Arena.prototype.addGameListeners = function() {
     });
     
     //Damage player
-    this.app.on('game:player-damaged', function(room) {
+    this.app.on('game:player-damaged', function(room, playerThatDied) {
        updateGame(room); 
+        
+        if(typeof playerThatDied !== "undefined") {
+            var diedEntity = self.app.root.findByName(playerThatDied);
+            
+            //Get random spawn
+            var getRandomInt = function(min, max) {
+                return Math.floor(Math.random() * (max - min + 1)) + min;
+            };
+            
+            var spawnpoint = self.app.root.findByName('Spawnpoint ' + getRandomInt(0,3));
+            
+            diedEntity.enabled = false;
+            diedEntity.rigidbody.teleport(spawnpoint.getPosition());
+            
+            
+            setTimeout(function() {
+                diedEntity.enabled = true;
+            }, 5000);
+        }
     });
     
     //Remove leaving player entity
@@ -224,6 +254,5 @@ Arena.prototype.addGameListeners = function() {
        //Hier alles was passieren muss wenn game fertig ist
        self.app.root.findByName('Root').sound.stop('music');
        self.app.root.findByName('Root').sound.play('hero');
-      
     });
 };
