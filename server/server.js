@@ -681,10 +681,11 @@ function onStartTimer(socket) {
             //Get room
             var room = game.roomManager.getRoom(roomName);
 
-            //Check if player is owner
-            var playerIsOwner = room.hasOwner(playerId);
+            //Mark player has done tutorial
+            room.playerTutorialDone();
 
-            if(playerIsOwner) {
+            //Only start timer if all players have completed the tutorial
+            if(room.timerCanStart()) {
                 //Console
                 util.log();
                 util.log('START_TIMER.');

@@ -29,6 +29,28 @@ const Room = function(roomName, ownerId) {
     this.minGameTime = 1;
     this.defaultGameTime = 1;
     this.gameTime = this.defaultGameTime;
+
+    this.tutorialDoneCounter = 0;
+};
+
+/**
+ * Timer can start
+ */
+Room.prototype.timerCanStart = function() {
+    var canStart = false;
+
+    if(this.tutorialDoneCounter === this.players.length) {
+        canStart = true;
+    }
+
+    return canStart;
+};
+
+/**
+ * Increase tutorial done counter
+ */
+Room.prototype.playerTutorialDone = function() {
+  this.tutorialDoneCounter++;
 };
 
 /**
@@ -155,14 +177,14 @@ Room.prototype.setGameTime = function(time) {
  * Increase room game time
  */
 Room.prototype.increaseGameTime = function() {
-  this.setGameTime(this.getGameTime()+1);
+    this.setGameTime(this.getGameTime() + 1);
 };
 
 /**
  * Decrease room game time
  */
 Room.prototype.decreaseGameTime = function() {
-    this.setGameTime(this.getGameTime()-1);
+    this.setGameTime(this.getGameTime() - 1);
 };
 
 /**
@@ -301,6 +323,7 @@ Room.prototype.startGame = function() {
  * Stop the game
  */
 Room.prototype.stopGame = function() {
+    this.tutorialDoneCounter = 0;
     this.started = false;
 };
 
