@@ -595,8 +595,6 @@ function onUpdateGameTime(socket) {
         var roomName = payload.data.roomName;
         var action = payload.data.action;
 
-        console.log('ACTION: ' + action);
-
         //Check if room exists
         var roomExists = game.roomManager.roomExists(roomName);
 
@@ -619,8 +617,11 @@ function onUpdateGameTime(socket) {
                 else if(action === 'decrease') {
                     room.decreaseGameTime();
                 }
+                else {
+                    room.setGameTime(2);
+                }
 
-                console.log('GAME_TIME: ' + room.getGameTime());
+                util.log('GAME_TIME: ' + room.getGameTime());
 
                 //Get room players
                 var roomPlayers = game.playerManager.getPlayers(room.getPlayers());

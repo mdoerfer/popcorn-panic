@@ -167,7 +167,7 @@ Room.prototype.setGameTime = function(time) {
         this.gameTime = this.minGameTime;
     }
     else {
-        this.time = time;
+        this.gameTime = time;
     }
 
     return this;
