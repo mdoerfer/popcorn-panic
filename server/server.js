@@ -703,10 +703,10 @@ function onStartTimer(socket) {
                     var roomPlayers = game.playerManager.getPlayers(room.getPlayers());
 
                     var podium = roomPlayers.sort(function(a,b) {
-                       if(a.getKills() < b.getKills) {
+                       if(a.getKills() > b.getKills) {
                             return -1;
                        }
-                       else if(a.getKills() > b.getKills) {
+                       else if(a.getKills() < b.getKills) {
                            return 1;
                        }
 
