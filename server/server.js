@@ -595,6 +595,8 @@ function onUpdateGameTime(socket) {
         var roomName = payload.data.roomName;
         var action = payload.data.action;
 
+        console.log('ACTION: ' + action);
+
         //Check if room exists
         var roomExists = game.roomManager.roomExists(roomName);
 

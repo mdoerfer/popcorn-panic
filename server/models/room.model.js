@@ -157,7 +157,10 @@ Room.prototype.setMap = function(roomMap) {
  * @returns {*}
  */
 Room.prototype.setGameTime = function(time) {
-    if(time > this.maxGameTime) {
+    if(typeof time !== "number") {
+        this.gameTime = this.defaultGameTime;
+    }
+    else if(time > this.maxGameTime) {
         this.gameTime = this.maxGameTime;
     }
     else if(time <= this.minGameTime) {
