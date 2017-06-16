@@ -27,7 +27,7 @@ const Room = function(roomName, ownerId) {
     this.map = this.possibleMaps[0];
     this.maxGameTime = 10;
     this.minGameTime = 1;
-    this.defaultGameTime = 0.15;
+    this.defaultGameTime = 1;
     this.gameTime = this.defaultGameTime;
 };
 
