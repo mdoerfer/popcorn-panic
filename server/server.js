@@ -693,7 +693,10 @@ function onStartTimer(socket) {
                 //Inform game room about timer starting
                 io.to(room.getName()).emit('timer-started', {
                     state: 'success',
-                    target: 'room'
+                    target: 'room',
+                    data: {
+                        secondsLeft: room.getGameTimeInS()
+                    }
                 });
 
                 //Update game timer every second
