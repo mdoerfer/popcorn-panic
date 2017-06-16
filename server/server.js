@@ -80,6 +80,7 @@ function bindEventHandlers(socket) {
     onLeaveRoom(socket);
     onChangeMap(socket);
     onChangeMode(socket);
+    onUpdateGameTime(socket);
     onStartGame(socket);
     onStartTimer(socket);
     onMovePlayer(socket);
@@ -579,6 +580,77 @@ function onChangeMode(socket) {
 
             //Inform user of error
             socket.emit('mode-changed', {
+                state: 'error',
+                target: 'me',
+                message: "Room doesn't exist."
+            });
+        }
+    });
+}
+
+function onUpdateGameTime(socket) {
+    socket.on('update-game-time', function(payload) {
+        //Get variables
+        var playerId = socket.id;
+        var roomName = payload.data.roomName;
+        var action = payload.data.action;
+
+        //Check if room exists
+        var roomExists = game.roomManager.roomExists(roomName);
+
+        if(roomExists) {
+            //Get room
+            var room = game.roomManager.getRoom(roomName);
+
+            //Check if player is owner
+            var playerIsOwner = room.hasOwner(playerId);
+
+            if(playerIsOwner) {
+                //Console
+                util.log();
+                util.log('UPDATE_GAME_TIME.');
+
+                //Set the mode
+                if(action === 'increase') {
+                    room.increaseGameTime();
+                }
+                else if(action === 'decrease') {
+                    room.decreaseGameTime();
+                }
+
+                //Get room players
+                var roomPlayers = game.playerManager.getPlayers(room.getPlayers());
+
+                //Inform game room about mode change
+                io.to(room.getName()).emit('game-time-updated', {
+                    state: 'success',
+                    target: 'room',
+                    data: {
+                        room: room,
+                        roomPlayers: roomPlayers
+                    }
+                });
+            }
+            else {
+                //Console
+                util.log();
+                util.log('DENY_UPDATE_GAME_TIME. (PLAYER_ISNT_OWNER)');
+
+                //Inform user of error
+                socket.emit('game-time-updated', {
+                    state: 'error',
+                    target: 'me',
+                    message: "Player can't update game time, because he is not the room owner."
+                });
+            }
+        }
+        else {
+            //Console
+            util.log();
+            util.log('ERROR_UPDATE_GAME_TIME. (ROOM_DOESNT_EXIST)');
+
+            //Inform user of error
+            socket.emit('game-time-updated', {
                 state: 'error',
                 target: 'me',
                 message: "Room doesn't exist."
