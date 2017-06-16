@@ -618,6 +618,8 @@ function onUpdateGameTime(socket) {
                     room.decreaseGameTime();
                 }
 
+                console.log('GAME_TIME: ' + room.getGameTime());
+
                 //Get room players
                 var roomPlayers = game.playerManager.getPlayers(room.getPlayers());
 
