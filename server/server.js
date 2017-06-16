@@ -696,28 +696,44 @@ function onStartTimer(socket) {
                     target: 'room'
                 });
 
-                //End game after timer is over
-                //Give back podium info
-                //Reset room and players
-                setTimeout(function() {
-                    var roomPlayers = game.playerManager.getPlayers(room.getPlayers());
+                //Update game timer every second
+                var secondsLeft = room.getGameTimeInS();
 
-                    var podium = roomPlayers.sort(function(a,b) {
-                        return b.getKills() - a.getKills();
-                    });
+                var timerUpdate = setInterval(function() {
+                    if(secondsLeft > 0) {
+                        io.to(room.getName()).emit('timer-update', {
+                            state: 'success',
+                            target: 'room',
+                            data: {
+                                secondsLeft: secondsLeft
+                            }
+                        });
 
-                    io.to(room.getName()).emit('game-ended', {
-                        state: 'success',
-                        target: 'room',
-                        data: {
-                            podium: podium
-                        }
-                    });
+                        secondsLeft--;
+                    }
+                    else {
+                        //Cancel timer update
+                        clearInterval(timerUpdate);
 
-                    //Reset players and room
-                    room.stopGame();
-                    game.playerManager.resetPlayers(room.getPlayers());
-                }, room.getGameTimeInMs());
+                        var roomPlayers = game.playerManager.getPlayers(room.getPlayers());
+
+                        var podium = roomPlayers.sort(function(a, b) {
+                            return b.getKills() - a.getKills();
+                        });
+
+                        io.to(room.getName()).emit('game-ended', {
+                            state: 'success',
+                            target: 'room',
+                            data: {
+                                podium: podium
+                            }
+                        });
+
+                        //Reset players and room
+                        room.stopGame();
+                        game.playerManager.resetPlayers(room.getPlayers());
+                    }
+                }, 1000);
             }
         }
     });

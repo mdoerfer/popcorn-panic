@@ -242,6 +242,15 @@ Room.prototype.getGameTime = function() {
 };
 
 /**
+ * Get room game time in seconds
+ *
+ * @returns {number}
+ */
+Room.prototype.getGameTimeInS = function() {
+    return this.gameTime * 60;
+};
+
+/**
  * Get room game time in milliseconds
  *
  * @returns {number}
