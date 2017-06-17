@@ -232,6 +232,41 @@ var client = client || function() {
                 });
             }
         };
+    
+        /**
+         * Lobby message
+         */
+        this.lobbyMessage = function(msgContent) {
+            var self = this;
+            
+            if(msgContent.length > 0) {
+                this.socket.emit('lobby-message', {
+                   data: {
+                       msgContent: msgContent
+                   } 
+                });
+            } else {
+                console.log('"lobby-message": Message content cant be empty.');
+            }
+        };
+        
+        /**
+         * Room message
+         */
+        this.roomMessage = function(msgContent) {
+            var self = this;
+            
+            if(msgContent.length > 0 && this.room !== null) {
+                this.socket.emit('room-message', {
+                   data: {
+                       roomName: self.room.name,
+                       msgContent: msgContent
+                   } 
+                });
+            } else {
+                console.log('"room-message": You need to join a room and message content cant be empty.');
+            }
+        };
 
         /**
          * Disconnect from websocket
@@ -266,6 +301,8 @@ var client = client || function() {
                 this.socket.on('game-time-updated', this.onGameTimeUpdated);
                 this.socket.on('player-moved', this.onPlayerMoved);
                 this.socket.on('took-damage', this.onTookDamage);
+                this.socket.on('lobby-message', this.onLobbyMessage);
+                this.socket.on('room-message', this.onRoomMessage);
             } else {
                 console.error("Couldn't bind socket event listeners. Socket is " + typeof this.socket);
             }
@@ -307,7 +344,7 @@ var client = client || function() {
                     game.client.rooms = payload.data.rooms;
 
                     //Fire game events
-                    pc.app.fire('lobby:you-joined', game.client.me, game.client.rooms, game.client.players);
+                    pc.app.fire('lobby:you-joined', game.client.me, game.client.rooms, game.client.players, payload.data.lobbyChat);
                 }
                 else if(payload.target === 'other') {
                     //Console
@@ -692,6 +729,38 @@ var client = client || function() {
             else {
                 //Console
                 console.info('Error damaging player.');
+            }
+        };
+    
+        /**
+         * onLobbyMessage
+         */
+        this.onLobbyMessage = function(payload) {
+            if(payload.state === 'success') {
+                if(payload.target === 'all') {
+                    //Fire game events
+                    pc.app.fire('lobby:message', payload.data.lobbyChat);
+                }
+            }
+            else {
+                //Console
+                console.info('Error sending lobby message.');
+            }
+        };
+    
+        /**
+         * onRoomMessage
+         */
+        this.onRoomMessage = function(payload) {
+            if(payload.state === 'success') {
+                if(payload.target === 'room') {
+                    //Fire game events
+                    pc.app.fire('room:message', payload.data.roomChat);
+                }
+            }
+            else {
+                //Console
+                console.info('Error sending room message.');
             }
         };
     };

@@ -434,7 +434,7 @@ UI.prototype.initializeClient = function() {
 UI.prototype.bindDataEventListeners = function() {
     var self = this;
 
-    this.app.on('lobby:you-joined', function(me, rooms, players) {   
+    this.app.on('lobby:you-joined', function(me, rooms, players, lobbyChat) {   
         //Player name
         updatePlayerNameInput(me.name);
 
@@ -446,6 +446,9 @@ UI.prototype.bindDataEventListeners = function() {
 
         //Rooms
         updateLobbyRooms(rooms);
+        
+        //Chat
+        updateLobbyChat(lobbyChat);
 
         //Show lobby
         self.showLobby();
@@ -472,12 +475,20 @@ UI.prototype.bindDataEventListeners = function() {
     this.app.on('lobby:you-created-a-room', function(room, rooms) {
         //Room
         updateRoom(room);
+        
+        //Empty room chat
+        updateRoomChat([]);
 
         //Rooms
         updateLobbyRooms(rooms);
 
         //Show room
         self.showRoom();
+    });
+    
+    this.app.on('lobby:message', function(lobbyChat) {
+       //Update lobby chat
+       updateLobbyChat(lobbyChat); 
     });
 
     this.app.on('lobby:someone-created-a-room', function(rooms) {
@@ -488,6 +499,9 @@ UI.prototype.bindDataEventListeners = function() {
     this.app.on('room:someone-joined-your-room', function(room, rooms) {
         //Room
         updateRoom(room);
+        
+        //Chat
+        updateRoomChat(room.chat);
 
         //Rooms
         updateLobbyRooms(rooms);
@@ -544,6 +558,11 @@ UI.prototype.bindDataEventListeners = function() {
         //Show game
         self.showGame();
     });
+    
+    this.app.on('room:message', function(roomChat) {
+       //Update room chat
+       updateRoomChat(roomChat); 
+    });
 
     this.app.on('lobby:someones-game-started', function(rooms) {
         //Rooms
@@ -587,6 +606,8 @@ UI.prototype.bindHTMLEventListeners = function() {
     addRoomMapChangeListener();
     addStartGameClickListener();
     addGameTimeChangeListener();
+    addLobbyChatSubmitListener();
+    addRoomChatSubmitListener();
     
     //Return to room
     var returnToRoomBtn = document.getElementById('return-to-room-btn');
@@ -1151,6 +1172,123 @@ function updatePodium(podium) {
 function updateGameEnd(podium) {
     updateScoreText(podium);
     updatePodium(podium);
+}
+
+/**
+ * --------------------------
+ *
+ * CHAT FUNCTIONS
+ *
+ * --------------------------
+ */
+function updateLobbyChat(lobbyChat) {
+    var chat = document.getElementById('lobby-chat'),
+        msgContainer = chat.querySelector('#lobby-chat-messages');
+    
+    //Empty chat
+    while(msgContainer.firstChild) {
+        msgContainer.removeChild(msgContainer.firstChild);
+    }
+    
+    //Fill chat
+    for(var i = 0; i < lobbyChat.length; i++) {
+        var li = document.createElement('li');
+        var time = document.createElement('span');
+        var name = document.createElement('span');
+        var msg = document.createElement('span');
+        
+        time.classList.add('msg-time');
+        name.classList.add('player-name');
+        msg.classList.add('msg');
+        
+        var date  = new Date(lobbyChat[i].createdAt);
+        
+        time.innerHTML = formatTime(date.getDay()) + '.' + formatTime(date.getMonth()) + ' - ' + formatTime(date.getHours()) + ':' + formatTime(date.getMinutes());
+        name.innerHTML = lobbyChat[i].playerName;
+        msg.innerHTML = lobbyChat[i].content;
+        
+        li.appendChild(time);
+        li.appendChild(name);
+        li.appendChild(msg);
+        
+        msgContainer.appendChild(li);
+    }
+    
+    //Scroll down to last message
+    chat.scrollTop = chat.scrollHeight;
+}
+
+function addLobbyChatSubmitListener() {
+    var form = document.getElementById('lobby-chat-form'),
+        input = form.querySelector('#lobby-chat-input');
+    
+    form.addEventListener('submit', function(e) {
+        //Prevent browser reload
+        e.preventDefault();
+        
+        //Send message
+        game.client.lobbyMessage(input.value);
+        
+        //Reset input value
+        input.value = '';
+    });
+}
+
+function updateRoomChat(roomChat) {
+    var chat = document.getElementById('room-chat'),
+        msgContainer = chat.querySelector('#room-chat-messages');
+    
+    //Empty chat
+    while(msgContainer.firstChild) {
+        msgContainer.removeChild(msgContainer.firstChild);
+    }
+    
+    //Fill chat
+    for(var i = 0; i < roomChat.length; i++) {
+        var li = document.createElement('li');
+        var time = document.createElement('span');
+        var name = document.createElement('span');
+        var msg = document.createElement('span');
+        
+        time.classList.add('msg-time');
+        name.classList.add('player-name');
+        msg.classList.add('msg');
+        
+        var date  = new Date(roomChat[i].createdAt);
+        
+        time.innerHTML = formatTime(date.getDay()) + '.' + formatTime(date.getMonth()) + ' - ' + formatTime(date.getHours()) + ':' + formatTime(date.getMinutes());
+        name.innerHTML = roomChat[i].playerName;
+        msg.innerHTML = roomChat[i].content;
+        
+        li.appendChild(time);
+        li.appendChild(name);
+        li.appendChild(msg);
+        
+        msgContainer.appendChild(li);
+    }
+    
+    //Scroll down to last message
+    chat.scrollTop = chat.scrollHeight;
+}
+
+function addRoomChatSubmitListener() {
+    var form = document.getElementById('room-chat-form'),
+        input = form.querySelector('#room-chat-input');
+    
+    form.addEventListener('submit', function(e) {
+        //Prevent browser reload
+        e.preventDefault();
+        
+        //Send message
+        game.client.roomMessage(input.value);
+        
+        //Reset input value
+        input.value = '';
+    });
+}
+
+function formatTime(number) {
+    return (number < 10) ? "0" + number : number;
 }
 
 /**

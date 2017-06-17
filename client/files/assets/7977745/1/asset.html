@@ -83,6 +83,16 @@
             </div>
         </div>
     </div>
+    <!-- Lobby chat-->
+    <div class="lobby-chat-wrapper">
+        <div id="lobby-chat">
+            <ul id="lobby-chat-messages"></ul>
+        </div>
+        <form id="lobby-chat-form">
+            <input id="lobby-chat-input" type="text" placeholder="Your message">
+            <button type="submit">Send</button>
+        </form>
+    </div>
 </div>
 
 <!-- all UI for Room-->
@@ -135,49 +145,59 @@
     </div> <!-- End of room settings -->
     
     <!-- Players -->
-        <div class="row">
-            <img id="bg-room">
-            <div class="left-col col">
-                <div class="player-slot-1 player-slot">
-                    <img class="player-slot-role">
-                    <img class="player-slot-img">
-                    <p class="player-slot-name"></p>
-                </div>
-                <div class="player-slot-3 player-slot">
-                    <img class="player-slot-role">
-                    <img class="player-slot-img">
-                    <p class="player-slot-name"></p>
-                </div>
+    <div class="row">
+        <img id="bg-room">
+        <div class="left-col col">
+            <div class="player-slot-1 player-slot">
+                <img class="player-slot-role">
+                <img class="player-slot-img">
+                <p class="player-slot-name"></p>
             </div>
-            
-            <div class="mid-col col play-btn-helper">
-                <div id="game-time-setter">
-                    <p id="timer-room-heading">Game Time:</p>
-                    <img class="chevron increase time-setter" data-action="increase"> 
-                    <p id="timer-room"><span id="game-time-minutes">2</span>:00</p>
-                    <img class="chevron decrease time-setter" data-action="decrease"> 
-                </div>
-                <div id="start-game" class="playButton">
-                    <img id="redplane" class="redplane">
-                    <img id="play" class="play">
-                    <h3 id="random">Start</h3>
-                </div>
+            <div class="player-slot-3 player-slot">
+                <img class="player-slot-role">
+                <img class="player-slot-img">
+                <p class="player-slot-name"></p>
             </div>
-            
-            <div class="right-col col">
-                <div class="player-slot-2 player-slot">
-                    <img class="player-slot-role">
-                    <img class="player-slot-img">
-                    <p class="player-slot-name"></p>
-                </div>
-                <div class="player-slot-4 player-slot">
-                    <img class="player-slot-role">
-                    <img class="player-slot-img">
-                    <p class="player-slot-name"></p>
-                </div>
-            </div>
-        </div><!-- End of Players row -->
+        </div>
 
+        <div class="mid-col col play-btn-helper">
+            <div id="game-time-setter">
+                <p id="timer-room-heading">Game Time:</p>
+                <img class="chevron increase time-setter" data-action="increase"> 
+                <p id="timer-room"><span id="game-time-minutes">2</span>:00</p>
+                <img class="chevron decrease time-setter" data-action="decrease"> 
+            </div>
+            <div id="start-game" class="playButton">
+                <img id="redplane" class="redplane">
+                <img id="play" class="play">
+                <h3 id="random">Start</h3>
+            </div>
+        </div>
+
+        <div class="right-col col">
+            <div class="player-slot-2 player-slot">
+                <img class="player-slot-role">
+                <img class="player-slot-img">
+                <p class="player-slot-name"></p>
+            </div>
+            <div class="player-slot-4 player-slot">
+                <img class="player-slot-role">
+                <img class="player-slot-img">
+                <p class="player-slot-name"></p>
+            </div>
+        </div>
+    </div><!-- End of Players row -->
+    
+    <!-- Room chat-->
+    <div class="room-chat-wrapper">
+        <div id="room-chat">
+            <ul id="room-chat-messages"></ul>
+        </div>
+        <form id="room-chat-form">
+            <input id="room-chat-input" type="text" placeholder="Your message">
+            <button type="submit">Send</button>
+        </form>
+    </div>
 </div> <!-- End of room -->
 
 <!-- all UI for Game-->

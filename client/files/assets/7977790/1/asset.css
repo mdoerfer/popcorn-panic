@@ -1098,3 +1098,75 @@ a:active {
     margin: 4%;
     
 }
+
+.room-chat-wrapper {
+    z-index: 2;
+    background-color: rgba(0,0,0,0.8);
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 500px;
+}
+
+.room-chat-wrapper #room-chat {
+    overflow-y: scroll;
+    height: 110px;
+}
+
+.room-chat-wrapper #room-chat #room-chat-messages {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.room-chat-wrapper #room-chat #room-chat-messages .msg-time {
+    margin-right: 5px;
+}
+
+.room-chat-wrapper #room-chat #room-chat-messages .player-name {
+    margin-right: 5px;
+}
+
+.room-chat-wrapper #room-chat #room-chat-messages .msg {
+    
+}
+
+.room-chat-wrapper #room-chat-form {
+    
+}
+
+.lobby-chat-wrapper {
+    z-index: 2;
+    background-color: rgba(0,0,0,0.8);
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 500px;
+}
+
+.lobby-chat-wrapper #lobby-chat {
+    overflow-y: scroll;
+    height: 110px;
+}
+
+.lobby-chat-wrapper #lobby-chat #lobby-chat-messages {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.lobby-chat-wrapper #lobby-chat #lobby-chat-messages .msg-time {
+    margin-right: 5px;
+}
+
+.lobby-chat-wrapper #lobby-chat #lobby-chat-messages .player-name {
+    margin-right: 5px;
+}
+
+.lobby-chat-wrapper #lobby-chat #lobby-chat-messages .msg {
+    
+}
+
+.lobby-chat-wrapper #lobby-chat-form {
+    
+}
