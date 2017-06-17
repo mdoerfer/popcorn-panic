@@ -126,7 +126,8 @@ function onJoinLobby(socket) {
             data: {
                 me: game.playerManager.getPlayer(playerId),
                 players: game.playerManager.getPlayers(),
-                rooms: game.roomManager.getRooms()
+                rooms: game.roomManager.getRooms(),
+                lobbyChat: game.chatManager.getLobbyChat()
             }
         });
 
