@@ -164,7 +164,8 @@ Room.prototype.setGameTime = function(time) {
         this.gameTime = this.maxGameTime;
     }
     else if(time <= this.minGameTime) {
-        this.gameTime = this.minGameTime;
+        //this.gameTime = this.minGameTime;
+        this.gameTime = 1/6;
     }
     else {
         this.gameTime = time;
