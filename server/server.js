@@ -85,6 +85,8 @@ function bindEventHandlers(socket) {
     onStartTimer(socket);
     onMovePlayer(socket);
     onTakeDamage(socket);
+    onLobbyMessage(socket);
+    onRoomMessage(socket);
 }
 
 /**
@@ -825,10 +827,10 @@ function onStartTimer(socket) {
                         });
 
                         socket.broadcast.emit('game-reset', {
-                           state: 'success',
+                            state: 'success',
                             target: 'other',
                             data: {
-                               rooms: game.roomManager.getRooms()
+                                rooms: game.roomManager.getRooms()
                             }
                         });
                     }
@@ -905,6 +907,72 @@ function onTakeDamage(socket) {
                 state: 'success',
                 target: 'room',
                 data: payloadData
+            });
+        }
+    });
+}
+
+/**
+ * On 'lobby-message'
+ *
+ * @param socket
+ */
+function onLobbyMessage(socket) {
+    socket.on('lobby-message', function(payload) {
+        //Read payload data
+        var playerId = socket.id;
+        var player = game.playerManager.getPlayer(playerId);
+        var msgContent = payload.data.msgContent;
+
+        if(msgContent.length !== 0) {
+            //Create new message
+            var message = game.chatManager.getNewMessage(playerId);
+            message.setPlayerName(player.getName());
+            message.setContent(msgContent);
+
+            //Add message to lobby chat
+            game.chatManager.addLobbyChatMessage(message);
+
+            io.emit('lobby-message', {
+                state: 'success',
+                target: 'all',
+                data: {
+                    lobbyChat: game.chatManager.getLobbyChat()
+                }
+            });
+        }
+    });
+}
+
+/**
+ * On 'room-message'
+ *
+ * @param socket
+ */
+function onRoomMessage(socket) {
+    socket.on('room-message', function(payload) {
+        //Read payload data
+        var playerId = socket.id;
+        var player = game.playerManager.getPlayer(playerId);
+        var roomName = payload.data.roomName;
+        var room = game.roomManager.getRoom(roomName);
+        var msgContent = payload.data.msgContent;
+
+        if(msgContent.length !== 0 && game.roomManager.roomExists(roomName)) {
+            //Create new message
+            var message = game.chatManager.getNewMessage(playerId);
+            message.setPlayerName(player.getName());
+            message.setContent(msgContent);
+
+            //Add message to lobby chat
+            room.addChatMessage(message);
+
+            io.to(room.getName()).emit('room-message', {
+                state: 'success',
+                target: 'room',
+                data: {
+                    roomChat: room.getChat()
+                }
             });
         }
     });

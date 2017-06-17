@@ -12,9 +12,15 @@ const _ = require('./../util/util');
 const Room = function(roomName, ownerId) {
     this.owner = ownerId;
     this.name = roomName;
+
+    //Players
     this.players = [];
     this.maxPlayers = 4;
+
+    //State
     this.started = false;
+
+    //Modes and maps
     this.possibleModes = [
         'Deathmatch',
         'CaptureTheFlag'
@@ -25,16 +31,24 @@ const Room = function(roomName, ownerId) {
     ];
     this.mode = this.possibleModes[0];
     this.map = this.possibleMaps[0];
+
+    //Game time
     this.maxGameTime = 10;
     this.minGameTime = 1;
     this.defaultGameTime = 1;
     this.gameTime = this.defaultGameTime;
 
+    //Counter to check if all players have finished the tutorial before starting the timer
     this.tutorialDoneCounter = 0;
+
+    //Chat
+    this.chat = [];
 };
 
 /**
  * Timer can start
+ *
+ * @returns {boolean} true if all players have finished the tutorial
  */
 Room.prototype.timerCanStart = function() {
     var canStart = false;
@@ -164,8 +178,7 @@ Room.prototype.setGameTime = function(time) {
         this.gameTime = this.maxGameTime;
     }
     else if(time <= this.minGameTime) {
-        //this.gameTime = this.minGameTime;
-        this.gameTime = 1/6;
+        this.gameTime = this.minGameTime;
     }
     else {
         this.gameTime = time;
@@ -344,6 +357,22 @@ Room.prototype.stopGame = function() {
  */
 Room.prototype.hasStarted = function() {
     return this.started;
+};
+
+/**
+ * Return the whole room chat
+ */
+Room.prototype.getChat = function() {
+    return this.chat;
+};
+
+/**
+ * Add chat message
+ */
+Room.prototype.addChatMessage = function(message) {
+    if(message instanceof Message) {
+        this.chat.push(message);
+    }
 };
 
 module.exports = Room;
