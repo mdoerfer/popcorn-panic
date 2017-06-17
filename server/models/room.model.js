@@ -370,9 +370,7 @@ Room.prototype.getChat = function() {
  * Add chat message
  */
 Room.prototype.addChatMessage = function(message) {
-    if(message instanceof Message) {
-        this.chat.push(message);
-    }
+    this.chat.push(message);
 };
 
 module.exports = Room;
