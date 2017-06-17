@@ -48,3 +48,5 @@ Message.prototype.sanitize = function(unsafeHtml) {
         .replace(/"/g, "&quot;")
         .replace(/'/g, "&#039;");
 };
+
+module.exports = Message;

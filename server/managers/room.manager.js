@@ -222,10 +222,6 @@ RoomManager.prototype.removeLeftovers = function(game, io, playerId) {
             self.removeRoom(this.getName());
         }
     });
-
-
-
-
 };
 
 module.exports = RoomManager;

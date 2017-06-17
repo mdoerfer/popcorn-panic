@@ -38,3 +38,5 @@ ChatManager.prototype.addLobbyChatMessage = function(message) {
         this.chat.push(message);
     }
 };
+
+module.exports = ChatManager;
