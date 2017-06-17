@@ -823,6 +823,14 @@ function onStartTimer(socket) {
                                 roomPlayers: roomPlayers
                             }
                         });
+
+                        socket.broadcast.emit('game-reset', {
+                           state: 'success',
+                            target: 'other',
+                            data: {
+                               rooms: game.roomManager.getRooms()
+                            }
+                        });
                     }
                 }, 1000);
             }
