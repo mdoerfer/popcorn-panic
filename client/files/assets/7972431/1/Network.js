@@ -260,13 +260,14 @@ var client = client || function() {
                 this.socket.on('timer-started', this.onTimerStarted);
                 this.socket.on('timer-update', this.onTimerUpdate);
                 this.socket.on('game-ended', this.onGameEnded);
+                this.socket.on('game-reset', this.onGameReset);
                 this.socket.on('map-changed', this.onMapChanged);
                 this.socket.on('mode-changed', this.onModeChanged);
                 this.socket.on('game-time-updated', this.onGameTimeUpdated);
                 this.socket.on('player-moved', this.onPlayerMoved);
                 this.socket.on('took-damage', this.onTookDamage);
             } else {
-                console.error("Couldn't bind socket event listeners. Socket is null");
+                console.error("Couldn't bind socket event listeners. Socket is " + typeof this.socket);
             }
         };
 
@@ -616,7 +617,7 @@ var client = client || function() {
                 if(payload.target === 'room') {
                     //Console
                     console.info('Your game ended');
-
+                    
                     //Fire game events
                     pc.app.fire('room:your-game-ended', payload.data.podium);
                     pc.app.fire('game:game-ended');
@@ -624,6 +625,34 @@ var client = client || function() {
             }
             else {
                 console.info('Error ending game.');
+            }
+        };
+    
+        /**
+         * onGameReset
+         */
+        this.onGameReset = function(payload) {
+            if(payload.state === 'success') {
+                if(payload.target === 'room') {
+                    //Console
+                    console.info('Your game was reset');
+                    
+                    //Update self
+                    game.client.room = payload.data.room;
+                    game.client.room.players = payload.data.roomPlayers;
+                }
+                else if(payload.target === 'other') {
+                    //Console
+                    console.info('A game was reset');
+                    
+                    //Update self
+                    game.client.rooms = payload.data.rooms;
+                    
+                    pc.app.fire('lobby:someones-game-reset', game.client.rooms);
+                }
+            }
+            else {
+                console.info('Error reseting game.');
             }
         };
 

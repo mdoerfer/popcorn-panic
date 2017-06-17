@@ -29,7 +29,6 @@
                 </div>
                 <br>
                 <div id="join-random-game" class="playButton">
-                    <!-- TODO Implement random game creation -->
                     <img id="redplane" class="redplane">
                     <img id="play" class="play">
                     <h3 id="random">Random <br>Game</h3>
@@ -66,6 +65,16 @@
                             <div class="slide-head shadow style-box">
                                 <img class="slide-left chevron" data-char="Corngirl">
                                 <span class="character">Angrycorn</span>
+                                <img class="slide-right chevron" data-char="Playercorn">
+                            </div>
+                        </div>
+                        <div class="slide hidden" id="Playercorn">
+                            <div class="slide-body">
+                                <img class="character-pic" id="playercorn-pic">
+                            </div>
+                            <div class="slide-head shadow style-box">
+                                <img class="slide-left chevron" data-char="Angrycorn">
+                                <span class="character">Playercorn</span>
                                 <img class="slide-right chevron" data-char="Cornboy">
                             </div>
                         </div>
@@ -269,7 +278,7 @@
             </div>
             <div id="podium4" class="podium">
                 <span class="podium-name">Looser</span>
-                <p class="player-kills">
+                <p class="player-kills-big">
                     <img class="player-kills-pic">
                     <span class="numberKills">5</span> Kills
                 </p>

@@ -35,5 +35,10 @@ var game = game || {
     },
     ui: {
         initialized: false
+    },
+    sounds: {
+        music: 1,
+        effects: 1,
+        volume: 1
     }
 };

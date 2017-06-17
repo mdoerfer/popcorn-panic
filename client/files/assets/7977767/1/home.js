@@ -28,6 +28,11 @@ UI.attributes.add('angrycornPic', {
     title: 'Angrycorn'
 });
 
+UI.attributes.add('playercornPic', {
+    type: 'asset',
+    title: 'Playercorn'
+});
+
 UI.attributes.add('chevron', {
     type: 'asset',
     title: 'Chevron'
@@ -179,6 +184,7 @@ UI.prototype.loadUI = function() {
     game.images.cornboy = (this.cornboyPic !== null) ? this.cornboyPic.getFileUrl() : '';
     game.images.corngirl = (this.corngirlPic !== null) ? this.corngirlPic.getFileUrl() : '';
     game.images.angrycorn = (this.angrycornPic !== null) ? this.angrycornPic.getFileUrl() : '';
+    game.images.playercorn = (this.playercornPic !== null) ? this.playercornPic.getFileUrl() : '';
     game.images.chevron = (this.chevron !== null) ? this.chevron.getFileUrl() : '';
     game.images.chevronWhite = (this.chevronsWhite !== null) ? this.chevronsWhite.getFileUrl() : '';
     game.images.redplane = (this.redplane !== null) ? this.redplane.getFileUrl() : '';
@@ -202,6 +208,7 @@ UI.prototype.loadUI = function() {
     document.getElementById('cornboy-pic').setAttribute('src', game.images.cornboy);
     document.getElementById('corngirl-pic').setAttribute('src', game.images.corngirl);
     document.getElementById('angrycorn-pic').setAttribute('src', game.images.angrycorn);
+    document.getElementById('playercorn-pic').setAttribute('src', game.images.playercorn);
     document.getElementById('productions').setAttribute('src', game.images.productions);
     document.getElementById('tutorial01').setAttribute('src', game.images.tutorial01);
     document.getElementById('tutorial02').setAttribute('src', game.images.tutorial02);
@@ -307,6 +314,9 @@ UI.prototype.showGameEnd = function() {
 UI.prototype.returnToRoom = function() {
     //Change scenes to lobby
     this.changeScenes(game.scenes.lobby);
+    
+    //Reset
+    resetGame();
     
     //TODO: Fix script/scene change errors
     
@@ -482,8 +492,10 @@ UI.prototype.bindDataEventListeners = function() {
         //Rooms
         updateLobbyRooms(rooms);
 
-        //Show room
-        self.showRoom();
+        //Show room (only if not on game-end already)
+        if(document.getElementById('game-end').classList.contains('hidden')) {
+            self.showRoom();
+        }
     });
 
     this.app.on('lobby:someone-joined-a-room', function(rooms) {
@@ -534,6 +546,11 @@ UI.prototype.bindDataEventListeners = function() {
     });
 
     this.app.on('lobby:someones-game-started', function(rooms) {
+        //Rooms
+        updateLobbyRooms(rooms);
+    });
+    
+    this.app.on('lobby:someones-game-reset', function(rooms) {
         //Rooms
         updateLobbyRooms(rooms);
     });
@@ -1109,8 +1126,6 @@ function updateScoreText(podium) {
 
 function updatePodium(podium) {
     var podiums = document.getElementsByClassName('podium');
-    console.log(podiums);
-    console.log(podium);
     
     var charSelector = '.podium-character';
     var nameSelector = '.podium-name';
@@ -1157,6 +1172,9 @@ function getCharImg(char) {
             break;
         case 'Angrycorn':
             imgUrl = game.images.angrycorn;
+            break;
+        case 'Playercorn':
+            imgUrl = game.images.playercorn;
             break;
         default:
             imgUrl = game.images.cornboy;

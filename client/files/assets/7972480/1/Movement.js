@@ -24,11 +24,27 @@ Arena.prototype.initialize = function() {
     this.angrycorn = this.app.root.findByName('Angrycorn');
     this.cornboy = this.app.root.findByName('Cornboy');
     this.corngirl = this.app.root.findByName('Corngirl');
+    this.playercorn = this.app.root.findByName('Playercorn');
+    this.popcorn = this.app.root.findByName('Popcorn');
     
     this.force = new pc.Vec3();
-
+    
+    this.destroyDestroyables();
     this.spawnPlayers();
     this.addGameListeners();
+};
+
+/**
+ * Destroy any previously created entities
+ */
+Arena.prototype.destroyDestroyables = function() {
+    console.log('Destroying previous entities');
+    
+    var destroyables = this.app.root.findByTag('Destroyable');
+    
+    for(var i = 0; i < destroyables.length; i++) {
+        destroyables[i].destroy();
+    }
 };
 
 /**
@@ -41,38 +57,49 @@ Arena.prototype.spawnPlayers = function() {
     this.room = game.client.room;
 
     //Declare variables
-    var originalEntity;
     var playerEntity;
     var spawnpoint;
+    var currPlayer;
 
     //Create player entities
     for(var i = 0; i < this.room.players.length; i++) {
+        currPlayer = this.room.players[i];
+        
         //Get correct spawnpoint
         spawnpoint = this.app.root.findByName('Spawnpoint ' + i);
 
         //Get player character entity
-        switch(this.room.players[i].character) {
+        switch(currPlayer.character) {
             case 'Angrycorn':
-                originalEntity = this.angrycorn;
+                playerEntity = this.app.root.findByName('Angrycorn').clone();
                 break;
             case 'Corngirl':
-                originalEntity = this.corngirl;
+                playerEntity = this.app.root.findByName('Corngirl').clone();
                 break;
             case 'Cornboy':
-                originalEntity = this.cornboy;
+                playerEntity = this.app.root.findByName('Cornboy').clone();
+                break;
+            case 'Playercorn':
+                playerEntity = this.app.root.findByName('Playercorn').clone();
                 break;
             default:
-                originalEntity = this.cornboy;
+                playerEntity = this.app.root.findByName('Cornboy').clone();
         }
-
-        //Create player entity
-        playerEntity = originalEntity.clone();
+        
+        //Set entity name
+        playerEntity.name = currPlayer.id;
+        
+        //Tag player entity
+        playerEntity.tags.add('Destroyable');
+        
+        console.log('PLAYER ENTITY');
+        console.log(playerEntity.children);
         
         //Save other players
         this.otherEntities = [];
 
         //If player entity is mine, save it for later use
-        if(this.room.players[i].id === game.client.me.id) {
+        if(currPlayer.id === game.client.me.id) {
             this.playerEntity = playerEntity;
   
             this.playerEntity.findByName('damage').collision.on('collisionstart', this.onCollisionStart, this);
@@ -82,9 +109,6 @@ Arena.prototype.spawnPlayers = function() {
             
             playerEntity.findByName('damage').collision.on('collisionstart', this.onOtherCollisionStart, this);
         }
-
-        //Set entity name
-        playerEntity.name = this.room.players[i].id;
 
         //Enable entity
         playerEntity.enabled = true;
@@ -188,10 +212,12 @@ Arena.prototype.addGameListeners = function() {
     
     this.app.on('game:tutorial-start', function() {
         console.log('Tutorial started');
+        
         self.app.root.findByName('Root').sound.play('tutorial');
     });
 
     this.app.on('game:countdown-sound', function() {
+        self.app.root.findByName('Root').sound.stop('tutorial');
         self.app.root.findByName('Root').sound.play('countdown');
     });
     
@@ -203,6 +229,7 @@ Arena.prototype.addGameListeners = function() {
 
     this.app.on('game:tutorial-end', function() {
         self.app.root.findByName('Root').sound.play('music');
+        self.app.root.findByName('Root').sound.play('haha');
     });
 
     
@@ -214,6 +241,7 @@ Arena.prototype.addGameListeners = function() {
             entity.setLocalEulerAngles(new pc.Vec3(player.rotX, player.rotY, player.rotZ));
             entity.rigidbody.teleport(new pc.Vec3(player.x, player.y, player.z));
         }
+        
     });
     
     //Damage player
@@ -229,14 +257,24 @@ Arena.prototype.addGameListeners = function() {
             };
             
             var spawnpoint = self.app.root.findByName('Spawnpoint ' + getRandomInt(0,3));
+            var currPos = self.playerEntity.getPosition();
             
             diedEntity.enabled = false;
             diedEntity.rigidbody.teleport(spawnpoint.getPosition());
             
-            
             setTimeout(function() {
                 diedEntity.enabled = true;
+                self.app.root.findByName('Root').sound.play('respawn');
             }, 5000);
+            
+            
+            var vorlagenPopcorn =  self.app.root.findByName('Popcorn');
+            var newPopcorn = vorlagenPopcorn.clone();
+            self.app.root.addChild(newPopcorn);
+            newPopcorn.rigidbody.teleport(currPos);
+            newPopcorn.enabled = true;
+            self.app.root.findByName('Root').sound.play('kill');
+            self.app.root.findByName('Root').sound.play('haha');
         }
     });
     

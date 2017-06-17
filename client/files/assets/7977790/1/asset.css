@@ -674,6 +674,9 @@ a:active {
     margin-bottom: 60px;
     position: relative;
     padding-top: 0;
+    width: 50%;
+    margin-right: auto;
+    margin-left: auto;
 }
 
 #timer-room-heading {
@@ -847,9 +850,10 @@ a:active {
     padding-right: 20px;
     padding-bottom: 5px;
     text-align: left;
-    width: 37%;
+    width: 30%;
     margin: 5px auto;
     font-family: Luckiest Guy;
+    position: relative;
 }
 
 
@@ -970,7 +974,7 @@ a:active {
     position: absolute;
     width: 34%;
     left: 26%;
-    top: 22%;
+    top: 25.5%;
     transform: translateX(-50%);
 }
 
@@ -984,11 +988,33 @@ a:active {
 
 #podium4 {
     width: 50%;
-    left: 50%; 
-    top: 100%; 
+    left: 61%;
+    top: 22%;
     transform: translate(-50%, -50%);
-    position: absolute; 
+    position: absolute;
 }
+
+#podium4 .podium-name{
+    ont-size: 80%;
+    margin-bottom: 0px;
+    
+}
+
+#podium4 .player-kills-big{
+    width: 12%;
+    font-size: 57%;
+    padding: 1px;
+    margin: 1px auto;
+}
+
+#podium4 .player-deaths{
+    width: 12%;
+    font-size: 57%;
+    padding: 1px;
+    margin: 1px auto;
+    
+}
+
 
 .podium-character {
     width: 42%;
@@ -1017,31 +1043,32 @@ a:active {
     padding-right: 20px;
     padding-bottom: 5px;
     text-align: left;
-    width: 37%;
+    width: 30%;
     margin: 5px auto;
     font-family: Luckiest Guy;
+    position: relative;
 }
 
 .player-kills-pic{
-    width: 21%;
-    vertical-align: sub;
-    padding-right: 10%;
+    width: 15%;
+    position: absolute;
+    right: 76%;
     
 }
 
 .player-deaths-pic{
-    width: 21%;
-    vertical-align: sub;
-    padding-right: 10%;
+    width: 15%;
+    position: absolute;
+    right: 76%;
     
 }
 
 .numberdeaths{
-    
+    padding-left: 25%;
 }
 
-.numberKillss{
-    
+.numberKills{     
+    padding-left: 25%; 
 }
 
 #podium {
