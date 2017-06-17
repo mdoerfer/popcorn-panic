@@ -803,17 +803,24 @@ function onStartTimer(socket) {
                             return b.getKills() - a.getKills();
                         });
 
-                        //Reset players and room
-                        room.stopGame();
-                        game.playerManager.resetPlayers(room.getPlayers());
-
                         io.to(room.getName()).emit('game-ended', {
                             state: 'success',
                             target: 'room',
                             data: {
-                                room: room,
-                                roomPlayers: roomPlayers,
                                 podium: podium
+                            }
+                        });
+
+                        //Reset players and room
+                        room.stopGame();
+                        game.playerManager.resetPlayers(room.getPlayers());
+
+                        io.to(room.getName()).emit('game-reset', {
+                            state: 'success',
+                            target: 'room',
+                            data: {
+                                room: room,
+                                roomPlayers: roomPlayers
                             }
                         });
                     }
