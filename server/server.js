@@ -795,23 +795,27 @@ function onStartTimer(socket) {
                         //Cancel timer update
                         clearInterval(timerUpdate);
 
+                        //Get room players
                         var roomPlayers = game.playerManager.getPlayers(room.getPlayers());
 
+                        //Sort podium
                         var podium = roomPlayers.sort(function(a, b) {
                             return b.getKills() - a.getKills();
-                        });
-
-                        io.to(room.getName()).emit('game-ended', {
-                            state: 'success',
-                            target: 'room',
-                            data: {
-                                podium: podium
-                            }
                         });
 
                         //Reset players and room
                         room.stopGame();
                         game.playerManager.resetPlayers(room.getPlayers());
+
+                        io.to(room.getName()).emit('game-ended', {
+                            state: 'success',
+                            target: 'room',
+                            data: {
+                                room: room,
+                                roomPlayers: roomPlayers,
+                                podium: podium
+                            }
+                        });
                     }
                 }, 1000);
             }
