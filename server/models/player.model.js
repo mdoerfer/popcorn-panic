@@ -23,7 +23,8 @@ const Player = function(playerId) {
     this.possibleCharacters = [
         'Cornboy',
         'Corngirl',
-        'Angrycorn'
+        'Angrycorn',
+        'Playercorn'
     ];
     this.name = this.defaultName;
     this.character = this.possibleCharacters[0];
