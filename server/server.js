@@ -803,9 +803,9 @@ function onStartTimer(socket) {
                         var roomPlayers = game.playerManager.getPlayers(room.getPlayers());
 
                         //Add players to leaderboard
-                        _.foreach(roomPlayers, function() {
-                            game.leaderboardManager.addPlayerToLeaderboard(this);
-                        });
+                        for(var i = 0; i < roomPlayers.length; i++) {
+                            game.leaderboardManager.addPlayerToLeaderboard(roomPlayers[i]);
+                        }
 
                         //Sort podium
                         var podium = roomPlayers.sort(function(a, b) {
