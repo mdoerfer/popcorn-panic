@@ -127,6 +127,7 @@ function onJoinLobby(socket) {
                 me: game.playerManager.getPlayer(playerId),
                 players: game.playerManager.getPlayers(),
                 rooms: game.roomManager.getRooms(),
+                leaderboard: game.leaderboardManager.getLeaderboard(),
                 lobbyChat: game.chatManager.getLobbyChat()
             }
         });
@@ -801,6 +802,11 @@ function onStartTimer(socket) {
                         //Get room players
                         var roomPlayers = game.playerManager.getPlayers(room.getPlayers());
 
+                        //Add players to leaderboard
+                        _.foreach(roomPlayers, function() {
+                            game.leaderboardManager.addPlayerToLeaderboard(this);
+                        });
+
                         //Sort podium
                         var podium = roomPlayers.sort(function(a, b) {
                             return b.getKills() - a.getKills();
@@ -831,7 +837,8 @@ function onStartTimer(socket) {
                             state: 'success',
                             target: 'other',
                             data: {
-                                rooms: game.roomManager.getRooms()
+                                rooms: game.roomManager.getRooms(),
+                                leaderboard: game.leaderboardManager.getLeaderboard()
                             }
                         });
                     }
