@@ -26,7 +26,13 @@ LeaderboardManager.prototype.getLeaderboard = function() {
  * @param player
  */
 LeaderboardManager.prototype.addPlayerToLeaderboard = function(player) {
-    this.leaderboard.push(player);
+    var boardPlayer = {
+        name: player.name,
+        kills: player.kills,
+        timestamp: new Date().valueOf()
+    };
+
+    this.leaderboard.push(boardPlayer);
 
     this.leaderboard.sort(function(a, b) {
         return b.getKills() - a.getKills();
