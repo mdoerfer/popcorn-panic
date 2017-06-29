@@ -35,7 +35,7 @@ LeaderboardManager.prototype.addPlayerToLeaderboard = function(player) {
     this.leaderboard.push(boardPlayer);
 
     this.leaderboard.sort(function(a, b) {
-        return b.getKills() - a.getKills();
+        return b.kills - a.kills;
     });
 
     this.leaderboard = this.leaderboard.slice(0, this.config.maxPlayersInBoard);
