@@ -23,7 +23,9 @@ var game = new GameManager();
  * @param response
  */
 function serverHandler(request, response) {
-    var filePath = __dirname + '/../' + request.url;
+    util.log(request.url);
+
+    var filePath = __dirname + '/..' + request.url;
 
     if(filePath === __dirname + '/../')
         filePath = __dirname + '/../index.html';
@@ -58,7 +60,7 @@ function serverHandler(request, response) {
             if(error.code === 'ENOENT') {
                 fs.readFile(__dirname + '/../404.html', function(error, content) {
                     response.writeHead(200, {'Content-Type': contentType});
-                    response.end(content, 'utf-8');
+                    response.end(content, 'utf-8's);
                 });
             }
             else {
