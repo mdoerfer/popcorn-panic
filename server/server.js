@@ -2,7 +2,7 @@
  * Require dependencies
  */
 var util = require('util'),
-    server = require('http').createServer(),
+    server = require('http').createServer(serverHandler),
     io = require('socket.io')(server);
 
 /**
@@ -14,6 +14,25 @@ var GameManager = require('./managers/game.manager');
  * Global variables
  */
 var game = new GameManager();
+
+/**
+ * Handling serving static files
+ *
+ * @param req
+ * @param res
+ */
+function serverHandler (req, res) {
+    fs.readFile(__dirname + '../client/index.html',
+        function (err, data) {
+            if (err) {
+                res.writeHead(500);
+                return res.end('Error loading index.html');
+            }
+
+            res.writeHead(200, {'Content-Type': 'text/html'});
+            res.end(data);
+        });
+}
 
 /**
  * Initialize server
