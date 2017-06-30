@@ -216,7 +216,7 @@ function onCreateRoom(socket) {
             util.log('ROOM_CREATED.');
 
             //Get room
-            var room = game.roomManager.getRoom(roomName),
+            var room = roomCreated,
                 roomPlayers = game.playerManager.getPlayers(room.getPlayers());
 
             //Join socket room

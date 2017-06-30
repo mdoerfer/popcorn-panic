@@ -67,7 +67,7 @@ RoomManager.prototype.getRandomRoom = function() {
  * @returns {boolean}
  */
 RoomManager.prototype.createRoom = function(roomName, ownerId) {
-    var createdRoom = false;
+    var createdRoom = null;
 
     if(!this.roomExists(roomName) && !this.playerIsOwnerAlready(ownerId) && !this.playerIsMemberAlready(ownerId)) {
         var newRoom = new Room(ownerId);
@@ -76,7 +76,7 @@ RoomManager.prototype.createRoom = function(roomName, ownerId) {
 
         this.rooms.push(newRoom);
 
-        createdRoom = true;
+        createdRoom = newRoom;
     }
 
     return createdRoom;
