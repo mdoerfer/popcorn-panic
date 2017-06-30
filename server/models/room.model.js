@@ -11,7 +11,7 @@ const _ = require('./../util/util');
  */
 const Room = function(roomName, ownerId) {
     this.owner = ownerId;
-    this.name = roomName;
+    this.name = this.setName(roomName);
 
     //Players
     this.players = [];
