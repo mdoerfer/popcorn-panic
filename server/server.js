@@ -23,7 +23,7 @@ var game = new GameManager();
  * @param res
  */
 function serverHandler(req, res) {
-    fs.readFile(__dirname + '../client/index.html',
+    fs.readFile('../client/index.html',
         function(err, data) {
             if(err) {
                 res.writeHead(500);
