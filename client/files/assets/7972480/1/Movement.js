@@ -20,18 +20,12 @@ Arena.attributes.add('playerTorque', {
  */
 Arena.prototype.initialize = function() {
     console.log('Loading game scene');
-
-    this.angrycorn = this.app.root.findByName('Angrycorn');
-    this.cornboy = this.app.root.findByName('Cornboy');
-    this.corngirl = this.app.root.findByName('Corngirl');
-    this.playercorn = this.app.root.findByName('Playercorn');
-    this.popcorn = this.app.root.findByName('Popcorn');
     
     this.force = new pc.Vec3();
     
+    this.addGameListeners();
     this.destroyDestroyables();
     this.spawnPlayers();
-    this.addGameListeners();
 };
 
 /**
@@ -92,9 +86,6 @@ Arena.prototype.spawnPlayers = function() {
         //Tag player entity
         playerEntity.tags.add('Destroyable');
         
-        console.log('PLAYER ENTITY');
-        console.log(playerEntity.children);
-        
         //Save other players
         this.otherEntities = [];
 
@@ -130,14 +121,14 @@ Arena.prototype.onCollisionStart = function (result) {
         game.client.takeDamage(result.other.name);
         
         //Play sound
-        result.other.sound.play("fire");
+        this.playEffect('fire', result.other);
         
         hit = 1;
     }
     
     if(result.other.tags.has('water')) {    
         //Play sound
-        result.other.sound.play("water");
+        this.playEffect('water', result.other);
     }
 };
 
@@ -145,12 +136,12 @@ Arena.prototype.onCollisionStart = function (result) {
 Arena.prototype.onOtherCollisionStart = function(result) {
     if(result.other.tags.has('Attackable') && result.other.tags.has('Player')) {    
         //Play sound
-        result.other.sound.play("fire");
+        this.playEffect('fire', result.other);
     }
     
     if(result.other.tags.has('water')) {    
         //Play sound
-        result.other.sound.play("water");
+        this.playEffect('water', result.other);
     }
 };
 
@@ -210,87 +201,132 @@ Arena.prototype.update = function(dt) {
 Arena.prototype.addGameListeners = function() {
     var self = this;
     
-    this.app.on('game:tutorial-start', function() {
-        console.log('Tutorial started');
+    if(!game.client.addedListeners) {
+        this.app.on('game:tutorial-start', function() {
+            console.log('Tutorial started'); 
+            
+            self.playMusic('tutorial');
+        });
+
+        this.app.on('game:countdown-sound', function() {
+            self.stopSound('tutorial');
+            self.playEffect('countdown');
+        });
+
+
+        this.app.on('game:countdown-fight', function() {
+            self.playEffect('fight');
+        });
+
+
+        this.app.on('game:tutorial-end', function() {
+            console.log('Tutorial ended'); 
+            
+            self.playMusic('music');
+            self.playEffect('haha');
+        });
+
+
+        //Move player
+        this.app.on('game:player-moved', function(player) {
+            var entity = self.app.root.findByName(player.id);
+
+            if(entity !== null) {
+                entity.setLocalEulerAngles(new pc.Vec3(player.rotX, player.rotY, player.rotZ));
+                entity.rigidbody.teleport(new pc.Vec3(player.x, player.y, player.z));
+            }
+
+        });
+
+        //Damage player
+        this.app.on('game:player-damaged', function(room, playerThatDied) {
+           updateGame(room); 
+
+            if(typeof playerThatDied !== "undefined") {
+                var diedEntity = self.app.root.findByName(playerThatDied);
+
+                //Get random spawn
+                var getRandomInt = function(min, max) {
+                    return Math.floor(Math.random() * (max - min + 1)) + min;
+                };
+
+                var spawnpoint = self.app.root.findByName('Spawnpoint ' + getRandomInt(0,3));
+                var currPos = self.playerEntity.getPosition();
+
+                diedEntity.enabled = false;
+                diedEntity.rigidbody.teleport(spawnpoint.getPosition());
+
+                setTimeout(function() {
+                    diedEntity.enabled = true;
+                    self.playEffect('respawn');
+                }, 5000);
+
+
+                var vorlagenPopcorn =  self.app.root.findByName('Popcorn');
+                var newPopcorn = vorlagenPopcorn.clone();
+                
+                newPopcorn.tags.add('Destroyable');
+                
+                self.app.root.addChild(newPopcorn);
+                newPopcorn.rigidbody.teleport(currPos);
+                newPopcorn.enabled = true;
+                
+                self.playEffect('kill');
+                self.playEffect('haha');
+            }
+        });
+
+        //Remove leaving player entity
+        this.app.on('game:someone-left', function(leavingPlayer) {
+           var entity = self.app.root.findByName(leavingPlayer.id);
+
+            if(entity !== null) {
+               entity.destroy();
+            }
+        });
+
+        //End game
+        this.app.on('game:game-ended', function(room) {
+            
+            self.stopSound('music');
+            self.playMusic('hero');
+        });
         
-        self.app.root.findByName('Root').sound.play('tutorial');
-    });
-
-    this.app.on('game:countdown-sound', function() {
-        self.app.root.findByName('Root').sound.stop('tutorial');
-        self.app.root.findByName('Root').sound.play('countdown');
-    });
-    
-
-    this.app.on('game:countdown-fight', function() {
-        self.app.root.findByName('Root').sound.play('fight');
-    });
-
-
-    this.app.on('game:tutorial-end', function() {
-        self.app.root.findByName('Root').sound.play('music');
-        self.app.root.findByName('Root').sound.play('haha');
-    });
-
-    
-    //Move player
-    this.app.on('game:player-moved', function(player) {
-        var entity = self.app.root.findByName(player.id);
-
-        if(entity !== null) {
-            entity.setLocalEulerAngles(new pc.Vec3(player.rotX, player.rotY, player.rotZ));
-            entity.rigidbody.teleport(new pc.Vec3(player.x, player.y, player.z));
-        }
+        //Leave podium
+        this.app.on('game:podium-left', function() {
+            self.stopSound('hero');
+        });
         
-    });
+        //Set flag
+        game.client.addedListeners = true;
+    }
+};
+
+Arena.prototype.playEffect = function(name, entity) {
+    var ent = entity || this.app.root.findByName('Root');
     
-    //Damage player
-    this.app.on('game:player-damaged', function(room, playerThatDied) {
-       updateGame(room); 
-        
-        if(typeof playerThatDied !== "undefined") {
-            var diedEntity = self.app.root.findByName(playerThatDied);
-            
-            //Get random spawn
-            var getRandomInt = function(min, max) {
-                return Math.floor(Math.random() * (max - min + 1)) + min;
-            };
-            
-            var spawnpoint = self.app.root.findByName('Spawnpoint ' + getRandomInt(0,3));
-            var currPos = self.playerEntity.getPosition();
-            
-            diedEntity.enabled = false;
-            diedEntity.rigidbody.teleport(spawnpoint.getPosition());
-            
-            setTimeout(function() {
-                diedEntity.enabled = true;
-                self.app.root.findByName('Root').sound.play('respawn');
-            }, 5000);
-            
-            
-            var vorlagenPopcorn =  self.app.root.findByName('Popcorn');
-            var newPopcorn = vorlagenPopcorn.clone();
-            self.app.root.addChild(newPopcorn);
-            newPopcorn.rigidbody.teleport(currPos);
-            newPopcorn.enabled = true;
-            self.app.root.findByName('Root').sound.play('kill');
-            self.app.root.findByName('Root').sound.play('haha');
-        }
-    });
+    ent.sound.volume = game.sounds.volume;
     
-    //Remove leaving player entity
-    this.app.on('game:someone-left', function(leavingPlayer) {
-       var entity = self.app.root.findByName(leavingPlayer.id);
-        
-        if(entity !== null) {
-           entity.destroy();
-        }
-    });
+    ent.sound.slot(name).volume = game.sounds.effects;
+    ent.sound.slot(name).play();
+};
+
+Arena.prototype.playMusic = function(name, entity) {
+    var ent = entity || this.app.root.findByName('Root');
     
-    //End game
-    this.app.on('game:game-ended', function(room) {
-       //Hier alles was passieren muss wenn game fertig ist
-       self.app.root.findByName('Root').sound.stop('music');
-       self.app.root.findByName('Root').sound.play('hero');
-    });
+    this.lastMusic = {
+        name: name,
+        entity: ent
+    };
+    
+    ent.sound.volume = game.sounds.volume;
+    
+    ent.sound.slot(name).volume = game.sounds.music;
+    ent.sound.slot(name).play();
+};
+
+Arena.prototype.stopSound = function(name, entity) {
+    var ent = entity || this.app.root.findByName('Root');
+    
+    ent.sound.slot(name).stop();
 };

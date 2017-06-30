@@ -1,5 +1,7 @@
-<!-- all UI for Lobby-->
-<div id="lobby" class="lobby hidden">
+<!------------------------------------------------------------------------------------------------------------------
+                                                    LOBBY
+-------------------------------------------------------------------------------------------------------------------->
+<div id="lobby" class="lobby hidden ui-part">
     <!-- Header of Site-->
     <div class="header">
         <img id="header-bg">
@@ -43,7 +45,7 @@
                                 <img class="character-pic" id="cornboy-pic">
                             </div>
                             <div class="slide-head shadow style-box">
-                                <img class="slide-left chevron" data-char="Angrycorn">
+                                <img class="slide-left chevron" data-char="Playercorn">
                                 <span class="character">Cornboy</span>
                                 <img class="slide-right chevron" data-char="Corngirl">
                             </div>
@@ -84,19 +86,23 @@
         </div>
     </div>
     <!-- Lobby chat-->
-    <div class="lobby-chat-wrapper">
+    
+    <div id="moveChatLobby" class="lobby-chat-wrapper">
+        <div class="chat-icon"  onclick="moveChatLobby()"><img id="chat-icon"></div>
         <div id="lobby-chat">
             <ul id="lobby-chat-messages"></ul>
         </div>
         <form id="lobby-chat-form">
-            <input id="lobby-chat-input" type="text" placeholder="Your message">
-            <button type="submit">Send</button>
+            <input class="shadow" id="lobby-chat-input" type="text" placeholder="Your message">
+            <button id="chat-send" type="submit">Send</button>
         </form>
     </div>
 </div>
 
-<!-- all UI for Room-->
-<div id="room" class="room hidden">
+<!------------------------------------------------------------------------------------------------------------------
+                                                    ROOM
+-------------------------------------------------------------------------------------------------------------------->
+<div id="room" class="room hidden ui-part">
     <div class="room-settings">
         <div class="row">
              <div class="left-col col">
@@ -104,18 +110,18 @@
                  <div id="mode-slider">
                      <div class="slide" id="Deathmatch">
                          <div class="slide-head">
-                            <img class="chevronsWhite left" data-mode="CaptureTheFlag">
+                            <img class="chevronsWhite left" data-mode="Deathmatch">
                                 <span class="mode slide-text">Deathmatch</span>
-                            <img class="chevronsWhite" data-mode="CaptureTheFlag">
+                            <img class="chevronsWhite" data-mode="Deathmatch">
                          </div>
                      </div>
-                     <div class="slide hidden" id="CaptureTheFlag">
+                     <!--div class="slide hidden" id="CaptureTheFlag">
                         <div class="slide-head">
                             <img class="chevronsWhite left" data-mode="Deathmatch">
                                 <span class="mode slide-text">Capture the Flag</span>
                             <img class="chevronsWhite" data-mode="Deathmatch">
                         </div>
-                    </div>
+                    </div-->
                  </div>
             </div>
             <div class="mid-col col">
@@ -127,18 +133,18 @@
                   <div id="map-slider">
                      <div class="slide" id="Field">
                          <div class="slide-head">
-                            <img class="chevronsWhite left" data-map="Pot">
+                            <img class="chevronsWhite left" data-map="Field">
                                 <span class="map slide-text">Field</span>
-                            <img class="chevronsWhite" data-map="Pot">
+                            <img class="chevronsWhite" data-map="Field">
                          </div>
                      </div>
-                     <div class="slide hidden" id="Pot">
+                     <!--div class="slide hidden" id="Pot">
                         <div class="slide-head">
                             <img class="chevronsWhite left" data-map="Field">
                                 <span class="map slide-text">Pot</span>
                             <img class="chevronsWhite" data-map="Field">
                         </div>
-                    </div>
+                    </div-->
                  </div>
             </div>
         </div> <!-- End of Header row -->
@@ -189,19 +195,22 @@
     </div><!-- End of Players row -->
     
     <!-- Room chat-->
-    <div class="room-chat-wrapper">
+    <div id="moveChatRoom" class="room-chat-wrapper">
+        <div class="chat-icon"  onclick="moveChatRoom()"><img id="chat-icon-room"></div>
         <div id="room-chat">
             <ul id="room-chat-messages"></ul>
         </div>
         <form id="room-chat-form">
-            <input id="room-chat-input" type="text" placeholder="Your message">
-            <button type="submit">Send</button>
+            <input class="shadow" id="room-chat-input" type="text" placeholder="Your message">
+            <button id="btmChatRoom" type="submit">Send</button>
         </form>
     </div>
 </div> <!-- End of room -->
 
-<!-- all UI for Game-->
-<div id="game" class="game hidden">
+<!------------------------------------------------------------------------------------------------------------------
+                                                    GAME
+-------------------------------------------------------------------------------------------------------------------->
+<div id="game" class="game hidden ui-part">
     <div id="players" class="players">
         <div id="player-1" class="player player-hud">
             <div class="player-inner">
@@ -210,7 +219,7 @@
                     <div class="actual-pressure"></div>
                 </div>
                 <p class="player-kills">
-                   <span class="numberKills">5</span> Kills
+                   <span class="numberKills">5</span> Pops
                  </p>
             </div>
         </div>
@@ -221,7 +230,7 @@
                     <div class="actual-pressure"></div>
                 </div>
                  <p class="player-kills">
-                     <span class="numberKills">0</span> Kills
+                     <span class="numberKills">0</span> Pops
                  </p>
             </div>
         </div>
@@ -237,7 +246,7 @@
                     <div class="actual-pressure"></div>
                 </div>
                  <p class="player-kills">
-                     <span class="numberKills">5</span> Kills
+                     <span class="numberKills">5</span> Pops
                  </p>
             </div>
         </div>
@@ -248,15 +257,17 @@
                     <div class="actual-pressure"></div>
                 </div>
                  <p class="player-kills">
-                     <span class="numberKills">5</span> Kills
+                     <span class="numberKills">5</span> Pops
                  </p>
             </div>
         </div>
     </div>
 </div>
 
-<!-- all UI for Game End-->
-<div id="game-end" class="game-end hidden">
+<!------------------------------------------------------------------------------------------------------------------
+                                                    GAME-END
+-------------------------------------------------------------------------------------------------------------------->
+<div id="game-end" class="game-end hidden ui-part">
     <div class="bg-black bg-black-end" id="winnerEffect">
         <div id="score">
             <p id="score-text"> you win </p>
@@ -265,11 +276,11 @@
                 <span class="podium-name">Player1</span>
                 <p class="player-kills-big">
                     <img class="player-kills-pic">
-                    <span class="numberKills">5</span> Kills
+                    <span class="numberKills">5</span> Pops
                 </p>
                 <p class="player-deaths">
                     <img class="player-deaths-pic">
-                    <span class="numberdeaths">5</span> Deaths
+                    <span class="numberdeaths">5</span> Plops
                 </p>
             </div>
             <div id="podium2" class="podium">
@@ -277,11 +288,11 @@
                 <span class="podium-name">Player1</span>
                 <p class="player-kills-big">
                     <img class="player-kills-pic">
-                    <span class="numberKills">5</span> Kills
+                    <span class="numberKills">5</span> Pops
                 </p>
                 <p class="player-deaths">
                     <img class="player-deaths-pic">
-                    <span class="numberdeaths">5</span> Deaths
+                    <span class="numberdeaths">5</span> Plops
                 </p>
             </div>
             <div id="podium3" class="podium">
@@ -289,22 +300,22 @@
                 <span class="podium-name">Player1</span>
                 <p class="player-kills-big">
                     <img class="player-kills-pic">
-                    <span class="numberKills">5</span> Kills
+                    <span class="numberKills">5</span> Pops
                 </p>
                 <p class="player-deaths">
                     <img class="player-deaths-pic">
-                    <span class="numberdeaths">5</span> Deaths
+                    <span class="numberdeaths">5</span> Plops
                 </p>
             </div>
             <div id="podium4" class="podium">
                 <span class="podium-name">Looser</span>
                 <p class="player-kills-big">
                     <img class="player-kills-pic">
-                    <span class="numberKills">5</span> Kills
+                    <span class="numberKills">5</span> Pops
                 </p>
                 <p class="player-deaths">
                     <img class="player-deaths-pic">
-                    <span class="numberdeaths">5</span> Deaths
+                    <span class="numberdeaths">5</span> Plops
                 </p>
             </div>
             <img id="podium">
@@ -315,8 +326,10 @@
     </div>
 </div>
 
-<!-- all UI for Tutorial-->
-<div id="tutorial" class="tutorial hidden">
+<!------------------------------------------------------------------------------------------------------------------
+                                                    TUTORIAL
+-------------------------------------------------------------------------------------------------------------------->
+<div id="tutorial" class="tutorial hidden ui-part">
     <div id="bg-black" class="bg-black">
         <div class="productions">
           <img id="productions">
@@ -336,8 +349,10 @@
     </div>
 </div>
 
-<!-- all UI for Footer-->
-<div id="move" class="footer">
+<!------------------------------------------------------------------------------------------------------------------
+                                                    SETTINGS
+-------------------------------------------------------------------------------------------------------------------->
+<div id="move" class="footer ui-part">
     <div class="ribbon">
         <a id="open-footer" href="#move">Settings</a>
     </div>
@@ -371,16 +386,35 @@
             <div class="settings">
                 <div>
                     <h2 class="h2-sound">Music</h2>
-                    <input type="range">
+                    <input type="range" id="settings-music" max="1" min="0" step="0.05" value="0.5">
                 </div>
                 <div>
                     <h2 class="h2-sound">Effects</h2>
-                    <input type="range">
+                    <input type="range" id="settings-effects" max="1" min="0" step="0.05" value="0.5">
                 </div>
                 <div>
                     <h2 class="h2-sound">Volume</h2>
-                    <input type="range">
+                    <input type="range" id="settings-volume" max="1" min="0" step="0.05" value="1">
                 </div>
             </div>
         </div>
     </div>
+
+<!------------------------------------------------------------------------------------------------------------------
+                                                    LEADERBOARD
+-------------------------------------------------------------------------------------------------------------------->
+<div id="leaderboard" class="ui-part">
+    <ul id="leaderboard-list"></ul>
+</div>
+
+<!------------------------------------------------------------------------------------------------------------------
+                                              REQUEST FULLSCREEN POPUP
+-------------------------------------------------------------------------------------------------------------------->
+<div id="pop-up-back">
+<div id="request-fullscreen" class="popup">
+    <p>For the best experience activate fullscreen mode</p>
+    <button class="activate btn" data-js="accept-fullscreen">Gimme fullscreen!</button>
+    <br>
+    <button class="no-thanks" data-js="decline-fullscreen">No thanks</button>
+</div>
+</div>

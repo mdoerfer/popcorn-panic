@@ -19,7 +19,7 @@ UI.attributes.add('cornboyPic', {
 });
 
 UI.attributes.add('corngirlPic', {
-    type: 'asset',
+    type: 'asset', 
     title: 'Corngirl'
 });
 
@@ -90,26 +90,6 @@ UI.attributes.add('tutorial02', {
     title: 'Tutorial02'
 });
 
-UI.attributes.add('podium1', {
-    type: 'asset',
-    title: 'Podium1'
-});
-
-UI.attributes.add('podium2', {
-    type: 'asset',
-    title: 'Podium2'
-});
-
-UI.attributes.add('podium3', {
-    type: 'asset',
-    title: 'Podium3'
-});
-
-UI.attributes.add('loser', {
-    type: 'asset',
-    title: 'Loser'
-});
-
 UI.attributes.add('podium', {
     type: 'asset',
     title: 'Podium'
@@ -135,196 +115,188 @@ UI.attributes.add('killsIcon', {
     title: 'KillsIcon'
 });
 
-
+UI.attributes.add('chatIcon', {
+    type: 'asset',
+    title: 'ChatIcon'
+});
 
 /**
  * Initialize component
  */
 UI.prototype.initialize = function() {
+    //Initialize UI and Client connection only once
     if(!game.ui.initialized) {
         this.initializeUI();
         this.initializeClient();
+        
+        game.ui.initialized = true;
     }
-    
-    game.ui.initialized = true;
 };
 
 /**
  * Initialize UI
  */
 UI.prototype.initializeUI = function() {
-    this.loadUI();
-    this.showUIPart('lobby');
-};
-
-/**
- * Load lobby
- */
-UI.prototype.loadUI = function() {
     /**
      * Append CSS
      */
-    var style = document.createElement('style');
-    style.innerHTML = this.css.resource || '';
-    document.head.appendChild(style);
+    appendCSStoHead(this.css);
 
     /**
      * Append HTML
      */
-    var div = document.createElement('div');
-    div.setAttribute('id', 'ui');
-    div.innerHTML = this.html.resource || '';
-    document.body.appendChild(div);
+    appendHTMLtoBody(this.html);
 
     /**
-     * Add images
+     * Get image paths and save them in global game object
      */
-    game.images.headerBg = (this.headerBg !== null) ? this.headerBg.getFileUrl() : '';
-    game.images.headerLogo = (this.headerLogo !== null) ? this.headerLogo.getFileUrl() : '';
-    game.images.cornboy = (this.cornboyPic !== null) ? this.cornboyPic.getFileUrl() : '';
-    game.images.corngirl = (this.corngirlPic !== null) ? this.corngirlPic.getFileUrl() : '';
-    game.images.angrycorn = (this.angrycornPic !== null) ? this.angrycornPic.getFileUrl() : '';
-    game.images.playercorn = (this.playercornPic !== null) ? this.playercornPic.getFileUrl() : '';
-    game.images.chevron = (this.chevron !== null) ? this.chevron.getFileUrl() : '';
-    game.images.chevronWhite = (this.chevronsWhite !== null) ? this.chevronsWhite.getFileUrl() : '';
-    game.images.redplane = (this.redplane !== null) ? this.redplane.getFileUrl() : '';
-    game.images.play = (this.play !== null) ? this.play.getFileUrl() : '';
-    game.images.crown = (this.crown !== null) ? this.crown.getFileUrl() : '';
-    game.images.dummyCorn = (this.dummyCorn !== null) ? this.dummyCorn.getFileUrl() : '';
-    game.images.productions = (this.productions !== null) ? this.productions.getFileUrl() : '';
-    game.images.tutorial01 = (this.tutorial01 !== null) ? this.tutorial01.getFileUrl() : '';
-    game.images.tutorial02 = (this.tutorial02 !== null) ? this.tutorial02.getFileUrl() : '';
-    game.images.podium1 = (this.podium1 !== null) ? this.podium1.getFileUrl() : '';
-    game.images.podium2 = (this.podium2 !== null) ? this.podium2.getFileUrl() : '';
-    game.images.podium3 = (this.podium3 !== null) ? this.podium3.getFileUrl() : '';
-    game.images.podium = (this.podium !== null) ? this.podium.getFileUrl() : '';
-    game.images.leaveRoom = (this.leaveRoom !== null) ? this.leaveRoom.getFileUrl() : '';
-    game.images.bgRoom = (this.bgRoom !== null) ? this.bgRoom.getFileUrl() : '';
-    game.images.deathsIcon = (this.deathsIcon !== null) ? this.deathsIcon.getFileUrl() : '';
-    game.images.killsIcon = (this.killsIcon !== null) ? this.killsIcon.getFileUrl() : '';
-
-    document.getElementById('header-bg').setAttribute('src', game.images.headerBg);
-    document.getElementById('header-logo').setAttribute('src', game.images.headerLogo);
-    document.getElementById('cornboy-pic').setAttribute('src', game.images.cornboy);
-    document.getElementById('corngirl-pic').setAttribute('src', game.images.corngirl);
-    document.getElementById('angrycorn-pic').setAttribute('src', game.images.angrycorn);
-    document.getElementById('playercorn-pic').setAttribute('src', game.images.playercorn);
-    document.getElementById('productions').setAttribute('src', game.images.productions);
-    document.getElementById('tutorial01').setAttribute('src', game.images.tutorial01);
-    document.getElementById('tutorial02').setAttribute('src', game.images.tutorial02);
-    document.getElementById('podium').setAttribute('src', game.images.podium);
-    document.getElementById('leave-icon').setAttribute('src', game.images.leaveRoom);
-    document.getElementById('bg-room').setAttribute('src', game.images.bgRoom);
+    game.images.headerBg = getFileUrl(this.headerBg);
+    game.images.headerLogo = getFileUrl(this.headerLogo);
+    game.images.cornboy = getFileUrl(this.cornboyPic);
+    game.images.corngirl = getFileUrl(this.corngirlPic);
+    game.images.angrycorn = getFileUrl(this.angrycornPic);
+    game.images.playercorn = getFileUrl(this.playercornPic);
+    game.images.chevron = getFileUrl(this.chevron);
+    game.images.chevronWhite = getFileUrl(this.chevronsWhite);
+    game.images.redplane = getFileUrl(this.redplane);
+    game.images.play = getFileUrl(this.play);
+    game.images.crown = getFileUrl(this.crown);
+    game.images.dummyCorn = getFileUrl(this.dummyCorn);
+    game.images.productions = getFileUrl(this.productions);
+    game.images.tutorial01 = getFileUrl(this.tutorial01);
+    game.images.tutorial02 = getFileUrl(this.tutorial02);
+    game.images.podium = getFileUrl(this.podium);
+    game.images.leaveRoom = getFileUrl(this.leaveRoom);
+    game.images.bgRoom = getFileUrl(this.bgRoom);
+    game.images.deathsIcon = getFileUrl(this.deathsIcon);
+    game.images.killsIcon = getFileUrl(this.killsIcon);
+    game.images.chatIcon = getFileUrl(this.chatIcon);
     
-    //Placeholder
-    document.querySelector('#podium1 .podium-character').setAttribute('src', game.images.cornboy);
-    document.querySelector('#podium2 .podium-character').setAttribute('src', game.images.corngirl);
-    document.querySelector('#podium3 .podium-character').setAttribute('src', game.images.angrycorn);
+    /*
+     * Set src of images
+     */
+    setSrcById('header-bg', game.images.headerBg);
+    setSrcById('header-logo', game.images.headerLogo);
+    setSrcById('cornboy-pic', game.images.cornboy);
+    setSrcById('corngirl-pic', game.images.corngirl);
+    setSrcById('angrycorn-pic', game.images.angrycorn);
+    setSrcById('playercorn-pic', game.images.playercorn);
+    setSrcById('productions', game.images.productions);
+    setSrcById('tutorial01', game.images.tutorial01);
+    setSrcById('tutorial02', game.images.tutorial02);
+    setSrcById('podium', game.images.podium);
+    setSrcById('leave-icon', game.images.leaveRoom);
+    setSrcById('bg-room', game.images.bgRoom);
+    setSrcById('chat-icon', game.images.chatIcon);
     
-    var redplanes = document.getElementsByClassName('redplane');
-    var play = document.getElementsByClassName('play');
-    var deathsIcon = document.getElementsByClassName('player-deaths-pic');
-    var killsIcon = document.getElementsByClassName('player-kills-pic');
-
-    for(var c = 0; c < redplanes.length; c++) {
-        redplanes[c].setAttribute('src', game.images.redplane);
-    }
-
-    for(var d = 0; d < play.length; d++) {
-        play[d].setAttribute('src', game.images.play);
-    }
+    setSrcByClass('redplane', game.images.redplane);
+    setSrcByClass('play', game.images.play);
+    setSrcByClass('player-deaths-pic', game.images.deathsIcon);
+    setSrcByClass('player-kills-pic', game.images.killsIcon);
+    setSrcByClass('chevron', game.images.chevron);
+    setSrcByClass('chevronsWhite', game.images.chevronWhite);
     
-    for(var e = 0; e < play.length; e++) {
-       deathsIcon[e].setAttribute('src', game.images.deathsIcon);
-    }
-    
-    for(var f = 0; f < play.length; f++) {
-       killsIcon[f].setAttribute('src', game.images.killsIcon);
-    }
-
-
-    var chevrons = document.getElementsByClassName('chevron');
-
-    for(var i = 0; i < chevrons.length; i++) {
-        chevrons[i].setAttribute('src', game.images.chevron);
-    }
-
-    var chevronsWhite = document.getElementsByClassName('chevronsWhite');
-
-    for(var j = 0; j < chevronsWhite.length; j++) {
-        chevronsWhite[j].setAttribute('src', game.images.chevronWhite);
-    }
-
     /**
      * Bind event listeners
      */
     this.bindDataEventListeners();
     this.bindHTMLEventListeners();
-};
-
-UI.prototype.showUIPart = function(selector) {
-    document.getElementById(selector).classList.remove('hidden');
-};
-
-UI.prototype.hideUIPart = function(selector) {
-    document.getElementById(selector).classList.add('hidden');
-};
-
-UI.prototype.showLobby = function() {
-    this.hideUIPart('room');
-    this.hideUIPart('game');
-    this.hideUIPart('tutorial');
-    this.hideUIPart('game-end');
-
-    this.showUIPart('lobby');
-};
-
-UI.prototype.showRoom = function() {
-    this.hideUIPart('lobby');
-    this.hideUIPart('game');
-    this.hideUIPart('tutorial');
-    this.hideUIPart('game-end');
-
-    this.showUIPart('room');
-};
-
-UI.prototype.showGame = function() {
-    this.hideUIPart('room');
-    this.hideUIPart('lobby');
-    this.hideUIPart('tutorial');
-    this.hideUIPart('game');
-    this.hideUIPart('game-end');
     
-    //TODO: Change to chosen map
-    this.changeScenes(game.scenes.field);
+    /**
+     * Show lobby
+     */
+    this.showLobby();
+};
+
+/**
+ * Show lobby
+ */
+UI.prototype.showLobby = function() {
+    hideUIPart('room');
+    hideUIPart('game');
+    hideUIPart('tutorial');
+    hideUIPart('game-end');
+    
+    showUIPart('leaderboard');
+    showUIPart('lobby');
+};
+
+/**
+ * Show room
+ */
+UI.prototype.showRoom = function() {
+    hideUIPart('lobby');
+    hideUIPart('game');
+    hideUIPart('tutorial');
+    hideUIPart('game-end');
+    
+    showUIPart('leaderboard');
+    showUIPart('room');
+};
+
+/**
+ * Show game
+ */
+UI.prototype.showGame = function() {
+    hideUIPart('room');
+    hideUIPart('lobby');
+    hideUIPart('tutorial');
+    hideUIPart('leaderboard');
+    hideUIPart('game');
+    hideUIPart('game-end');
+    
+    //Call the chosen map
+    switch(game.client.room.map) {
+        case 'Field':
+            this.changeScenes(game.scenes.field);
+            break;
+        default:
+            this.changeScenes(game.scenes.field);
+    }
     
     this.showTutorial();
 };
 
+/**
+ * Show tutorial
+ */
 UI.prototype.showTutorial = function() {
-    this.showUIPart('tutorial');
+    showUIPart('tutorial');
     this.playTutorial();
 };
 
+/**
+ * Show game-end
+ */
 UI.prototype.showGameEnd = function() {
-     this.hideUIPart('game');
-     this.showUIPart('game-end');
+     hideUIPart('game');
+     showUIPart('game-end');
 };
 
+/**
+ * Return to room
+ */
 UI.prototype.returnToRoom = function() {
+    //Fire events
+    this.app.fire('game:podium-left');
+    
     //Change scenes to lobby
     this.changeScenes(game.scenes.lobby);
     
     //Reset
     resetGame();
     
-    //TODO: Fix script/scene change errors
-    
     //Show room
     this.showRoom();
 };
 
+/**
+ * Return to lobby
+ */
 UI.prototype.returnToLobby = function() {
+    //Fire events
+    this.app.fire('game:podium-left');
+    
     //Change scenes to lobby (also contains room)
     this.changeScenes(game.scenes.lobby);
     
@@ -338,10 +310,11 @@ UI.prototype.returnToLobby = function() {
     this.showLobby();
 };
 
+/**
+ * Play tutorial step by step
+ */
 UI.prototype.playTutorial = function() {
     var self = this;
-    
-    pc.app.fire('game:tutorial-start');
     
     var bgBlack = document.getElementById('bg-black');
     var productions = document.getElementById('productions');
@@ -350,51 +323,70 @@ UI.prototype.playTutorial = function() {
     var coutdown = document.getElementById('countdown');
     var counter = document.getElementById('counter-number');
     
-    //Fade out bg and logo after 2s
-    setTimeout(function() {
-        bgBlack.style.backgroundColor = "rgba(0,0,0,0.8)";
-        productions.style.opacity = "0";
+    (function tutorialStart() {
+        setTimeout(function() {
+            pc.app.fire('game:tutorial-start');
         
-        //Fade in tutorial01
+            bgBlack.style.backgroundColor = "rgba(0,0,0,0.8)";
+            productions.style.opacity = "0";
+            
+            tutorialStep01();
+        }, 2000);
+    })();
+    
+    
+    function tutorialStep01() {
         setTimeout(function() {
             tutorial01.style.opacity = "1";
             
-            //Fade in tutorial02
-            setTimeout(function() {
-                tutorial01.style.opacity = "0";
-                tutorial02.style.opacity = "1";
-                
-                //Fade in Counter
-                setTimeout(function() {
-                    tutorial02.style.opacity = "0";
-                    coutdown.style.opacity = "1";
-                    countdown(counter.innerHTML);
-                
-                        //Fade in tutorial01
-                        setTimeout(function() {
-                            self.hideUIPart('tutorial');
-                            self.showUIPart('game');
-                            
-                            //Mark tutorial as done
-                            game.client.tutorialDone = true;
-                            
-                            //Start timer on server
-                            game.client.startTimer();
-                            
-                            //Reset tutorial
-                            productions.style.opacity = "1";
-                            tutorial01.style.opacity = "0";
-                            tutorial02.style.opacity = "0";
-                            coutdown.style.opacity = "0";
-                            counter.innerHTML = "3";
-                            pc.app.fire('game:tutorial-end');
-                        }, 4000);
-                  }, 3000);
-            }, 3000);
+            tutorialStep02();
         }, 500);
-    }, 2000);
+    }
+    
+    function tutorialStep02() {
+        setTimeout(function() {
+            tutorial01.style.opacity = "0";
+            tutorial02.style.opacity = "1";
+            
+            tutorialCountdown();
+        }, 3000);
+    }
+    
+    function tutorialCountdown() {
+        setTimeout(function() {
+            tutorial02.style.opacity = "0";
+            coutdown.style.opacity = "1";
+            countdown(counter.innerHTML);
+            
+            tutorialFinish();
+        }, 3000);
+    }
+    
+    function tutorialFinish() {
+        setTimeout(function() {
+            hideUIPart('tutorial');
+            showUIPart('game');
+
+            //Start timer on server
+            game.client.startTimer();
+
+            //Reset tutorial
+            bgBlack.style.backgroundColor = "rgba(0,0,0,1)";
+            productions.style.opacity = "1";
+            tutorial01.style.opacity = "0";
+            tutorial02.style.opacity = "0";
+            coutdown.style.opacity = "0";
+            counter.innerHTML = "3";
+
+            //Fire tutorial-end
+            pc.app.fire('game:tutorial-end');
+        }, 4000);
+    }
 };
 
+/**
+ * Change scene and destroy old hierarchy
+ */
 UI.prototype.changeScenes = function(sceneId) {
     var oldHierarchy = this.app.root.findByName('Root');
 
@@ -403,6 +395,9 @@ UI.prototype.changeScenes = function(sceneId) {
     });
 };
 
+/**
+ * Load scene by ID
+ */
 UI.prototype.loadScene = function(id, callback) {
     // Get the path to the scene
     var url = id + ".json";
@@ -434,7 +429,7 @@ UI.prototype.initializeClient = function() {
 UI.prototype.bindDataEventListeners = function() {
     var self = this;
 
-    this.app.on('lobby:you-joined', function(me, rooms, players, lobbyChat) {   
+    this.app.on('lobby:you-joined', function(me, rooms, players, lobbyChat, leaderboard) {   
         //Player name
         updatePlayerNameInput(me.name);
 
@@ -449,6 +444,9 @@ UI.prototype.bindDataEventListeners = function() {
         
         //Chat
         updateLobbyChat(lobbyChat);
+        
+        //Leaderboard
+        updateLeaderboard(leaderboard);
 
         //Show lobby
         self.showLobby();
@@ -549,6 +547,13 @@ UI.prototype.bindDataEventListeners = function() {
     });
 
     this.app.on('room:your-game-started', function(room) {
+        if(!document.getElementById('game-end').classList.contains('hidden')) {
+            self.returnToRoom();
+        }
+        
+        //Mark tutorial as not done
+        game.client.tutorialDone = false;
+
         //Room
         updateRoom(room);
 
@@ -569,12 +574,18 @@ UI.prototype.bindDataEventListeners = function() {
         updateLobbyRooms(rooms);
     });
     
-    this.app.on('lobby:someones-game-reset', function(rooms) {
+    this.app.on('lobby:someones-game-reset', function(rooms, leaderboard) {
         //Rooms
         updateLobbyRooms(rooms);
+        
+        //Leaderboard
+        updateLeaderboard(leaderboard);
     });
 
     this.app.on('room:your-timer-started', function(secondsLeft) {
+        //Mark tutorial as done
+        game.client.tutorialDone = true;
+        
         updateTimer(secondsLeft);
     });
     
@@ -597,6 +608,10 @@ UI.prototype.bindDataEventListeners = function() {
 UI.prototype.bindHTMLEventListeners = function() {
     var self = this;
     
+    addFullScreenPopupClickListeners();
+    addSoundEffectsChangeListener();
+    addSoundMusicChangeListener();
+    addSoundVolumeChangeListener();
     addPlayerNameInputChangeListener();
     addPlayerCharacterChangeListener();
     addCreateRoomListener();
@@ -623,11 +638,11 @@ UI.prototype.bindHTMLEventListeners = function() {
 };
 
 /**
- * --------------------------
+ * ----------------------------------------------------------------------------------------------------------------------------------
  *
  * LOBBY USER FUNCTIONS
  *
- * --------------------------
+ * ----------------------------------------------------------------------------------------------------------------------------------
  */
 //Return the <input> for the player name
 function getPlayerNameInput() {
@@ -690,11 +705,54 @@ function addPlayerCharacterChangeListener() {
 }
 
 /**
- * --------------------------
+ * ----------------------------------------------------------------------------------------------------------------------------------
  *
- * LOBBY ROOMS FUNCTIONS
+ * LOBBY LEADERBOARD FUNCTIONS
  *
- * --------------------------
+ * ----------------------------------------------------------------------------------------------------------------------------------
+ */
+function updateLeaderboard(leaderboard) {
+    var leaderboardContainer = document.getElementById('leaderboard');
+    var leaderboardList = leaderboardContainer.querySelector('#leaderboard-list');
+    
+    while(leaderboardList.firstChild) {
+        leaderboardList.removeChild(leaderboardList.firstChild);
+    }
+    
+    for(var i = 0; i < leaderboard.length; i++) {
+        var li = document.createElement('li');
+        var name = document.createElement('span');
+        var kills = document.createElement('span');
+        var date = document.createElement('span');
+        
+        //Add classes
+        name.classList.add('name');
+        kills.classList.add('kills');
+        date.classList.add('date');
+        
+        //Fill HTML
+        name.innerHTML = leaderboard[i].name;
+        kills.innerHTML = leaderboard[i].kills + ' Pops';
+        
+        var timestamp = new Date(leaderboard[i].timestamp);
+        
+        date.innerHTML = formatTime(timestamp.getHours()) + ':' + formatTime(timestamp.getMinutes());
+        
+        //Append
+        li.appendChild(name);
+        li.appendChild(kills);
+        li.appendChild(date);
+        
+        leaderboardList.appendChild(li);
+    }
+}
+
+/**
+ * ----------------------------------------------------------------------------------------------------------------------------------
+ *
+ * LOBBY ROOMS LISTING FUNCTIONS
+ *
+ * ----------------------------------------------------------------------------------------------------------------------------------
  */
 //Return lobby rooms <ul>
 function getLobbyRoomsList() {
@@ -794,7 +852,7 @@ function addCreateRoomListener() {
             game.client.createRoom(input.value);
         }
         else {
-            console.log('Error during room creation, room name must not be empty');
+            game.log('Error during room creation, room name must not be empty');
         }
     });
 }
@@ -809,11 +867,11 @@ function addJoinRandomGameClickListener() {
 }
 
 /**
- * --------------------------
+ * ----------------------------------------------------------------------------------------------------------------------------------
  *
  * ROOM FUNCTIONS
  *
- * --------------------------
+ * ----------------------------------------------------------------------------------------------------------------------------------
  */
 //Update room title
 function updateRoomTitle(title) {
@@ -988,11 +1046,11 @@ function addLeaveRoomClickListener() {
 }
 
 /**
- * --------------------------
+ * ----------------------------------------------------------------------------------------------------------------------------------
  *
  * GAME FUNCTIONS
  *
- * --------------------------
+ * ----------------------------------------------------------------------------------------------------------------------------------
  */
 //Get player hud
 function getPlayerHud(playerIndex) {
@@ -1088,25 +1146,27 @@ function resetGame() {
 }
 
 /**
- * --------------------------
+ * ----------------------------------------------------------------------------------------------------------------------------------
  *
  * GAME TIMER FUNCTIONS
  *
- * --------------------------
+ * ----------------------------------------------------------------------------------------------------------------------------------
  */
-//Counting function
+//Tutorial countdown
 function countdown (time) {
-      document.getElementById('counter-number').innerHTML=time;
-      time -= 1;  
-      if (time > -1) {
-          pc.app.fire('game:countdown-sound');
-         setTimeout( countdown, 1000, time);
-      }
-      else if (time < 0) {
-          pc.app.fire('game:countdown-fight');
-          document.getElementById('counter-number').innerHTML= "Fight";
-      }
-   }
+  document.getElementById('counter-number').innerHTML = time;
+    
+  time -= 1;  
+    
+  if (time > -1) {
+      pc.app.fire('game:countdown-sound');
+     setTimeout( countdown, 1000, time);
+  }
+  else if (time < 0) {
+      pc.app.fire('game:countdown-fight');
+      document.getElementById('counter-number').innerHTML= "Fight";
+  }
+}
 
 //Game Timer
 function updateTimer(secondsLeft) {
@@ -1123,11 +1183,11 @@ function updateTimer(secondsLeft) {
 }
 
 /**
- * --------------------------
+ * ----------------------------------------------------------------------------------------------------------------------------------
  *
- * GAME END FUNCTIONS
+ * GAME-END FUNCTIONS
  *
- * --------------------------
+ * ----------------------------------------------------------------------------------------------------------------------------------
  */
 function updateScoreText(podium) {
     var scoreText = document.getElementById('score-text');
@@ -1175,12 +1235,28 @@ function updateGameEnd(podium) {
 }
 
 /**
- * --------------------------
+ * ----------------------------------------------------------------------------------------------------------------------------------
  *
- * CHAT FUNCTIONS
+ * LOBBY CHAT FUNCTIONS
  *
- * --------------------------
+ * ----------------------------------------------------------------------------------------------------------------------------------
  */
+
+function moveChatLobby() {
+    var obj= document.getElementById('moveChatLobby');
+    
+    var style = window.getComputedStyle(obj);
+    var right = style.getPropertyValue('right');
+    
+    if(right == "0px"){
+        obj.style.right= "-502px";
+    }
+    else{
+        obj.style.right= "0px";
+    }      
+}
+
+
 function updateLobbyChat(lobbyChat) {
     var chat = document.getElementById('lobby-chat'),
         msgContainer = chat.querySelector('#lobby-chat-messages');
@@ -1203,13 +1279,14 @@ function updateLobbyChat(lobbyChat) {
         
         var date  = new Date(lobbyChat[i].createdAt);
         
-        time.innerHTML = formatTime(date.getDay()) + '.' + formatTime(date.getMonth()) + ' - ' + formatTime(date.getHours()) + ':' + formatTime(date.getMinutes());
-        name.innerHTML = lobbyChat[i].playerName;
+        time.innerHTML = formatTime(date.getHours()) + ':' + formatTime(date.getMinutes());
+        name.innerHTML = lobbyChat[i].playerName +':';
         msg.innerHTML = lobbyChat[i].content;
         
-        li.appendChild(time);
+        
         li.appendChild(name);
         li.appendChild(msg);
+        li.appendChild(time);
         
         msgContainer.appendChild(li);
     }
@@ -1234,6 +1311,29 @@ function addLobbyChatSubmitListener() {
     });
 }
 
+/**
+ * ----------------------------------------------------------------------------------------------------------------------------------
+ *
+ * ROOM CHAT FUNCTIONS
+ *
+ * ----------------------------------------------------------------------------------------------------------------------------------
+ */
+
+function moveChatRoom() {
+    var obj= document.getElementById('moveChatRoom');
+    
+    var style = window.getComputedStyle(obj);
+    var right = style.getPropertyValue('right');
+    
+    if(right == "0px"){
+        obj.style.right= "-502px";
+    }
+    else{
+        obj.style.right= "0px";
+    }      
+}
+
+
 function updateRoomChat(roomChat) {
     var chat = document.getElementById('room-chat'),
         msgContainer = chat.querySelector('#room-chat-messages');
@@ -1256,13 +1356,14 @@ function updateRoomChat(roomChat) {
         
         var date  = new Date(roomChat[i].createdAt);
         
-        time.innerHTML = formatTime(date.getDay()) + '.' + formatTime(date.getMonth()) + ' - ' + formatTime(date.getHours()) + ':' + formatTime(date.getMinutes());
+        time.innerHTML = formatTime(date.getHours()) + ':' + formatTime(date.getMinutes());
         name.innerHTML = roomChat[i].playerName;
         msg.innerHTML = roomChat[i].content;
         
-        li.appendChild(time);
+
         li.appendChild(name);
         li.appendChild(msg);
+        li.appendChild(time);
         
         msgContainer.appendChild(li);
     }
@@ -1287,17 +1388,57 @@ function addRoomChatSubmitListener() {
     });
 }
 
-function formatTime(number) {
-    return (number < 10) ? "0" + number : number;
+/**
+ * ----------------------------------------------------------------------------------------------------------------------------------
+ *
+ * GENERIC DOM FUNCTIONS
+ *
+ * ----------------------------------------------------------------------------------------------------------------------------------
+ */
+function appendCSStoHead(asset) {
+    var style = document.createElement('style');
+    style.innerHTML = asset.resource || '';
+    document.head.appendChild(style);
+}
+
+function appendHTMLtoBody(asset) {
+    var div = document.createElement('div');
+    div.setAttribute('id', 'ui');
+    div.innerHTML = asset.resource || '';
+    document.body.appendChild(div);
+}
+
+function showUIPart(selector) {
+    document.getElementById(selector).classList.remove('hidden');
+}
+
+function hideUIPart(selector) {
+    document.getElementById(selector).classList.add('hidden');
 }
 
 /**
- * --------------------------
+ * ----------------------------------------------------------------------------------------------------------------------------------
  *
- * PLAYER FUNCTIONS
+ * IMAGE FUNCTIONS
  *
- * --------------------------
+ * ----------------------------------------------------------------------------------------------------------------------------------
  */
+function getFileUrl(asset) {
+    return (asset !== null) ? asset.getFileUrl() : '';
+}
+
+function setSrcById(id, src) {
+    document.getElementById(id).setAttribute('src', src);
+}
+
+function setSrcByClass(klass, src) {
+    var coll = document.getElementsByClassName(klass);
+    
+    for(var i = 0; i < coll.length; i++) {
+        coll[i].setAttribute('src', src);
+    }
+}
+
 function getCharImg(char) {
     var imgUrl = game.images.cornboy;
 
@@ -1320,4 +1461,87 @@ function getCharImg(char) {
     }
 
     return imgUrl;
+}
+
+function formatTime(number) {
+    return (number < 10) ? "0" + number : number;
+}
+
+/**
+ * ----------------------------------------------------------------------------------------------------------------------------------
+ *
+ * SOUND FUNCTIONS
+ *
+ * ----------------------------------------------------------------------------------------------------------------------------------
+ */
+function addSoundEffectsChangeListener() {
+    var slider = document.getElementById('settings-effects');
+    
+    var eventCallback = function() {
+        game.sounds.effects = this.value;
+    };
+    
+    slider.addEventListener('input', eventCallback);
+    slider.addEventListener('change', eventCallback);
+}
+
+function addSoundMusicChangeListener() {
+    var slider = document.getElementById('settings-music');
+    
+    var eventCallback = function() {
+        game.sounds.music = this.value;
+    };
+    
+    slider.addEventListener('input', eventCallback);
+    slider.addEventListener('change', eventCallback);
+}
+
+function addSoundVolumeChangeListener() {
+    var slider = document.getElementById('settings-volume');
+    
+    var eventCallback = function() {
+        game.sounds.volume = this.value;
+    };
+    
+    slider.addEventListener('input', eventCallback);
+    slider.addEventListener('change', eventCallback);
+}
+
+/**
+ * ----------------------------------------------------------------------------------------------------------------------------------
+ *
+ * FULL SCREEN
+ *
+ * ----------------------------------------------------------------------------------------------------------------------------------
+ */
+function addFullScreenPopupClickListeners() {
+    var popup = document.querySelector('#request-fullscreen');
+    var popupBack = document.querySelector('#pop-up-back');
+    var acceptBtn = popup.querySelector('[data-js="accept-fullscreen"]');
+    var declineBtn = popup.querySelector('[data-js="decline-fullscreen"]');
+    
+    acceptBtn.addEventListener('click', function() {
+        requestFullScreen(document.body);
+        popup.classList.add('hidden');
+        popupBack.classList.add('hidden');
+    });
+    
+    declineBtn.addEventListener('click', function() {
+        popup.classList.add('hidden');
+        popupBack.classList.add('hidden');
+    });
+}
+
+function requestFullScreen(element) {
+    // Supports most browsers and their versions.
+    var requestMethod = element.requestFullScreen || element.webkitRequestFullScreen || element.mozRequestFullScreen || element.msRequestFullScreen;
+
+    if (requestMethod) { // Native full screen.
+        requestMethod.call(element);
+    } else if (typeof window.ActiveXObject !== "undefined") { // Older IE.
+        var wscript = new ActiveXObject("WScript.Shell");
+        if (wscript !== null) {
+            wscript.SendKeys("{F11}");
+        }
+    }
 }

@@ -43,7 +43,7 @@ LeaderboardManager.prototype.addPlayerToLeaderboard = function(player) {
     this.leaderboard.sort(function(a, b) {
         return b.kills - a.kills;
     });
-    
+
     //Reduce leaderboard to max players limit
     this.leaderboard = this.leaderboard.slice(0, this.config.maxPlayersInBoard);
 };

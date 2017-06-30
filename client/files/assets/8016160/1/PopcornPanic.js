@@ -1,44 +1,61 @@
-var game = game || {
-    config: {
-        mode: 'dev',
-        socket: {
-            host: 'http://138.68.69.7'
-        }
-    },
-    scenes: {
-        lobby: 526492,
-        field: 531055
-    },
-    images: {
-        headerLogo: '',
-        headerBg: '',
-        cornboy: '',
-        corngirl: '',
-        angrycorn: '',
-        chevron: '',
-        chevronWhite: '',
-        redplane: '',
-        play: '',
-        crown: '',
-        dummyCorn: '',
-        productions: '',
-        tutorial01: '',
-        tutorial02: '',
-        podium1: '',
-        podium2: '',
-        podium3: '',
-        podium: '',
-        leaveRoome: '',
-        bgRoom: '',
-        deathsIcon: '',
-        killsIcon: ''
-    },
-    ui: {
-        initialized: false
-    },
-    sounds: {
-        music: 1,
-        effects: 1,
-        volume: 1
+var game = game || {};
+
+/**
+ * Configuration
+ */ 
+game.config = {
+    mode: 'dev', //Can be 'dev' or 'live'
+    socket: {
+        host: 'http://138.68.69.7'
+    }
+};
+
+/**
+ * List of scene ids
+ */ 
+game.scenes = {
+    lobby: 526492,
+    field: 531055
+};
+
+/**
+ * List of image src paths (initialized via js)
+ */
+game.images = {};
+
+/**
+ * UI
+ */
+game.ui = {
+    initialized: false
+};
+
+/**
+ * Sound settings
+ */
+game.sounds = {
+    music: 0.5,
+    effects: 0.5,
+    volume: 1
+};
+
+/**
+ * Functions
+ */
+game.log = function(msg) {
+    if(this.config.mode === 'dev') {
+        console.log(msg);
+    }
+};
+
+game.logError = function(msg) {
+    if(this.config.mode === 'dev') {
+        console.error(msg);
+    }
+};
+
+game.logWarning = function(msg) {
+    if(this.config.mode === 'dev') {
+        console.warn(msg);
     }
 };
