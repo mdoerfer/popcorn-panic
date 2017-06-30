@@ -70,7 +70,8 @@ RoomManager.prototype.createRoom = function(roomName, ownerId) {
     var createdRoom = false;
 
     if(!this.roomExists(roomName) && !this.playerIsOwnerAlready(ownerId) && !this.playerIsMemberAlready(ownerId)) {
-        var newRoom = new Room(roomName, ownerId);
+        var newRoom = new Room(ownerId);
+        newRoom.setName(roomName);
         newRoom.addPlayer(ownerId);
 
         this.rooms.push(newRoom);

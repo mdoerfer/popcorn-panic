@@ -9,9 +9,9 @@ const _ = require('./../util/util');
  * @param roomName
  * @constructor
  */
-const Room = function(roomName, ownerId) {
+const Room = function(ownerId) {
     this.owner = ownerId;
-    this.name = this.setName(roomName);
+    this.name = 'n/a';
 
     //Players
     this.players = [];
