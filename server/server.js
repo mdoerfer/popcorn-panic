@@ -24,9 +24,6 @@ var game = new GameManager();
  * @param response
  */
 function serverHandler(request, response) {
-    util.log(request.url);
-    util.log(__dirname);
-
     // Website you wish to allow to connect
     response.setHeader('Access-Control-Allow-Origin', '*');
 
@@ -40,14 +37,56 @@ function serverHandler(request, response) {
     // to the API (e.g. in case you use sessions)
     response.setHeader('Access-Control-Allow-Credentials', true);
 
-    fs.readFile(__dirname + "/../client/index.html", function(error, content) {
+    var clientBasePath = __dirname + "/../client";
+    var filePath = clientBasePath + "/index.html";
+
+    switch(request.url) {
+        case "/":
+            filePath = clientBasePath + "/index.html";
+            break;
+        case "/popcorn-panic":
+            filePath = clientBasePath + "/popcorn-panic.html";
+            break;
+        default:
+            filePath = clientBasePath + "/index.html";
+
+    }
+
+    util.log(filePath);
+
+    var extname = path.extname(filePath);
+
+    var contentType = 'text/html';
+
+    switch(extname) {
+        case '.js':
+            contentType = 'text/javascript';
+            break;
+        case '.css':
+            contentType = 'text/css';
+            break;
+        case '.json':
+            contentType = 'application/json';
+            break;
+        case '.png':
+            contentType = 'image/png';
+            break;
+        case '.jpg':
+            contentType = 'image/jpg';
+            break;
+        case '.wav':
+            contentType = 'audio/wav';
+            break;
+    }
+
+    fs.readFile(filePath, function(error, content) {
         if(error) {
             response.writeHead(500);
             response.end('Sorry, check with the site admin for error: ' + error.code + ' ..\n');
             response.end();
         }
         else {
-            response.writeHead(200);
+            response.writeHead(200, {'Content-Type': contentType});
             response.end(content, 'utf-8');
         }
     });
