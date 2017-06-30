@@ -74,9 +74,11 @@ RoomManager.prototype.createRoom = function(roomName, ownerId) {
         newRoom.setName(roomName);
         newRoom.addPlayer(ownerId);
 
-        this.rooms.push(newRoom);
+        if(!this.roomExists(newRoom.getName())) {
+            this.rooms.push(newRoom);
 
-        createdRoom = newRoom;
+            createdRoom = newRoom;
+        }
     }
 
     return createdRoom;
