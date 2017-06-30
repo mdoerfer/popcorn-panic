@@ -3,7 +3,8 @@
  */
 var util = require('util'),
     server = require('http').createServer(serverHandler),
-    io = require('socket.io')(server);
+    io = require('socket.io')(server),
+    fs = require('fs');
 
 /**
  * Require game manager
@@ -21,10 +22,10 @@ var game = new GameManager();
  * @param req
  * @param res
  */
-function serverHandler (req, res) {
+function serverHandler(req, res) {
     fs.readFile(__dirname + '../client/index.html',
-        function (err, data) {
-            if (err) {
+        function(err, data) {
+            if(err) {
                 res.writeHead(500);
                 return res.end('Error loading index.html');
             }
