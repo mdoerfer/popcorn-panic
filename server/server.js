@@ -30,7 +30,7 @@ function serverHandler(req, res) {
                 return res.end('Error loading index.html');
             }
 
-            res.writeHead(200, {'Content-Type': 'text/html'});
+            res.writeHead(200);
             res.end(data);
         });
 }
