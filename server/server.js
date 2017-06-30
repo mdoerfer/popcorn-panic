@@ -39,7 +39,7 @@ function serverHandler(request, response) {
 // to the API (e.g. in case you use sessions)
     response.setHeader('Access-Control-Allow-Credentials', true);
 
-    fs.readFile(__dirname + "/../index.html", function(error, content) {
+    fs.readFile(__dirname + "/../client/index.html", function(error, content) {
         if(error) {
             response.writeHead(500);
             response.end('Sorry, check with the site admin for error: ' + error.code + ' ..\n');
