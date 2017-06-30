@@ -39,16 +39,7 @@ function serverHandler(request, response) {
 // to the API (e.g. in case you use sessions)
     response.setHeader('Access-Control-Allow-Credentials', true);
 
-    util.log("Request URL: " + request.url);
-
-    var filePath = __dirname + '/..' + request.url;
-
-    if(filePath === __dirname + '/../')
-        filePath = __dirname + '/../index.html';
-
-    util.log("Filepath: " + filePath);
-
-    fs.readFile(filePath, function(error, content) {
+    fs.readFile(__dirname + "/../index.html", function(error, content) {
         if(error) {
             response.writeHead(500);
             response.end('Sorry, check with the site admin for error: ' + error.code + ' ..\n');
