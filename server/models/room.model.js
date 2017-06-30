@@ -43,6 +43,8 @@ const Room = function(roomName, ownerId) {
 
     //Chat
     this.chat = [];
+
+    this.maxRoomNameLength = 16;
 };
 
 /**
@@ -84,7 +86,15 @@ Room.prototype.setOwner = function(roomOwner) {
  * @param roomName
  */
 Room.prototype.setName = function(roomName) {
-    this.name = roomName;
+    if(roomName.length > this.maxRoomNameLength) {
+        this.name = roomName.slice(0, this.maxRoomNameLength);
+    }
+    else {
+        this.name = roomName;
+    }
+
+    //Sanitize name
+    this.name = this.sanitize(this.name);
 
     return this;
 };
@@ -371,6 +381,15 @@ Room.prototype.getChat = function() {
  */
 Room.prototype.addChatMessage = function(message) {
     this.chat.push(message);
+};
+
+Room.prototype.sanitize = function(unsafeHtml) {
+    return unsafeHtml
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
 };
 
 module.exports = Room;
