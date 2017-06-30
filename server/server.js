@@ -5,7 +5,7 @@ var util = require('util'),
     server = require('http').createServer(serverHandler),
     io = require('socket.io')(server),
     fs = require('fs'),
-    path = require('path');
+    url = require('url');
 
 /**
  * Require game manager
@@ -24,72 +24,53 @@ var game = new GameManager();
  * @param response
  */
 function serverHandler(request, response) {
-    // Website you wish to allow to connect
-    response.setHeader('Access-Control-Allow-Origin', '*');
+    var basepath = __dirname + "/../client";
+    var relpath = url.parse(request.url).pathname;
 
-    // Request methods you wish to allow
-    response.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-
-    // Request headers you wish to allow
-    response.setHeader('Access-Control-Allow-Headers', 'X-Requested-With,content-type');
-
-    // Set to true if you need the website to include cookies in the requests sent
-    // to the API (e.g. in case you use sessions)
-    response.setHeader('Access-Control-Allow-Credentials', true);
-
-    var clientBasePath = __dirname + "/../client";
-    var filePath = clientBasePath + "/index.html";
-
-    switch(request.url) {
-        case "/":
-            filePath = clientBasePath + "/index.html";
+    switch(relpath) {
+        case '/':
+            fs.readFile(basepath + relpath + "index.html", function(error, data) {
+                if(error) {
+                    response.writeHead(404);
+                    response.write("opps this doesn't exist - 404");
+                    response.end();
+                }
+                else {
+                    response.writeHead(200, {"Content-Type": "text/html"});
+                    response.write(data, "utf8");
+                    response.end();
+                }
+            });
             break;
-        case "/popcorn-panic":
-            filePath = clientBasePath + "/popcorn-panic.html";
+        case '/landing':
+            fs.readFile(basepath + relpath + "popcorn-panic.html", function(error, data) {
+                if(error) {
+                    response.writeHead(404);
+                    response.write("opps this doesn't exist - 404");
+                    response.end();
+                }
+                else {
+                    response.writeHead(200, {"Content-Type": "text/html"});
+                    response.write(data, "utf8");
+                    response.end();
+                }
+            });
             break;
         default:
-            filePath = clientBasePath + "/index.html";
-
-    }
-
-    util.log(filePath);
-
-    var extname = path.extname(filePath);
-
-    var contentType = 'text/html';
-
-    switch(extname) {
-        case '.js':
-            contentType = 'text/javascript';
-            break;
-        case '.css':
-            contentType = 'text/css';
-            break;
-        case '.json':
-            contentType = 'application/json';
-            break;
-        case '.png':
-            contentType = 'image/png';
-            break;
-        case '.jpg':
-            contentType = 'image/jpg';
-            break;
-        case '.wav':
-            contentType = 'audio/wav';
+            fs.readFile(basepath + relpath + "index.html", function(error, data) {
+                if(error) {
+                    response.writeHead(404);
+                    response.write("opps this doesn't exist - 404");
+                    response.end();
+                }
+                else {
+                    response.writeHead(200, {"Content-Type": "text/html"});
+                    response.write(data, "utf8");
+                    response.end();
+                }
+            });
             break;
     }
-
-    fs.readFile(filePath, function(error, content) {
-        if(error) {
-            response.writeHead(500);
-            response.end('Sorry, check with the site admin for error: ' + error.code + '\n');
-            response.end();
-        }
-        else {
-            response.writeHead(200, {'Content-Type': contentType});
-            response.end(content);
-        }
-    });
 }
 
 /**
