@@ -12,7 +12,7 @@ const LeaderboardManager = function() {
     this.leaderboard = [];
 
     this.config = {
-        maxPlayersInBoard: 20
+        maxPlayersInBoard: 10;
     };
 };
 

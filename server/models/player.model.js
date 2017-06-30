@@ -19,7 +19,7 @@ const Player = function(playerId) {
     this.rotZ = 0;
     this.pressure = 0;
     this.maxPressure = 100;
-    this.defaultName = 'Unknown Unicorn';
+    this.defaultName = 'UniCorn';
     this.possibleCharacters = [
         'Cornboy',
         'Corngirl',
@@ -30,6 +30,7 @@ const Player = function(playerId) {
     this.character = this.possibleCharacters[0];
     this.kills = 0;
     this.deaths = 0;
+    this.maxNameLength = 16;
 };
 
 /**
@@ -52,9 +53,15 @@ Player.prototype.setName = function(playerName) {
     if(!playerName.length) {
         this.name = this.defaultName;
     }
+    else if(playerName.length > this.maxNameLength) {
+        this.name = playerName.slice(0, this.maxNameLength);
+    }
     else {
         this.name = playerName;
     }
+
+    //Sanitize name
+    this.name = this.sanitize(this.name);
 
     return this;
 };
@@ -379,6 +386,15 @@ Player.prototype.reset = function() {
     this.rotZ = 0;
     this.kills = 0;
     this.deaths = 0;
+};
+
+Player.prototype.sanitize = function(unsafeHtml) {
+    return unsafeHtml
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
 };
 
 module.exports = Player;
