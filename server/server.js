@@ -4,7 +4,8 @@
 var util = require('util'),
     server = require('http').createServer(serverHandler),
     io = require('socket.io')(server),
-    fs = require('fs');
+    fs = require('fs'),
+    path = require('path');
 
 /**
  * Require game manager
