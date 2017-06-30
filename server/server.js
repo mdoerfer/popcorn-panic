@@ -2,10 +2,8 @@
  * Require dependencies
  */
 var util = require('util'),
-    server = require('http').createServer(serverHandler),
-    io = require('socket.io')(server),
-    fs = require('fs'),
-    url = require('url');
+    server = require('http').createServer(),
+    io = require('socket.io')(server);
 
 /**
  * Require game manager
@@ -16,62 +14,6 @@ var GameManager = require('./managers/game.manager');
  * Global variables
  */
 var game = new GameManager();
-
-/**
- * Handling serving static files
- *
- * @param request
- * @param response
- */
-function serverHandler(request, response) {
-    var basepath = __dirname + "/../client";
-    var relpath = url.parse(request.url).pathname;
-
-    switch(relpath) {
-        case '/':
-            fs.readFile(basepath + relpath + "index.html", function(error, data) {
-                if(error) {
-                    response.writeHead(404);
-                    response.write("opps this doesn't exist - 404");
-                    response.end();
-                }
-                else {
-                    response.writeHead(200, {"Content-Type": "text/html"});
-                    response.write(data, "utf8");
-                    response.end();
-                }
-            });
-            break;
-        case '/landing':
-            fs.readFile(basepath + relpath + "popcorn-panic.html", function(error, data) {
-                if(error) {
-                    response.writeHead(404);
-                    response.write("opps this doesn't exist - 404");
-                    response.end();
-                }
-                else {
-                    response.writeHead(200, {"Content-Type": "text/html"});
-                    response.write(data, "utf8");
-                    response.end();
-                }
-            });
-            break;
-        default:
-            fs.readFile(basepath + relpath + "index.html", function(error, data) {
-                if(error) {
-                    response.writeHead(404);
-                    response.write("opps this doesn't exist - 404");
-                    response.end();
-                }
-                else {
-                    response.writeHead(200, {"Content-Type": "text/html"});
-                    response.write(data, "utf8");
-                    response.end();
-                }
-            });
-            break;
-    }
-}
 
 /**
  * Initialize server
