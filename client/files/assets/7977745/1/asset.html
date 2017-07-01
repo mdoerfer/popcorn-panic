@@ -44,9 +44,9 @@
                             <div class="slide-body">
                                 <img class="character-pic" id="cornboy-pic">
                             </div>
-                            <div class="slide-head shadow style-box">
+                            <div class="slide-head style-box">
                                 <img class="slide-left chevron" data-char="Playercorn">
-                                <span class="character">Cornboy</span>
+                                <span class="shadow character">Cornboy</span>
                                 <img class="slide-right chevron" data-char="Corngirl">
                             </div>
                         </div>
@@ -54,9 +54,9 @@
                             <div class="slide-body">
                                 <img class="character-pic" id="corngirl-pic">
                             </div>
-                            <div class="slide-head shadow style-box">
+                            <div class="slide-head style-box">
                                 <img class="slide-left chevron" data-char="Cornboy">
-                                <span class="character">Corngirl</span>
+                                <span class="shadow character">Corngirl</span>
                                 <img class="slide-right chevron" data-char="Angrycorn">
                             </div>
                         </div>
@@ -64,9 +64,9 @@
                             <div class="slide-body">
                                 <img class="character-pic" id="angrycorn-pic">
                             </div>
-                            <div class="slide-head shadow style-box">
+                            <div class="slide-head style-box">
                                 <img class="slide-left chevron" data-char="Corngirl">
-                                <span class="character">Angrycorn</span>
+                                <span class="shadow character">Angrycorn</span>
                                 <img class="slide-right chevron" data-char="Playercorn">
                             </div>
                         </div>
@@ -74,9 +74,9 @@
                             <div class="slide-body">
                                 <img class="character-pic" id="playercorn-pic">
                             </div>
-                            <div class="slide-head shadow style-box">
+                            <div class="slide-head style-box">
                                 <img class="slide-left chevron" data-char="Angrycorn">
-                                <span class="character">Playercorn</span>
+                                <span class="shadow character">Playercorn</span>
                                 <img class="slide-right chevron" data-char="Cornboy">
                             </div>
                         </div>
@@ -88,7 +88,7 @@
     <!-- Lobby chat-->
     
     <div id="moveChatLobby" class="lobby-chat-wrapper">
-        <div class="chat-icon"  onclick="moveChatLobby()"><img id="chat-icon"></div>
+        <div class="chat-icon"  onclick="moveChatLobby()"><img class="chat-icon-src" id="chat-icon"></div>
         <div id="lobby-chat">
             <ul id="lobby-chat-messages"></ul>
         </div>
@@ -196,7 +196,7 @@
     
     <!-- Room chat-->
     <div id="moveChatRoom" class="room-chat-wrapper">
-        <div class="chat-icon"  onclick="moveChatRoom()"><img id="chat-icon-room"></div>
+        <div class="chat-icon"  onclick="moveChatRoom()"><img class="chat-icon-src" id="chat-icon-room"></div>
         <div id="room-chat">
             <ul id="room-chat-messages"></ul>
         </div>
@@ -352,14 +352,11 @@
 <!------------------------------------------------------------------------------------------------------------------
                                                     SETTINGS
 -------------------------------------------------------------------------------------------------------------------->
-<div id="move" class="footer ui-part">
-    <div class="ribbon">
-        <a id="open-footer" href="#move">Settings</a>
-    </div>
-    <div class="banner">
-        <div class="closeBanner"><a  href="#">X</a></div>
-        <div class="controls">
-            <h2>Controls</h2>
+
+<div id="settings" class="ui-part">
+    <div class="settings-icon" onclick="moveSettings()" ><img id="settings-icon"></div>
+    <div class="controls">
+            <h2 class="h2-settings">Controls</h2>
                 <div class="control-key" id="key-w">
                     <p><div>W</div>
                         <span>Forward</span>
@@ -397,6 +394,11 @@
                     <input type="range" id="settings-volume" max="1" min="0" step="0.05" value="1">
                 </div>
             </div>
+</div>
+
+<div class="footer ui-part">
+    <div class="banner">
+        
         </div>
     </div>
 
@@ -404,7 +406,12 @@
                                                     LEADERBOARD
 -------------------------------------------------------------------------------------------------------------------->
 <div id="leaderboard" class="ui-part">
+    <div class="leaderboard-icon"  onclick="moveLeaderboard()"><img id="star-icon"></div>
+    <div id="leftbar"></div>
+     <div id="rightbar"></div>
+    <h2>Leaderboard</h2>
     <ul id="leaderboard-list"></ul>
+    <p class="slogan">Haven‘t made it?  Play again!</p>
 </div>
 
 <!------------------------------------------------------------------------------------------------------------------
@@ -412,9 +419,12 @@
 -------------------------------------------------------------------------------------------------------------------->
 <div id="pop-up-back">
 <div id="request-fullscreen" class="popup">
-    <p>For the best experience activate fullscreen mode</p>
+    <p id="pop-text">For the best experience activate fullscreen mode</p>
+    <div id="active">
     <button class="activate btn" data-js="accept-fullscreen">Gimme fullscreen!</button>
-    <br>
+    </div>
+    <div>
     <button class="no-thanks" data-js="decline-fullscreen">No thanks</button>
+    </div>
 </div>
 </div>

@@ -23,6 +23,8 @@ Arena.prototype.initialize = function() {
     
     this.force = new pc.Vec3();
     
+    this.colors = this.app.assets.findByTag('PlayerColor');
+    
     this.addGameListeners();
     this.destroyDestroyables();
     this.spawnPlayers();
@@ -100,6 +102,12 @@ Arena.prototype.spawnPlayers = function() {
             
             playerEntity.findByName('damage').collision.on('collisionstart', this.onOtherCollisionStart, this);
         }
+        
+        //TODO: Set player entity marker color        
+        playerEntity.findByName('Marker').model.entity.model.meshInstances[0].material.diffuseMap = this.colors[i].resource;
+        playerEntity.findByName('Marker').model.entity.model.meshInstances[0].material.update();
+        
+        //TODO: Rotate player to match local euler angles of spawnpoint
 
         //Enable entity
         playerEntity.enabled = true;
