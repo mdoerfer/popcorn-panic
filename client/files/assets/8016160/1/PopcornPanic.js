@@ -4,7 +4,7 @@ var game = game || {};
  * Configuration
  */ 
 game.config = {
-    mode: 'dev', //Can be 'dev' or 'live'
+    mode: 'live', //Can be 'dev' or 'live'
     socket: {
         host: 'http://138.68.69.7'
     }
