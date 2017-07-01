@@ -92,6 +92,7 @@ UI.prototype.initializeUI = function() {
     setSrcByClass('play', game.images.play);
     setSrcByClass('player-deaths-pic', game.images.deathsIcon);
     setSrcByClass('player-kills-pic', game.images.killsIcon);
+    setSrcByClass('kills-icon', game.images.killsIcon);
     setSrcByClass('chevron', game.images.chevron);
     setSrcByClass('chevronsWhite', game.images.chevronWhite);
     
