@@ -410,13 +410,14 @@ a:active {
 }
 
 .controls {
-    width: 100%;
+    width: 86%;
     border-bottom: solid 1px #ffffff;
     box-sizing: border-box;
     text-align: center;
     float: left;
     color: #ffffff;
     padding-bottom: 70px;
+    margin-left: 7%;
 }
 
 .settings {
@@ -425,6 +426,7 @@ a:active {
     box-sizing: border-box;
     text-align: center;
     color: #ffffff;
+    margin-top: 30px;
 }
 
 .control-key {
@@ -448,7 +450,7 @@ a:active {
 }
 
 .control-key span {
-    font-size: 12pt;   
+    font-size: 10pt;   
     padding: 0;
     margin: 0;
 }
@@ -458,6 +460,8 @@ a:active {
     padding: 0;
     margin-top: 3px;
     font-weight: 700;
+    line-height: 24px;
+    padding-top: 9px;
 }
 
 #key-w {
@@ -477,6 +481,8 @@ a:active {
 .keys-asd div{
     margin: 0px 3px;
     box-sizing: border-box;
+    line-height: 24px;
+    padding-top: 7px;
 }
 
 #key-a {
@@ -822,6 +828,14 @@ a:active {
 .player .player-name {
     margin: 0px 0px 4px 0px;
     font-size: 22px;
+}
+
+.player .player-dot {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border-radius: 100%;
+    margin-right: 6px;
 }
 
 .pressure {
@@ -1314,7 +1328,7 @@ a:active {
     background-color: #3c88c6;
     position: absolute;
     border-bottom: 5;
-    bottom: 115px;
+    bottom: 60px;
     right: 500px;
     
 }
@@ -1369,7 +1383,7 @@ a:active {
     background-color: #e8de23;
     position: absolute;
     border-bottom: 5;
-    bottom: 60px;
+    bottom: 115px;
     right: 500px;
     
 }
@@ -1566,5 +1580,10 @@ a:active {
     border-bottom: 5;
     bottom: 5px;
     right: 500px;
+}
+
+#settings-icon{
+    width: 70%;
+    padding: 5px 4px 4px 9px;
 }
 

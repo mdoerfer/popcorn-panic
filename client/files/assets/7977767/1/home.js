@@ -67,6 +67,7 @@ UI.prototype.initializeUI = function() {
     game.images.killsIcon = getFileUrl(this.app.assets.get(8221057));
     game.images.chatIcon = getFileUrl(this.app.assets.get(8376487));
     game.images.starIcon = getFileUrl(this.app.assets.get(8396089));
+    game.images.settingsIcon = getFileUrl(this.app.assets.get(8402630));
     
     /*
      * Set src of images
@@ -84,6 +85,7 @@ UI.prototype.initializeUI = function() {
     setSrcById('leave-icon', game.images.leaveRoom);
     setSrcById('bg-room', game.images.bgRoom);
     setSrcById('star-icon', game.images.starIcon);
+    setSrcById('settings-icon', game.images.settingsIcon);
     
     setSrcByClass('chat-icon-src', game.images.chatIcon);
     setSrcByClass('redplane', game.images.redplane);
@@ -986,7 +988,10 @@ function fillPlayerHud(playerIndex, player) {
     var hudKills = hud.querySelector('.numberKills');
 
     //Set player name
-    hudName.innerHTML = player.name;
+    hudName.innerHTML = "<span class='player-dot'></span>" + player.name;
+    
+    var hudPlayerDot = hud.querySelector('.player-dot');
+    hudPlayerDot.style.backgroundColor = hud.dataset.dotColor;
 
     //Set pressure
     hudPressureContainer.classList.remove('hidden');
@@ -1096,6 +1101,8 @@ function updateTimer(secondsLeft) {
  */
 function updateScoreText(podium) {
     var scoreText = document.getElementById('score-text');
+    
+    if(!podium.length) return;
     
     if(typeof podium[0] !== undefined) {
         if(podium[0].id === game.client.me.id) {
