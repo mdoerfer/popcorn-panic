@@ -272,10 +272,10 @@ Arena.prototype.addGameListeners = function() {
                 
                 //Disable died player
                 diedEntity.enabled = false;
+                diedEntity.rigidbody.teleport(spawnpoint.getPosition());
                 
                 //After 5 sec, teleport to spawnpoint and enable again
                 setTimeout(function() {
-                    diedEntity.rigidbody.teleport(spawnpoint.getPosition());
                     diedEntity.enabled = true;
                     self.playEffect('respawn');
                 }, 5000);
