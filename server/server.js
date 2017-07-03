@@ -85,6 +85,7 @@ function bindEventHandlers(socket) {
     onStartTimer(socket);
     onMovePlayer(socket);
     onTakeDamage(socket);
+    onCoolDown(socket);
     onLobbyMessage(socket);
     onRoomMessage(socket);
 }
@@ -915,6 +916,31 @@ function onTakeDamage(socket) {
                 state: 'success',
                 target: 'room',
                 data: payloadData
+            });
+        }
+    });
+}
+
+function onCoolDown(socket) {
+    socket.on('cool-down', function(payload) {
+        var cooldownPlayerId = socket.id;
+        var roomName = payload.data.roomName;
+
+        var cooldownPlayer = game.playerManager.getPlayer(cooldownPlayerId);
+        var room = game.roomManager.getRoom(roomName);
+
+        if(cooldownPlayer !== null) {
+            cooldownPlayer.coolDown(3);
+
+            var roomPlayers = game.playerManager.getPlayers(room.getPlayers());
+
+            io.to(roomName).emit('cool-down', {
+                state: 'success',
+                target: 'room',
+                data: {
+                    room: room,
+                    roomPlayers: roomPlayers
+                }
             });
         }
     });

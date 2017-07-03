@@ -327,6 +327,17 @@ Player.prototype.takeDamage = function(amount) {
     return died;
 };
 
+Player.prototype.coolDown = function(amount) {
+  var newPressure = this.getPressure() - amount;
+
+  if(newPressure < 0) {
+      this.pressure = 0;
+  }
+  else {
+      this.pressure = newPressure;
+  }
+};
+
 /**
  * Get amount of kills
  *
