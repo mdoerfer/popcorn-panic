@@ -810,7 +810,20 @@ function onStartTimer(socket) {
 
                         //Sort podium
                         var podium = roomPlayers.sort(function(a, b) {
-                            return b.getKills() - a.getKills();
+                            //Sort by kills
+                            var sortVal = b.getKills() - a.getKills();
+
+                            //If kills match sort by deaths
+                            if(b.getKills() === a.getKills()) {
+                                sortVal = a.getDeaths() - b.getDeaths();
+                            }
+
+                            //If deaths match sort by pressure
+                            if(b.getDeaths() === a.getDeaths()) {
+                                sortVal = a.getPressure() - b.getPressure();
+                            }
+                            
+                            return sortVal;
                         });
 
                         io.to(room.getName()).emit('game-ended', {
