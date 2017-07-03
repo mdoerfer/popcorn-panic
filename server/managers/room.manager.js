@@ -199,6 +199,8 @@ RoomManager.prototype.removeLeftovers = function(game, io, playerId) {
 
     //Remove player from rooms he was in
     _.foreach(this.rooms, function() {
+        var roomName = this.getName();
+
         if(this.hasPlayer(playerId)) {
             this.removePlayer(playerId);
 
@@ -212,7 +214,7 @@ RoomManager.prototype.removeLeftovers = function(game, io, playerId) {
                 roomPlayers = game.playerManager.getPlayers(this.getPlayers());
 
             //Inform game room about user leaving
-            io.to(this.getName()).emit('room-left', {
+            io.to(roomName).emit('room-left', {
                 state: 'success',
                 target: 'room',
                 data: {
