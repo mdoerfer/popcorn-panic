@@ -26,6 +26,9 @@ UI.prototype.initialize = function() {
         
         game.ui.initialized = true;
     }
+    
+    //Play music
+    game.playMusic('music', this.app.root.findByName('Root'));
 };
 
 /**
@@ -45,8 +48,8 @@ UI.prototype.initializeUI = function() {
     /**
      * Get image paths and save them in global game object
      */
-    game.images.headerBg = getFileUrl(this.app.assets.get(8137732));
-    game.images.headerLogo = getFileUrl(this.app.assets.get(8137733));
+    game.images.headerBg = getFileUrl(this.app.assets.get(8419486));
+    game.images.headerLogo = getFileUrl(this.app.assets.get(8419344));
     game.images.cornboy = getFileUrl(this.app.assets.get(8221621));
     game.images.corngirl = getFileUrl(this.app.assets.get(8221623));
     game.images.angrycorn = getFileUrl(this.app.assets.get(8221620));
@@ -55,14 +58,14 @@ UI.prototype.initializeUI = function() {
     game.images.chevronWhite = getFileUrl(this.app.assets.get(8139155));
     game.images.redplane = getFileUrl(this.app.assets.get(8139154));
     game.images.play = getFileUrl(this.app.assets.get(8139155));
-    game.images.crown = getFileUrl(this.app.assets.get(8172000));
+    game.images.crown = getFileUrl(this.app.assets.get(8420405));
     game.images.dummyCorn = getFileUrl(this.app.assets.get(8221622));
     game.images.productions = getFileUrl(this.app.assets.get(8181714));
     game.images.tutorial01 = getFileUrl(this.app.assets.get(8181634));
     game.images.tutorial02 = getFileUrl(this.app.assets.get(8181611));
     game.images.podium = getFileUrl(this.app.assets.get(8193100));
     game.images.leaveRoom = getFileUrl(this.app.assets.get(8220239));
-    game.images.bgRoom = getFileUrl(this.app.assets.get(8220655));
+    game.images.bgRoom = getFileUrl(this.app.assets.get(8419851));
     game.images.deathsIcon = getFileUrl(this.app.assets.get(8221056));
     game.images.killsIcon = getFileUrl(this.app.assets.get(8221057));
     game.images.chatIcon = getFileUrl(this.app.assets.get(8376487));
@@ -328,6 +331,10 @@ UI.prototype.initializeClient = function() {
  */
 UI.prototype.bindDataEventListeners = function() {
     var self = this;
+    
+    this.app.on('lobby:leftovers-removed', function(rooms) {
+       updateLobbyRooms(rooms); 
+    });
 
     this.app.on('lobby:you-joined', function(me, rooms, players, lobbyChat, leaderboard) {   
         //Player name
@@ -1407,6 +1414,8 @@ function addSoundMusicChangeListener() {
     
     var eventCallback = function() {
         game.sounds.music = this.value;
+        
+        game.changeMusicVolume();
     };
     
     slider.addEventListener('input', eventCallback);
@@ -1418,6 +1427,8 @@ function addSoundVolumeChangeListener() {
     
     var eventCallback = function() {
         game.sounds.volume = this.value;
+        
+        game.changeMasterVolume();
     };
     
     slider.addEventListener('input', eventCallback);
@@ -1431,7 +1442,6 @@ function addSoundVolumeChangeListener() {
  *
  * ----------------------------------------------------------------------------------------------------------------------------------
  */
-
 function moveLeaderboard() {
     var obj= document.getElementById('leaderboard');
     
@@ -1462,10 +1472,13 @@ function moveSettings() {
     }      
 }
 
-
-
-
-
+/**
+ * ----------------------------------------------------------------------------------------------------------------------------------
+ *
+ * FULLSCREEN FUNCTIONS
+ *
+ * ----------------------------------------------------------------------------------------------------------------------------------
+ */
 function addFullScreenPopupClickListeners() {
     var popup = document.querySelector('#request-fullscreen');
     var popupBack = document.querySelector('#pop-up-back');
@@ -1476,11 +1489,13 @@ function addFullScreenPopupClickListeners() {
         requestFullScreen(document.body);
         popup.classList.add('hidden');
         popupBack.classList.add('hidden');
+         setSrcById('header-logo', game.images.headerLogo);
     });
     
     declineBtn.addEventListener('click', function() {
         popup.classList.add('hidden');
         popupBack.classList.add('hidden');
+        setSrcById('header-logo', game.images.headerLogo);
     });
 }
 

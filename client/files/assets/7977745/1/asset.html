@@ -90,6 +90,8 @@
     <div id="moveChatLobby" class="lobby-chat-wrapper">
         <div class="chat-icon"  onclick="moveChatLobby()"><img class="chat-icon-src" id="chat-icon"></div>
         <div id="lobby-chat">
+            <div class="chat-header"></div>
+            <div class="chat-badge">Lobby</div>
             <ul id="lobby-chat-messages"></ul>
         </div>
         <form id="lobby-chat-form">
@@ -198,6 +200,8 @@
     <div id="moveChatRoom" class="room-chat-wrapper">
         <div class="chat-icon"  onclick="moveChatRoom()"><img class="chat-icon-src" id="chat-icon-room"></div>
         <div id="room-chat">
+            <div class="chat-header"></div>
+            <div class="chat-badge">Room</div>
             <ul id="room-chat-messages"></ul>
         </div>
         <form id="room-chat-form">
@@ -383,11 +387,11 @@
             <div class="settings">
                 <div>
                     <h2 class="h2-sound">Music</h2>
-                    <input type="range" id="settings-music" max="1" min="0" step="0.05" value="0.5">
+                    <input type="range" id="settings-music" max="1" min="0" step="0.05" value="0.05">
                 </div>
                 <div>
                     <h2 class="h2-sound">Effects</h2>
-                    <input type="range" id="settings-effects" max="1" min="0" step="0.05" value="0.5">
+                    <input type="range" id="settings-effects" max="1" min="0" step="0.05" value="0.2">
                 </div>
                 <div>
                     <h2 class="h2-sound">Volume</h2>

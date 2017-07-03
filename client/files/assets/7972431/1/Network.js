@@ -316,6 +316,22 @@ var client = client || function() {
         };
     
         /**
+         * Cool down
+         * 
+         */
+        this.coolDown = function() {
+            var self = this;
+            
+            if(this.room !== null) {
+                this.socket.emit('cool-down', {
+                   data: {
+                       roomName: self.room.name
+                   } 
+                });
+            }
+        };
+    
+        /**
          * Lobby message
          * 
          * @param msgContent = The text content of the chat message
@@ -380,6 +396,7 @@ var client = client || function() {
                 
                 //Listeners
                 this.socket.on('disconnect', this.onDisconnect);
+                this.socket.on('leftovers-removed', this.onLeftoversRemoved);
                 this.socket.on('connect', this.onConnect);
                 this.socket.on('error', this.onError);
                 this.socket.on('connect_failed', this.onConnectFailed);
@@ -401,6 +418,7 @@ var client = client || function() {
                 this.socket.on('game-time-updated', this.onGameTimeUpdated);
                 this.socket.on('player-moved', this.onPlayerMoved);
                 this.socket.on('took-damage', this.onTookDamage);
+                this.socket.on('cool-down', this.onCoolDown);
                 this.socket.on('lobby-message', this.onLobbyMessage);
                 this.socket.on('room-message', this.onRoomMessage);
             } else {
@@ -414,6 +432,24 @@ var client = client || function() {
          */
         this.onConnect = function() {
             game.log('"ON_CONNECT": Connected to gameserver');
+        };
+    
+        /**
+         * onDisconnect
+         */
+        this.onDisconnect = function() {
+            game.log('"ON_DISCONNECT": Disconnected from gameserver');
+        };
+    
+        /**
+         * onLeftoversRemoved
+         */
+        this.onLeftoversRemoved = function(payload) {
+            game.log('"ON_LEFTOVERS_REMOVED": Leftovers removed, updating state from gameserver');
+            
+            game.client.rooms = payload.data.rooms;
+            
+            pc.app.fire('lobby:leftovers-removed', game.client.rooms);
         };
 
         /**
@@ -868,7 +904,7 @@ var client = client || function() {
         };
     
         /**
-         * onPlayerDamaged
+         * onTookDamage
          * 
          * @param payload = The object containing data that is received from the server
          */
@@ -886,6 +922,28 @@ var client = client || function() {
             else {
                 //Logs
                 game.logError('"ON_TOOK_DAMAGE": Error damaging player.');
+            }
+        };
+    
+        /**
+         * onCoolDown
+         * 
+         * @param payload = The object containing data that is received from the server
+         */
+        this.onCoolDown = function(payload) {
+            if(payload.state === 'success') {
+                if(payload.target === 'room') {   
+                    //Update self
+                    game.client.room = payload.data.room;
+                    game.client.room.players = payload.data.roomPlayers;
+                    
+                    //Fire game events
+                    pc.app.fire('game:player-cooled-down', game.client.room);
+                }
+            }
+            else {
+                //Logs
+                game.logError('"ON_COOL_DOWN": Error cooling down player.');
             }
         };
     

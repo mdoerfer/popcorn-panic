@@ -822,7 +822,7 @@ function onStartTimer(socket) {
                             if(b.getDeaths() === a.getDeaths()) {
                                 sortVal = a.getPressure() - b.getPressure();
                             }
-                            
+
                             return sortVal;
                         });
 

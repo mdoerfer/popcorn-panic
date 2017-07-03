@@ -41,6 +41,8 @@ Arena.prototype.destroyDestroyables = function() {
     for(var i = 0; i < destroyables.length; i++) {
         destroyables[i].destroy();
     }
+    
+    game.playerEntity = null;
 };
 
 /**
@@ -94,6 +96,7 @@ Arena.prototype.spawnPlayers = function() {
         //If player entity is mine, save it for later use
         if(currPlayer.id === game.client.me.id) {
             this.playerEntity = playerEntity;
+            game.playerEntity = this.playerEntity;
   
             this.playerEntity.findByName('damage').collision.on('collisionstart', this.onCollisionStart, this);
         }
@@ -130,22 +133,18 @@ Arena.prototype.spawnPlayers = function() {
 };
 
 Arena.prototype.onCollisionStart = function (result) {
-    var hit = 0;
-    
     //TODO: Debounce attack rate
-    if(result.other.tags.has('Attackable') && result.other.tags.has('Player') && hit === 0) {    
+    if(result.other.tags.has('Attackable') && result.other.tags.has('Player')) {    
         //Send player taking damage to server
         game.client.takeDamage(result.other.name);
         
         //Play sound
-        this.playEffect('fire', result.other);
-        
-        hit = 1;
+        game.playEffect('fire', result.other);
     }
     
-    if(result.other.tags.has('water')) {    
+    if(result.other.tags.has('Water')) {
         //Play sound
-        this.playEffect('water', result.other);
+        game.playEffect('water', result.other);
     }
 };
 
@@ -153,12 +152,12 @@ Arena.prototype.onCollisionStart = function (result) {
 Arena.prototype.onOtherCollisionStart = function(result) {
     if(result.other.tags.has('Attackable') && result.other.tags.has('Player')) {    
         //Play sound
-        this.playEffect('fire', result.other);
+        game.playEffect('fire', result.other);
     }
     
-    if(result.other.tags.has('water')) {    
+    if(result.other.tags.has('Water')) {
         //Play sound
-        this.playEffect('water', result.other);
+        game.playEffect('water', result.other);
     }
 };
 
@@ -222,25 +221,25 @@ Arena.prototype.addGameListeners = function() {
         this.app.on('game:tutorial-start', function() {
             console.log('Tutorial started'); 
             
-            self.playMusic('tutorial');
+            game.playMusic('tutorial');
         });
 
         this.app.on('game:countdown-sound', function() {
-            self.stopSound('tutorial');
-            self.playEffect('countdown');
+            game.stopSound('tutorial');
+            game.playEffect('countdown');
         });
 
 
         this.app.on('game:countdown-fight', function() {
-            self.playEffect('fight');
+            game.playEffect('fight');
         });
 
 
         this.app.on('game:tutorial-end', function() {
             console.log('Tutorial ended'); 
             
-            self.playMusic('music');
-            self.playEffect('haha');
+            game.playMusic('music');
+            game.playEffect('haha');
         });
 
 
@@ -277,7 +276,7 @@ Arena.prototype.addGameListeners = function() {
                 //After 5 sec, teleport to spawnpoint and enable again
                 setTimeout(function() {
                     diedEntity.enabled = true;
-                    self.playEffect('respawn');
+                    game.playEffect('respawn');
                 }, 5000);
 
                 var vorlagenPopcorn =  self.app.root.findByName('Popcorn');
@@ -289,14 +288,22 @@ Arena.prototype.addGameListeners = function() {
                 newPopcorn.rigidbody.teleport(currPos);
                 newPopcorn.enabled = true;
                 
-                self.playEffect('kill');
-                self.playEffect('haha');
+                game.playEffect('kill');
+                game.playEffect('haha');
             }
+        });
+        
+        //Cool down player
+        this.app.on('game:player-cooled-down', function(room) {
+           updateGame(room);     
         });
 
         //Remove leaving player entity
         this.app.on('game:someone-left', function(leavingPlayer) {
            var entity = self.app.root.findByName(leavingPlayer.id);
+            
+            console.log("Someone-left");
+            console.log(entity);
 
             if(entity !== null) {
                entity.destroy();
@@ -305,45 +312,16 @@ Arena.prototype.addGameListeners = function() {
 
         //End game
         this.app.on('game:game-ended', function(room) {
-            self.stopSound('music');
-            self.playMusic('hero');
+            game.stopSound('music');
+            game.playMusic('hero');
         });
         
         //Leave podium
         this.app.on('game:podium-left', function() {
-            self.stopSound('hero');
+            game.stopSound('hero');
         });
         
         //Set flag
         game.client.addedListeners = true;
     }
-};
-
-Arena.prototype.playEffect = function(name, entity) {
-    var ent = entity || this.app.root.findByName('Root');
-    
-    ent.sound.volume = game.sounds.volume;
-    
-    ent.sound.slot(name).volume = game.sounds.effects;
-    ent.sound.slot(name).play();
-};
-
-Arena.prototype.playMusic = function(name, entity) {
-    var ent = entity || this.app.root.findByName('Root');
-    
-    this.lastMusic = {
-        name: name,
-        entity: ent
-    };
-    
-    ent.sound.volume = game.sounds.volume;
-    
-    ent.sound.slot(name).volume = game.sounds.music;
-    ent.sound.slot(name).play();
-};
-
-Arena.prototype.stopSound = function(name, entity) {
-    var ent = entity || this.app.root.findByName('Root');
-    
-    ent.sound.slot(name).stop();
 };
