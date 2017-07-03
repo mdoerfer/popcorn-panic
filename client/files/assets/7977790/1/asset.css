@@ -279,6 +279,8 @@ h3 {
     position: relative; 
     font-size: 25pt;
     font-weight: bold;
+    padding: 1px 40px 4px 40px;
+    line-height: 51px;
 }
 
 .playButton{
@@ -408,19 +410,23 @@ a:active {
 }
 
 .controls {
-    width: 50%;
-    border-right: solid 1px #ffffff;
+    width: 86%;
+    border-bottom: solid 1px #ffffff;
     box-sizing: border-box;
     text-align: center;
     float: left;
+    color: #ffffff;
     padding-bottom: 70px;
+    margin-left: 7%;
 }
 
 .settings {
     float: left;
-    width: 50%;
+    width: 100%;
     box-sizing: border-box;
     text-align: center;
+    color: #ffffff;
+    margin-top: 30px;
 }
 
 .control-key {
@@ -437,14 +443,14 @@ a:active {
 
 .control-key p {
     font-family: Open Sans;
-    font-size: 28pt;  
+    font-size: 10pt;  
     margin: 0;
     padding: 0;
     text-align: center;
 }
 
 .control-key span {
-    font-size: 12pt;   
+    font-size: 10pt;   
     padding: 0;
     margin: 0;
 }
@@ -453,6 +459,9 @@ a:active {
     font-size: 28pt;   
     padding: 0;
     margin-top: 3px;
+    font-weight: 700;
+    line-height: 24px;
+    padding-top: 9px;
 }
 
 #key-w {
@@ -472,6 +481,8 @@ a:active {
 .keys-asd div{
     margin: 0px 3px;
     box-sizing: border-box;
+    line-height: 24px;
+    padding-top: 7px;
 }
 
 #key-a {
@@ -490,6 +501,12 @@ a:active {
     display: inline-block;
     width: 130px;
     text-align: left;
+    color: #ffffff;
+}
+
+.h2-settings{
+    color:white;
+    margin-top: 50px;
 }
 
 
@@ -500,7 +517,7 @@ a:active {
 .settings input[type=range] {
   -webkit-appearance: none;
   margin: 18px 0;
-  width: 66%;
+  width: 50%;
   background-color: #070707;
 }
 .settings input[type=range]:focus {
@@ -813,6 +830,14 @@ a:active {
     font-size: 22px;
 }
 
+.player .player-dot {
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    border-radius: 100%;
+    margin-right: 6px;
+}
+
 .pressure {
     background-color: rgba(255,255,255,0.8);
     width: 70%;
@@ -839,11 +864,10 @@ a:active {
     border-radius: 100px;
     position: absolute;
     padding-top: 2px;
-    padding-left: 20px;
-    padding-right: 20px; 
     padding-bottom: 3px;
     text-align: center; 
     top: 48px;
+    width: 55%;
     left: 50%; 
     transform: translateX(-50%);
 }
@@ -863,6 +887,13 @@ a:active {
     position: relative;
 }
 
+.kills-icon {
+    width: 15px;
+    height: 15px;
+    display: inline-block;
+    top: 2px;
+    position: relative;
+}
 
 #bg-black {
     background-color: rgba(0,0,0,1);
@@ -1075,7 +1106,11 @@ a:active {
 }
 
 .numberKills{     
-    padding-left: 25%; 
+    padding-left: 5px; 
+}
+
+.podium .numberKills {
+    padding-left: 25%;
 }
 
 #podium {
@@ -1303,29 +1338,172 @@ a:active {
     background-color: #3c88c6;
     position: absolute;
     border-bottom: 5;
-    bottom: 5px;
+    bottom: 60px;
     right: 500px;
     
 }
 
-#chat-icon {
+#chat-icon,
+.chat-icon-src{
     width: 60%;
     height: 60%;
     margin: 10px;
 }
 
+#star-icon{
+    width: 71%;
+    padding: 4px 4px 4px 10px;
+}
+
 #leaderboard {
+    z-index: 2;
+    background-color: #3c88c6;
+    border: 0px solid white;
+    border-radius: 7px 0 0 0;
     position: absolute;
-    left: 0;
-    top: 0;
+    right: -502px;
+    bottom: 0;
+    width: 500px;
+    bottom: 5px;
+    transition: all 1s ease;
+    height: 98%;
     color: black;
-    background-color: white;
+    font-family: Open Sans;
+}
+
+#leaderboard p {
+    text-align: center;
+    color: white;
+    font-size: 22px;
+    font-weight: 700;
+}
+
+#leaderboard h2 {
+    color: white;
+    font-weight: normal;
+    font-size: 40px;
+}
+
+.leaderboard-icon{
+    height: 50px;
+    width: 57px;
+    border-radius: 40px;
+    border-top-right-radius: 0px;
+    border-bottom-right-radius: 0px;
+    background-color: #e8de23;
+    position: absolute;
+    border-bottom: 5;
+    bottom: 115px;
+    right: 500px;
+    
 }
 
 #leaderboard-list {
     list-style: none;
+    margin: 0px 50px;
     padding: 0;
-    margin: 0;
+}
+
+#leaderboard-list li:first-child {
+    height: 60px;
+    margin: 10px 0px;
+    background-color: rgba(255,255,255,0.9);
+}
+
+#leaderboard-list li {
+    border-radius: 90px;
+    box-shadow: 1px 1px 1px #cccccc;
+    background-color: rgba(255,255,255,0.7);
+    margin: 10px 12px;
+    height: 45px;
+    box-sizing: border-box;
+    position: relative;
+}
+
+#leaderboard-list li .tag {
+    background-color: #4f4f4f;
+    border: solid 0px #4f4f4f;
+    border-radius: 23px;
+    color: white;
+    font-family: Luckiest Guy;
+    font-weight: normal;
+    height: 30px;
+    width: 30px;
+    display: inline-block;
+    text-align: center;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 9px;
+}
+
+#leaderboard-list li .inner {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 100%;
+    display: block;
+}
+
+#leaderboard-list li:first-child .tag {
+    height: 40px;
+    width: 40px;
+    font-size: 24px;
+}
+
+#leaderboard-list li .kills {
+    font-family: Luckiest Guy;
+    color: white; 
+    background-color: black; 
+    border: 0px solid #black;
+    border-radius: 100px; 
+    padding-top: 3px;
+    text-align: center; 
+    width: 110px;
+    height: 20px;
+    right: 9px;
+    top: 50%;
+    transform: translateY(-50%);
+    position: absolute;
+}
+
+#leaderboard-list li:first-child .kills {
+    height: 30px;
+    font-size: 21px;
+    width: 33%;
+    
+}
+
+#leaderboard-list li .name {
+    font-family: Open Sans;
+    width: 200px;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 50px;
+}
+
+#leaderboard-list li:first-child .name {
+    font-family: Open Sans;
+    font-weight: bold;
+    padding-left: 10px; 
+    font-size: 23px;
+}
+
+#leftbar {
+    position: absolute;
+    height: 100%;
+    width: 10px;
+    background-color: white;
+    left: 27px;
+}
+
+#rightbar {
+     position: absolute;
+    height: 100%;
+    width: 10px;
+    background-color: white;
+    left: 462px;   
 }
 
 #request-fullscreen {
@@ -1334,17 +1512,25 @@ a:active {
     top: 50%;
     transform: translate3D(-50%, -50%, 0);
     width: 400px;
-    min-height: 250px;
+    min-height: 150px;
     background-color: white;
+    border: solid 0px white;
+    border-radius: 30px;
     color: black;
     text-align: center;
-    font-family: Open Sans;
+    font-family: Luckiest Guy;
 }
 
 #request-fullscreen .btn {
-    display: block;
-    width: 50%;
+    width: 58%;
     box-sizing: border-box;
+    float: none;
+    height: 30px;
+    background-color: #3c88c6;
+    border-color: #3c88c6;
+    padding-left: 18px;
+    padding-right: 18px;
+    margin-top: -2px;
 }
 
 #pop-up-back {
@@ -1355,3 +1541,59 @@ a:active {
     position: absolute;
     top: 0;
 }
+
+#active {
+    text-align: center; 
+    width: 100%;
+    height: auto; 
+}
+
+#pop-text {
+    width: 74%;
+    display: inline-block; 
+    font-size: 22px;
+}
+
+.no-thanks {
+    background-color: white;
+    font-family: Open Sans;
+    border: none;
+    margin-top: 10px;
+    margin-bottom: 15px;
+    text-decoration: underline;
+}
+
+#settings {
+    z-index: 2;
+    background-color: #000000;
+    border: 0px solid white;
+    border-radius: 7px 0 0 0;
+    position: absolute;
+    right: -502px;
+    bottom: 0;
+    width: 500px;
+    bottom: 5px;
+    transition: all 1s ease;
+    height: 98%;
+    color: black;
+    font-family: Open Sans;
+}
+
+.settings-icon{
+    height: 50px;
+    width: 57px;
+    border-radius: 40px;
+    border-top-right-radius: 0px;
+    border-bottom-right-radius: 0px;
+    background-color: #000000;
+    position: absolute;
+    border-bottom: 5;
+    bottom: 5px;
+    right: 500px;
+}
+
+#settings-icon{
+    width: 70%;
+    padding: 5px 4px 4px 9px;
+}
+

@@ -23,6 +23,8 @@ Arena.prototype.initialize = function() {
     
     this.force = new pc.Vec3();
     
+    this.colors = this.app.assets.findByTag('PlayerColor');
+    
     this.addGameListeners();
     this.destroyDestroyables();
     this.spawnPlayers();
@@ -100,6 +102,21 @@ Arena.prototype.spawnPlayers = function() {
             
             playerEntity.findByName('damage').collision.on('collisionstart', this.onOtherCollisionStart, this);
         }
+        
+        //Set player entity marker color
+        var playerMarker = playerEntity.findByName('Marker');
+        var playerMarkerMaterial = this.app.assets.find('Marker' + i, 'material');
+        var playerMarkerMaterialColor = new pc.Color(playerMarkerMaterial.data.diffuse[0], playerMarkerMaterial.data.diffuse[1], playerMarkerMaterial.data.diffuse[2]);
+        var dotColor = playerMarkerMaterialColor.toString();
+        
+        //Give marker the right asset
+        playerMarker.model.materialAsset = playerMarkerMaterial;
+        
+        //Change dot color to player color
+        document.getElementById('player-'+(i+1)).dataset.dotColor = dotColor;
+        document.getElementById('player-'+(i+1)).querySelector('.player-dot').style.backgroundColor = dotColor;
+        
+        //TODO: Rotate player to match local euler angles of spawnpoint
 
         //Enable entity
         playerEntity.enabled = true;
@@ -252,15 +269,16 @@ Arena.prototype.addGameListeners = function() {
 
                 var spawnpoint = self.app.root.findByName('Spawnpoint ' + getRandomInt(0,3));
                 var currPos = self.playerEntity.getPosition();
-
+                
+                //Disable died player
                 diedEntity.enabled = false;
                 diedEntity.rigidbody.teleport(spawnpoint.getPosition());
-
+                
+                //After 5 sec, teleport to spawnpoint and enable again
                 setTimeout(function() {
                     diedEntity.enabled = true;
                     self.playEffect('respawn');
                 }, 5000);
-
 
                 var vorlagenPopcorn =  self.app.root.findByName('Popcorn');
                 var newPopcorn = vorlagenPopcorn.clone();
@@ -287,7 +305,6 @@ Arena.prototype.addGameListeners = function() {
 
         //End game
         this.app.on('game:game-ended', function(room) {
-            
             self.stopSound('music');
             self.playMusic('hero');
         });

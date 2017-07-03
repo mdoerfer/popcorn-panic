@@ -3,66 +3,6 @@ var UI = pc.createScript('ui');
 /**
  * Add component attributes
  */
-UI.attributes.add('headerLogo', {
-    type: 'asset',
-    title: 'Header Logo'
-});
-
-UI.attributes.add('headerBg', {
-    type: 'asset',
-    title: 'Header Background'
-});
-
-UI.attributes.add('cornboyPic', {
-    type: 'asset',
-    title: 'Cornboy'
-});
-
-UI.attributes.add('corngirlPic', {
-    type: 'asset', 
-    title: 'Corngirl'
-});
-
-UI.attributes.add('angrycornPic', {
-    type: 'asset',
-    title: 'Angrycorn'
-});
-
-UI.attributes.add('playercornPic', {
-    type: 'asset',
-    title: 'Playercorn'
-});
-
-UI.attributes.add('chevron', {
-    type: 'asset',
-    title: 'Chevron'
-});
-
-UI.attributes.add('chevronsWhite', {
-    type: 'asset',
-    title: 'ChevronsWhite'
-});
-
-UI.attributes.add('redplane', {
-    type: 'asset',
-    title: 'redplane'
-});
-
-UI.attributes.add('play', {
-    type: 'asset',
-    title: 'play'
-});
-
-UI.attributes.add('crown', {
-    type: 'asset',
-    title: 'Crown'
-});
-
-UI.attributes.add('dummyCorn', {
-    type: 'asset',
-    title: 'DummyCorn'
-});
-
 UI.attributes.add('html', {
     type: 'asset',
     assetType: 'html',
@@ -73,51 +13,6 @@ UI.attributes.add('css', {
     type: 'asset',
     assetType: 'css',
     title: 'CSS'
-});
-
-UI.attributes.add('productions', {
-    type: 'asset',
-    title: 'Productions'
-});
-
-UI.attributes.add('tutorial01', {
-    type: 'asset',
-    title: 'Tutorial01'
-});
-
-UI.attributes.add('tutorial02', {
-    type: 'asset',
-    title: 'Tutorial02'
-});
-
-UI.attributes.add('podium', {
-    type: 'asset',
-    title: 'Podium'
-});
-
-UI.attributes.add('leaveRoom', {
-    type: 'asset',
-    title: 'LeaveRoom'
-});
-
-UI.attributes.add('bgRoom', {
-    type: 'asset',
-    title: 'BackgroundRoom'
-});
-
-UI.attributes.add('deathsIcon', {
-    type: 'asset',
-    title: 'DeathsIcon'
-});
-
-UI.attributes.add('killsIcon', {
-    type: 'asset',
-    title: 'KillsIcon'
-});
-
-UI.attributes.add('chatIcon', {
-    type: 'asset',
-    title: 'ChatIcon'
 });
 
 /**
@@ -150,27 +45,29 @@ UI.prototype.initializeUI = function() {
     /**
      * Get image paths and save them in global game object
      */
-    game.images.headerBg = getFileUrl(this.headerBg);
-    game.images.headerLogo = getFileUrl(this.headerLogo);
-    game.images.cornboy = getFileUrl(this.cornboyPic);
-    game.images.corngirl = getFileUrl(this.corngirlPic);
-    game.images.angrycorn = getFileUrl(this.angrycornPic);
-    game.images.playercorn = getFileUrl(this.playercornPic);
-    game.images.chevron = getFileUrl(this.chevron);
-    game.images.chevronWhite = getFileUrl(this.chevronsWhite);
-    game.images.redplane = getFileUrl(this.redplane);
-    game.images.play = getFileUrl(this.play);
-    game.images.crown = getFileUrl(this.crown);
-    game.images.dummyCorn = getFileUrl(this.dummyCorn);
-    game.images.productions = getFileUrl(this.productions);
-    game.images.tutorial01 = getFileUrl(this.tutorial01);
-    game.images.tutorial02 = getFileUrl(this.tutorial02);
-    game.images.podium = getFileUrl(this.podium);
-    game.images.leaveRoom = getFileUrl(this.leaveRoom);
-    game.images.bgRoom = getFileUrl(this.bgRoom);
-    game.images.deathsIcon = getFileUrl(this.deathsIcon);
-    game.images.killsIcon = getFileUrl(this.killsIcon);
-    game.images.chatIcon = getFileUrl(this.chatIcon);
+    game.images.headerBg = getFileUrl(this.app.assets.get(8137732));
+    game.images.headerLogo = getFileUrl(this.app.assets.get(8137733));
+    game.images.cornboy = getFileUrl(this.app.assets.get(8221621));
+    game.images.corngirl = getFileUrl(this.app.assets.get(8221623));
+    game.images.angrycorn = getFileUrl(this.app.assets.get(8221620));
+    game.images.playercorn = getFileUrl(this.app.assets.get(8370833));
+    game.images.chevron = getFileUrl(this.app.assets.get(8139421));
+    game.images.chevronWhite = getFileUrl(this.app.assets.get(8139155));
+    game.images.redplane = getFileUrl(this.app.assets.get(8139154));
+    game.images.play = getFileUrl(this.app.assets.get(8139155));
+    game.images.crown = getFileUrl(this.app.assets.get(8172000));
+    game.images.dummyCorn = getFileUrl(this.app.assets.get(8221622));
+    game.images.productions = getFileUrl(this.app.assets.get(8181714));
+    game.images.tutorial01 = getFileUrl(this.app.assets.get(8181634));
+    game.images.tutorial02 = getFileUrl(this.app.assets.get(8181611));
+    game.images.podium = getFileUrl(this.app.assets.get(8193100));
+    game.images.leaveRoom = getFileUrl(this.app.assets.get(8220239));
+    game.images.bgRoom = getFileUrl(this.app.assets.get(8220655));
+    game.images.deathsIcon = getFileUrl(this.app.assets.get(8221056));
+    game.images.killsIcon = getFileUrl(this.app.assets.get(8221057));
+    game.images.chatIcon = getFileUrl(this.app.assets.get(8376487));
+    game.images.starIcon = getFileUrl(this.app.assets.get(8396089));
+    game.images.settingsIcon = getFileUrl(this.app.assets.get(8402630));
     
     /*
      * Set src of images
@@ -187,12 +84,15 @@ UI.prototype.initializeUI = function() {
     setSrcById('podium', game.images.podium);
     setSrcById('leave-icon', game.images.leaveRoom);
     setSrcById('bg-room', game.images.bgRoom);
-    setSrcById('chat-icon', game.images.chatIcon);
+    setSrcById('star-icon', game.images.starIcon);
+    setSrcById('settings-icon', game.images.settingsIcon);
     
+    setSrcByClass('chat-icon-src', game.images.chatIcon);
     setSrcByClass('redplane', game.images.redplane);
     setSrcByClass('play', game.images.play);
     setSrcByClass('player-deaths-pic', game.images.deathsIcon);
     setSrcByClass('player-kills-pic', game.images.killsIcon);
+    setSrcByClass('kills-icon', game.images.killsIcon);
     setSrcByClass('chevron', game.images.chevron);
     setSrcByClass('chevronsWhite', game.images.chevronWhite);
     
@@ -721,29 +621,37 @@ function updateLeaderboard(leaderboard) {
     
     for(var i = 0; i < leaderboard.length; i++) {
         var li = document.createElement('li');
+        var tag = document.createElement('span');
         var name = document.createElement('span');
         var kills = document.createElement('span');
-        var date = document.createElement('span');
         
         //Add classes
+        tag.classList.add('tag');
         name.classList.add('name');
         kills.classList.add('kills');
-        date.classList.add('date');
         
         //Fill HTML
-        name.innerHTML = leaderboard[i].name;
-        kills.innerHTML = leaderboard[i].kills + ' Pops';
-        
-        var timestamp = new Date(leaderboard[i].timestamp);
-        
-        date.innerHTML = formatTime(timestamp.getHours()) + ':' + formatTime(timestamp.getMinutes());
+        tag.innerHTML = "<span class='inner'>#" + (i+1) + "</span>";
+        name.innerHTML = "<span class='inner'>" + leaderboard[i].name + "</span>";
+        kills.innerHTML = "<span class='inner'>" + leaderboard[i].kills + " Pops</span>" ;
         
         //Append
+        li.appendChild(tag);
         li.appendChild(name);
         li.appendChild(kills);
-        li.appendChild(date);
         
         leaderboardList.appendChild(li);
+    }
+    
+    //Fill empty slots
+    var remainingSlots = 10 - leaderboard.length;
+    
+    for(var c = remainingSlots; c > 0; c--) {
+        var emptyLi = document.createElement('li');
+        
+        emptyLi.classList.add('empty-slot');
+        
+        leaderboardList.appendChild(emptyLi);
     }
 }
 
@@ -1081,7 +989,10 @@ function fillPlayerHud(playerIndex, player) {
     var hudKills = hud.querySelector('.numberKills');
 
     //Set player name
-    hudName.innerHTML = player.name;
+    hudName.innerHTML = "<span class='player-dot'></span>" + player.name;
+    
+    var hudPlayerDot = hud.querySelector('.player-dot');
+    hudPlayerDot.style.backgroundColor = hud.dataset.dotColor;
 
     //Set pressure
     hudPressureContainer.classList.remove('hidden');
@@ -1192,6 +1103,8 @@ function updateTimer(secondsLeft) {
 function updateScoreText(podium) {
     var scoreText = document.getElementById('score-text');
     
+    if(!podium.length) return;
+    
     if(typeof podium[0] !== undefined) {
         if(podium[0].id === game.client.me.id) {
             scoreText.innerHTML = 'YOU WIN';
@@ -1250,9 +1163,11 @@ function moveChatLobby() {
     
     if(right == "0px"){
         obj.style.right= "-502px";
+        obj.style.zIndex= 0;
     }
     else{
         obj.style.right= "0px";
+        obj.style.zIndex= 15;
     }      
 }
 
@@ -1327,9 +1242,11 @@ function moveChatRoom() {
     
     if(right == "0px"){
         obj.style.right= "-502px";
+        obj.style.zIndex= 0;
     }
     else{
         obj.style.right= "0px";
+        obj.style.zIndex= 15;
     }      
 }
 
@@ -1510,10 +1427,45 @@ function addSoundVolumeChangeListener() {
 /**
  * ----------------------------------------------------------------------------------------------------------------------------------
  *
- * FULL SCREEN
+ * LEADERBOARD
  *
  * ----------------------------------------------------------------------------------------------------------------------------------
  */
+
+function moveLeaderboard() {
+    var obj= document.getElementById('leaderboard');
+    
+    var style = window.getComputedStyle(obj);
+    var right = style.getPropertyValue('right');
+    if(right == "0px"){
+        obj.style.right= "-502px";
+        obj.style.zIndex= 0;
+    }
+    else{
+        obj.style.right= "0px";
+        obj.style.zIndex= 15;
+    }      
+}
+
+function moveSettings() {
+    var obj= document.getElementById('settings');
+    
+    var style = window.getComputedStyle(obj);
+    var right = style.getPropertyValue('right');
+    if(right == "0px"){
+        obj.style.right= "-502px";
+        obj.style.zIndex= 0;
+    }
+    else{
+        obj.style.right= "0px";
+        obj.style.zIndex= 15;
+    }      
+}
+
+
+
+
+
 function addFullScreenPopupClickListeners() {
     var popup = document.querySelector('#request-fullscreen');
     var popupBack = document.querySelector('#pop-up-back');
