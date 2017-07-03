@@ -158,15 +158,15 @@ RoomManager.prototype.playerIsMemberAlready = function(playerId) {
 };
 
 RoomManager.prototype.getPlayersRoomName = function(playerId) {
-  var roomName = '';
+    var roomName = '';
 
-  _.foreach(this.rooms, function() {
-     if(this.hasPlayer(playerId) || this.hasOwner(playerId)) {
-         roomName = this.getName();
-     }
-  });
+    _.foreach(this.rooms, function() {
+        if(this.hasPlayer(playerId) || this.hasOwner(playerId)) {
+            roomName = this.getName();
+        }
+    });
 
-  return roomName;
+    return roomName;
 };
 
 /**
@@ -202,6 +202,11 @@ RoomManager.prototype.removeLeftovers = function(game, io, playerId) {
         if(this.hasPlayer(playerId)) {
             this.removePlayer(playerId);
 
+            //Change owner of room if leaving player is owner and room isn't empty
+            if(this.hasOwner(playerId) && !this.isEmpty()) {
+                this.setOwner(this.getPlayers()[0]);
+            }
+
             //Payload variables
             var leavingPlayer = game.playerManager.getPlayer(playerId),
                 roomPlayers = game.playerManager.getPlayers(this.getPlayers());
@@ -217,13 +222,20 @@ RoomManager.prototype.removeLeftovers = function(game, io, playerId) {
                     rooms: game.roomManager.getRooms()
                 }
             });
-
-
         }
 
-        if(this.hasOwner(playerId) || this.isEmpty()) {
+        //Remove room if empty
+        if(this.isEmpty()) {
             self.removeRoom(this.getName());
         }
+
+        io.emit('leftovers-removed', {
+            state: 'success',
+            target: 'all',
+            data: {
+                rooms: game.roomManager.getRooms()
+            }
+        });
     });
 };
 
