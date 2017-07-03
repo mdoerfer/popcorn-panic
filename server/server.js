@@ -816,11 +816,11 @@ function onStartTimer(socket) {
                             //If kills match sort by deaths
                             if(b.getKills() === a.getKills()) {
                                 sortVal = a.getDeaths() - b.getDeaths();
-                            }
 
-                            //If deaths match sort by pressure
-                            if(b.getDeaths() === a.getDeaths()) {
-                                sortVal = a.getPressure() - b.getPressure();
+                                //If deaths match sort by pressure
+                                if(b.getDeaths() === a.getDeaths()) {
+                                    sortVal = a.getPressure() - b.getPressure();
+                                }
                             }
 
                             return sortVal;
