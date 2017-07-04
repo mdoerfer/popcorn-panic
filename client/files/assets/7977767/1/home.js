@@ -49,7 +49,7 @@ UI.prototype.initializeUI = function() {
      * Get image paths and save them in global game object
      */
     game.images.headerBg = getFileUrl(this.app.assets.get(8419486));
-    game.images.headerLogo = getFileUrl(this.app.assets.get(8419344));
+    game.images.headerLogo = getFileUrl(this.app.assets.get(8423037));
     game.images.cornboy = getFileUrl(this.app.assets.get(8221621));
     game.images.corngirl = getFileUrl(this.app.assets.get(8221623));
     game.images.angrycorn = getFileUrl(this.app.assets.get(8221620));
@@ -1492,11 +1492,7 @@ function addFullScreenPopupClickListeners() {
          setSrcById('header-logo', game.images.headerLogo);
     });
     
-    declineBtn.addEventListener('click', function() {
-        popup.classList.add('hidden');
-        popupBack.classList.add('hidden');
-        setSrcById('header-logo', game.images.headerLogo);
-    });
+
 }
 
 function requestFullScreen(element) {

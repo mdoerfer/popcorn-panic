@@ -301,9 +301,6 @@ Arena.prototype.addGameListeners = function() {
         //Remove leaving player entity
         this.app.on('game:someone-left', function(leavingPlayer) {
            var entity = self.app.root.findByName(leavingPlayer.id);
-            
-            console.log("Someone-left");
-            console.log(entity);
 
             if(entity !== null) {
                entity.destroy();
